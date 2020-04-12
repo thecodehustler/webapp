@@ -40,6 +40,8 @@
 
     <v-content>
       <Main/>
+
+      <LandingOverlay />
     </v-content>
   </v-app>
 </template>

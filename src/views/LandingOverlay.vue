@@ -36,8 +36,8 @@ export default {
   },
   created() {
     const componentsPath = [
-      "./views/landing/Intro1.vue",
-      "./views/landing/Intro2.vue"
+      "views/landing/Intro1.vue",
+      "views/landing/Intro2.vue"
     ];
     let promises = componentsPath.map(path => {
       return Utils.asyncComponent(path);
@@ -51,10 +51,10 @@ export default {
     selfClose() {
       console.log("closed");
       this.overlay = false;
-      //   Vue.nextTick(() => {
-      //     this.$store.commit("userLanded");
-      //   });
-      this.$emit('userLanded');
+        Vue.nextTick(() => {
+          this.$store.commit("userLanded");
+        });
+      // this.$emit('userLanded');
     }
   }
 };

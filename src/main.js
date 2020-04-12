@@ -22,4 +22,6 @@ let root = new Vue({
   render: h => h(App)
 });
 
+store.commit('initLandingState', localStorage.getItem('landed') == 'true')
+
 root.$mount('#app');

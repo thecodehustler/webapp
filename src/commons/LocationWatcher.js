@@ -25,7 +25,7 @@ class GeoWatch {
         this.onError = err => {
             for (let [id, cb] of this.registeredCallbacks) {
                 if (cb.error) {
-                    cb.error(pos);
+                    cb.error(pos, err);
                 }
             }
         }
