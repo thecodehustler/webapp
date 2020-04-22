@@ -1,5 +1,6 @@
 <template>
   <v-container class="fill-height" ma-0>
+    <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher>
     <div class="viewer-fill fixed">
       <CesiumViewer
         :innerData="cesiumData"
@@ -9,8 +10,7 @@
       ></CesiumViewer>
     </div>
     <v-card>
-      <v-card-title>调试信息</v-card-title>
-      <v-card-subtitle>我要死了</v-card-subtitle>
+      <v-card-title>{{$t("home.debug_Title")}}</v-card-title> 
       <v-card-text>
         Longitude: {{camera.position.lng}}
         <br />
@@ -19,20 +19,34 @@
         Height: {{camera.position.height}}
       </v-card-text>
     </v-card>
-    <LocationFAB @click="onFABClick" :state="locationWatcherStates"></LocationFAB>
+    <CesiumHtmlOverlay id="testerFloat" :position= "{latitude: 32, longitude: 45}">
+      <p>Paragraph!</p>
+    </CesiumHtmlOverlay>
+    <LocationFAB @click="onFABClick" :state="locationWatcherStates">
+    </LocationFAB>
   </v-container>
 </template>
 
 <script>
-import CesiumViewer from "./cesium-viewer/CesiumViewer";
+'use strict';
+
+import "../commons/location-watcher/LocationWatcherComponent";
+import AsyncComponents from "../commons/async-components/AsyncComponents";
+
+
+let CesiumViewer = AsyncComponents.build('components/cesium-viewer/CesiumViewer.vue');
 import {
   ViewerData,
+  // eslint-disable-next-line no-unused-vars
   Tileset,
-  CameraParameters
+  CameraParameters,
+  KMLData
 } from "./cesium-viewer/CesiumViewerTypes";
 import LocationFAB from "./location-button/LocationFAB";
 import { States } from "./location-button/LocationFAB";
-import LocationWatcher from "../commons/LocationWatcher";
+import CesiumHtmlOverlay from "./cesium-viewer/cesium-html-overlay/CesiumHtmlOverlay";
+// eslint-disable-next-line no-unused-vars
+import Vue from 'vue';
 
 export default {
   data: () => {
@@ -52,60 +66,63 @@ export default {
   methods: {
     onCesiumReady(cesiumInstance) {
       this.viewer = cesiumInstance.viewer;
+      let viewer = cesiumInstance.viewer;
+      globalThis.Cesium = cesiumInstance.Cesium;
       this.debug = {};
       // Called when Cesium is ready.
       console.log("CesiumViewer is ready to operate.");
       // console.log(Cesium); // Cesium 现在已经可以以一个全局变量的方式被访问。
-      this.cesiumData.Imagerys.push({
-        index: 1,
-        URLTemplate: {
-          url: "https://www.google.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}"
-        }
-      }); // 加入 Google 地球图层。
+
+      // this.cesiumData.Imagerys.push({
+      //   index: 1,
+      //   URLTemplate: {
+      //     url: "https://www.google.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}"
+      //   }
+      // }); // 加入 Google 地球图层。
+
       this.cesiumData.Primitives.Tilesets.push(
         new Tileset({
           url: "http://127.0.0.1:7999/upgraded/Production_1.json",
-          modelMatrix: Cesium.Matrix4.IDENTITY,
-          onReady: (tileset, object) => {
-            console.log(tileset, "loaded", object, this);
-            let boundingSphereCenter = tileset.boundingSphere.center; // 包裹球的三维笛卡尔坐标
-            let destination = Cesium.Cartographic.fromDegrees(
-              117.08,
-              35.12,
-              400
-            ); // 目的地
-            let offset = Cesium.Cartesian3.subtract(
-              Cesium.Cartographic.toCartesian(destination),
-              tileset.boundingSphere.center,
-              new Cesium.Cartesian3()
-            );
-            var moveMatrix = Cesium.Matrix4.fromTranslation(offset);
-            object.modelMatrix = moveMatrix;
-            this.viewer.scene.primitives.add(
-              new Cesium.DebugModelMatrixPrimitive({
-                modelMatrix: moveMatrix,
-                length: 30000000.0,
-                width: 2.0
-              })
-            );
-            this.$refs.viewer.flyTo({
-              position: { lng: 117.08, lat: 35.12, height: 2000 },
-              heading: 0,
-              pitch: -90,
-              roll: 0
-            });
+          onReady(e, t) {
+            console.log(e,t);
+            
+            viewer.scene.primitives.add(
+            new Cesium.DebugModelMatrixPrimitive({
+              modelMatrix: Cesium.Matrix4.fromTranslation(e.boundingSphere.center),
+              length: 30000000.0,
+              width: 2.0
+            })
+          );
           }
         })
       );
+      this.cesiumData.DataSources.KMLData.push(new KMLData("http://127.0.0.1:7999/statics/gadm36_CHN_3.kmz").ready((ret) => { 
+        console.log('KML loaded!', ret);
+      }));
+
     },
     onFABClick() {
       console.log("clicked.");
       this.locationWatcherStates = States.RUNNING;
+    },
+    locationUpdated(coord) {
+      console.log(coord);
+      console.log(this.$refs.viewer);
+      // Vue.nextTick(() => {
+      //   this.$refs.viewer.flyTo(new CameraParameters({
+      //     position: {
+      //       lng: coord.longitude,
+      //       lat: coord.latitude,
+      //       height: 50000
+      //     }
+      //   })); // 飞翔到我的位置！ 
+      // })
     }
   },
   components: {
     CesiumViewer,
-    LocationFAB
+    LocationFAB,
+    CesiumHtmlOverlay
   },
   created() {},
   computed: {}

@@ -52,7 +52,8 @@ export default {
     }
   },
   watch: {
-    state: function(newV, oldV) {
+    // 当 State 发生改变时被调用。
+    state: function(newV) {
       console.log(this);
       switch (newV) {
         case States.RUNNING:
@@ -67,8 +68,9 @@ export default {
           break;
         case States.PAUSED:
           this.stop();
-        default:
           break;
+        default:
+          throw new RangeError('Unexpected state of FAB.');
       }
     }
   }

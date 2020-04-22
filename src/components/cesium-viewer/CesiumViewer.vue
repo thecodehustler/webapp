@@ -12,9 +12,9 @@
       :url="tileset.url"
       :key="tileset.url"
       :modelMatrix="tileset.modelMatrix"
-      @readyPromise="tileset.onReady($event, tileset)"
+      @readyPromise="tileset.proxyReady($event, tileset)"
     ></vc-primitive-3dtileset>
-
+    <!-- Imagerys -->
     <vc-layer-imagery v-for="imagery in innerData.Imagerys" :key="imagery.index">
       <vc-provider-imagery-urltemplate v-if="imagery.URLTemplate" :url="imagery.URLTemplate.url"></vc-provider-imagery-urltemplate>
       <vc-provider-imagery-bingmaps
@@ -23,75 +23,85 @@
         :mapstyle="imagery.BingMaps.mapStyle"
       ></vc-provider-imagery-bingmaps>
     </vc-layer-imagery>
+    <!-- KML Data -->
+    <vc-datasource-kml
+      v-for="kml in innerData.DataSources.KMLData"
+      :data="kml.url"
+      :show="kml.show"
+      :key="kml.url"
+      :options="kml.options"
+      @ready="kml.proxyReady($event, kml)"
+    ></vc-datasource-kml>
   </vc-viewer>
 </template>
 
 <script>
-
-import { ViewerData, Tileset, CameraParameters } from './CesiumViewerTypes';
+import * as CVDataTypes from "./CesiumViewerTypes";
 
 function setupViewer(vm, viewer) {
   viewer.imageryLayers.removeAll(); // 移除掉自带的那个图层；
 }
 
 /**
- * Vue Components starts here...
+ * Vue Component starts here...
  */
 export default {
   name: "CesiumViewer",
   data() {
     return {
-      cesiumData: null
     };
   },
   props: {
     innerData: {
-      type: ViewerData,
+      type: CVDataTypes.ViewerData,
       required: true
     },
     cameraParameters: {
-      type: CameraParameters,
+      type: CVDataTypes.CameraParameters,
       required: false
     }
   },
 
   created() {
-    this.$data.cesiumData = this.$props.innerData;
-    this.flyTo = (options) => {
-      console.log('called!!!');
+    this.flyTo = options => {
+      console.log("flyTo() called!!!");
       if (this.cesiumInstance.viewer.scene.camera) {
-        if (typeof options == "CameraParameters"){
+        if (typeof options === typeof CameraParameters) {
           let o = {
             destination: Cesium.Cartesian3.fromDegrees(
-              options.position.lng, options.position.lat, options.position.height
+              options.position.lng,
+              options.position.lat,
+              options.position.height
             ),
             orientation: Cesium.HeadingPitchRoll.fromDegrees(
-              options.heading, options.pitch, options.roll
+              options.heading,
+              options.pitch,
+              options.roll
             )
-          }
+          };
 
           this.cesiumInstance.viewer.scene.camera.flyTo(o);
         }
       }
-    }
+    };
   },
   methods: {
     onCesiumReady(cesiumInstance) {
-      let { Cesium, viewer } = cesiumInstance;
+      this.cesiumInstance = cesiumInstance; // 保留一份本地副本。
+      let viewer = cesiumInstance.viewer;
       console.log("Cesium is ready to operate.");
       setupViewer(this, viewer);
       this.$emit("ready", cesiumInstance);
+      viewer.scene.globe.depthTestAgainstTerrain = true;
     },
     onCameraMoveStart() {
       this.$emit("cameraMoveStart");
     },
     onCameraMoveEnd() {
-      this.$emit('cameraMoveEnd');
+      this.$emit("cameraMoveEnd");
     }
   }
 };
-
-// export { ViewerData, Tileset };
 </script>
 
 <style>

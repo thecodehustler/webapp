@@ -18,13 +18,12 @@
 
 <script>
 // Must-have components.
-import Utils from "../commons/utils";
+import AsyncComponents from '../../commons/async-components/AsyncComponents';
 import Vue from "vue";
 
 export default {
   name: "LandingView",
   components: {
-    // some lazy load code here.
   },
   data() {
     return {
@@ -36,17 +35,16 @@ export default {
   },
   created() {
     const componentsPath = [
-      "views/landing/Intro1.vue",
-      "views/landing/Intro2.vue"
+      "views/landing/pages/Intro1.vue",
+      "views/landing/pages/Intro2.vue"
     ];
     let promises = componentsPath.map(path => {
-      return Utils.asyncComponent(path);
+      return AsyncComponents.build(path);
     });
     promises.forEach(x => {
       this.slides.push({ component: x });
     });
   },
-  components: {},
   methods: {
     selfClose() {
       console.log("closed");

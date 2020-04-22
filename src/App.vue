@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :dark="dark">
     <!-- <v-app-bar
       app
       color="primary"
@@ -47,9 +47,10 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld';
-import Main from './components/Main';
-import LandingOverlay from './views/LandingOverlay';
+import AsyncComponents from './commons/async-components/AsyncComponents';
+
+let Main = AsyncComponents.build('components/Main.vue');
+let LandingOverlay = AsyncComponents.build('views/landing/LandingOverlay.vue');
 
 export default {
   name: 'App',
@@ -62,5 +63,10 @@ export default {
   data: () => ({
     
   }),
+  computed: {
+    dark: function() {
+      return this.$store.state.darkMode;
+    }
+  }
 };
 </script>

@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     landed: false,
+    darkMode: false
   },
   mutations: {
     userLanded(state) { // 关闭 Overlay 之后更新这一状态。
@@ -13,6 +14,9 @@ export default new Vuex.Store({
     },
     initLandingState(state, payload) {
       state.landed = payload;
+    },
+    darkMode(state, payload) {
+      state.darkMode = payload;
     }
   },
   actions: {
