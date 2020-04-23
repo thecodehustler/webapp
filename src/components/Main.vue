@@ -7,10 +7,24 @@
         @ready="onCesiumReady"
         :cameraParameters="camera"
         ref="viewer"
-      ></CesiumViewer>
+      >
+        <CesiumHtmlOverlay id="testerFloat" :position="{latitude: 32, longitude: 45}">
+          <v-card>
+              <v-card-title>台湾</v-card-title>
+            </v-img>
+            <v-card-text>
+              <p>台湾是一个怎么样的地方。</p>
+            </v-card-text>
+            <v-divider />
+            <v-card-actions>
+              <v-btn>想去</v-btn>
+            </v-card-actions>
+          </v-card>
+        </CesiumHtmlOverlay>
+      </CesiumViewer>
     </div>
     <v-card>
-      <v-card-title>{{$t("home.debug_Title")}}</v-card-title> 
+      <v-card-title>{{$t("home.debug_Title")}}</v-card-title>
       <v-card-text>
         Longitude: {{camera.position.lng}}
         <br />
@@ -19,22 +33,19 @@
         Height: {{camera.position.height}}
       </v-card-text>
     </v-card>
-    <CesiumHtmlOverlay id="testerFloat" :position= "{latitude: 32, longitude: 45}">
-      <p>Paragraph!</p>
-    </CesiumHtmlOverlay>
-    <LocationFAB @click="onFABClick" :state="locationWatcherStates">
-    </LocationFAB>
+    <LocationFAB @click="onFABClick" :state="locationWatcherStates"></LocationFAB>
   </v-container>
 </template>
 
 <script>
-'use strict';
+"use strict";
 
 import "../commons/location-watcher/LocationWatcherComponent";
 import AsyncComponents from "../commons/async-components/AsyncComponents";
 
-
-let CesiumViewer = AsyncComponents.build('components/cesium-viewer/CesiumViewer.vue');
+let CesiumViewer = AsyncComponents.build(
+  "components/cesium-viewer/CesiumViewer.vue"
+);
 import {
   ViewerData,
   // eslint-disable-next-line no-unused-vars
@@ -46,7 +57,7 @@ import LocationFAB from "./location-button/LocationFAB";
 import { States } from "./location-button/LocationFAB";
 import CesiumHtmlOverlay from "./cesium-viewer/cesium-html-overlay/CesiumHtmlOverlay";
 // eslint-disable-next-line no-unused-vars
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
   data: () => {
@@ -73,33 +84,38 @@ export default {
       console.log("CesiumViewer is ready to operate.");
       // console.log(Cesium); // Cesium 现在已经可以以一个全局变量的方式被访问。
 
-      // this.cesiumData.Imagerys.push({
-      //   index: 1,
-      //   URLTemplate: {
-      //     url: "https://www.google.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}"
-      //   }
-      // }); // 加入 Google 地球图层。
+      this.cesiumData.Imagerys.push({
+        index: 1,
+        URLTemplate: {
+          url: "https://www.google.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}"
+        }
+      }); // 加入 Google 地球图层。
 
       this.cesiumData.Primitives.Tilesets.push(
         new Tileset({
           url: "http://127.0.0.1:7999/upgraded/Production_1.json",
           onReady(e, t) {
-            console.log(e,t);
-            
+            console.log(e, t);
+
             viewer.scene.primitives.add(
-            new Cesium.DebugModelMatrixPrimitive({
-              modelMatrix: Cesium.Matrix4.fromTranslation(e.boundingSphere.center),
-              length: 30000000.0,
-              width: 2.0
-            })
-          );
+              new Cesium.DebugModelMatrixPrimitive({
+                modelMatrix: Cesium.Matrix4.fromTranslation(
+                  e.boundingSphere.center
+                ),
+                length: 30000000.0,
+                width: 2.0
+              })
+            );
           }
         })
       );
-      this.cesiumData.DataSources.KMLData.push(new KMLData("http://127.0.0.1:7999/statics/gadm36_CHN_3.kmz").ready((ret) => { 
-        console.log('KML loaded!', ret);
-      }));
-
+      this.cesiumData.DataSources.KMLData.push(
+        new KMLData("http://127.0.0.1:7999/statics/gadm36_CHN_3.kmz").ready(
+          ret => {
+            console.log("KML loaded!", ret);
+          }
+        )
+      );
     },
     onFABClick() {
       console.log("clicked.");
@@ -115,7 +131,7 @@ export default {
       //       lat: coord.latitude,
       //       height: 50000
       //     }
-      //   })); // 飞翔到我的位置！ 
+      //   })); // 飞翔到我的位置！
       // })
     }
   },

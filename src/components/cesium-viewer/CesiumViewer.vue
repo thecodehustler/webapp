@@ -1,38 +1,41 @@
 <template>
-  <vc-viewer
-    @ready="onCesiumReady"
-    :infoBox="false"
-    :logo="false"
-    :scene3DOnly="true"
-    :camera="cameraParameters"
-  >
-    <!-- 3D tileset -->
-    <vc-primitive-3dtileset
-      v-for="tileset in innerData.Primitives.Tilesets"
-      :url="tileset.url"
-      :key="tileset.url"
-      :modelMatrix="tileset.modelMatrix"
-      @readyPromise="tileset.proxyReady($event, tileset)"
-    ></vc-primitive-3dtileset>
-    <!-- Imagerys -->
-    <vc-layer-imagery v-for="imagery in innerData.Imagerys" :key="imagery.index">
-      <vc-provider-imagery-urltemplate v-if="imagery.URLTemplate" :url="imagery.URLTemplate.url"></vc-provider-imagery-urltemplate>
-      <vc-provider-imagery-bingmaps
-        v-else-if="imagery.BingMaps"
-        :url="imagery.BingMaps.url"
-        :mapstyle="imagery.BingMaps.mapStyle"
-      ></vc-provider-imagery-bingmaps>
-    </vc-layer-imagery>
-    <!-- KML Data -->
-    <vc-datasource-kml
-      v-for="kml in innerData.DataSources.KMLData"
-      :data="kml.url"
-      :show="kml.show"
-      :key="kml.url"
-      :options="kml.options"
-      @ready="kml.proxyReady($event, kml)"
-    ></vc-datasource-kml>
-  </vc-viewer>
+  <div class="root">
+    <vc-viewer
+      @ready="onCesiumReady"
+      :infoBox="false"
+      :logo="false"
+      :scene3DOnly="true"
+      :camera="cameraParameters"
+    >
+      <!-- 3D tileset -->
+      <vc-primitive-3dtileset
+        v-for="tileset in innerData.Primitives.Tilesets"
+        :url="tileset.url"
+        :key="tileset.url"
+        :modelMatrix="tileset.modelMatrix"
+        @readyPromise="tileset.proxyReady($event, tileset)"
+      ></vc-primitive-3dtileset>
+      <!-- Imagerys -->
+      <vc-layer-imagery v-for="imagery in innerData.Imagerys" :key="imagery.index">
+        <vc-provider-imagery-urltemplate v-if="imagery.URLTemplate" :url="imagery.URLTemplate.url"></vc-provider-imagery-urltemplate>
+        <vc-provider-imagery-bingmaps
+          v-else-if="imagery.BingMaps"
+          :url="imagery.BingMaps.url"
+          :mapstyle="imagery.BingMaps.mapStyle"
+        ></vc-provider-imagery-bingmaps>
+      </vc-layer-imagery>
+      <!-- KML Data -->
+      <vc-datasource-kml
+        v-for="kml in innerData.DataSources.KMLData"
+        :data="kml.url"
+        :show="kml.show"
+        :key="kml.url"
+        :options="kml.options"
+        @ready="kml.proxyReady($event, kml)"
+      ></vc-datasource-kml>
+    </vc-viewer>
+    <slot></slot>
+  </div>
 </template>
 
 <script>
@@ -48,8 +51,7 @@ function setupViewer(vm, viewer) {
 export default {
   name: "CesiumViewer",
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     innerData: {
@@ -59,7 +61,8 @@ export default {
     cameraParameters: {
       type: CVDataTypes.CameraParameters,
       required: false
-    }
+    },
+
   },
 
   created() {
@@ -99,10 +102,34 @@ export default {
     },
     onCameraMoveEnd() {
       this.$emit("cameraMoveEnd");
+    },
+    resolveWhenReady() {
+      return new Promise(resolve => {
+        let id = setInterval(() => {
+          if (this.cesiumInstance) {
+            resolve(this.cesiumInstance);
+            clearInterval(id);
+          }
+        });
+      });
+    },
+    async getCesiumInstance() {
+      if (this.cesiumInstance) {
+        return this.cesiumInstance;
+      } else {
+        return await this.resolveWhenReady();
+      }
     }
   }
 };
 </script>
 
 <style>
+div.root {
+  height: 100vh;
+  width: 100vw;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
 </style>

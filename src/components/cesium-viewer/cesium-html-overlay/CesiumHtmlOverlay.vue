@@ -1,5 +1,5 @@
 <template>
-  <div class="float" :style="{top: cssTop, left: cssLeft}">
+  <div class="float" :style="{top: cssTop, left: cssLeft}" v-if="cesiumUp">
     <slot></slot>
   </div>
 </template>
@@ -12,42 +12,66 @@ export default {
       type: String
     },
     position: {
-      required: true,
+      required: true
+    },
+    clampInViewport: {
+      type: Boolean,
     }
   },
-  name: 'CesiumHtmlOverlay',
+  name: "CesiumHtmlOverlay",
   data() {
     return {
       top: 0,
-      left: 0
-    }
+      left: 0,
+      cesiumUp: false
+    };
   },
   computed: {
     cssTop() {
-      return this.top + 'px';
+      return this.top + "px";
     },
     cssLeft() {
-      return this.left + 'px';
+      return this.left + "px";
     }
   },
   methods: {
     preRenderListener() {
       let scratch = new Cesium.Cartesian2();
-      let position = Cesium.Cartesian3.fromDegrees(position.latitude, position.longitude);
-      let canvasPosition = this.$parent.cesiumInstance.scene.cartesianToCanvasCoordinates(position, scratch); // TODO: 改成异步，也就是等到 Cesium Viewer 初始化好了再来调用。
+      let position = Cesium.Cartesian3.fromDegrees(
+        this.position.latitude,
+        this.position.longitude
+      );
+      let canvasPosition = this.viewer.scene.cartesianToCanvasCoordinates(
+        position,
+        scratch
+      ); // TODO: 改成异步，也就是等到 Cesium Viewer 初始化好了再来调用。
       if (Cesium.defined(canvasPosition)) {
         this.top = canvasPosition.y;
-        this.left= canvasPosition.x;
+        this.left = canvasPosition.x;
       }
+    },
+    init(cesiumInstance) {
+      this.viewer = cesiumInstance.viewer;
+      this.viewer.scene.preRender.addEventListener(this.preRenderListener);
+      this.cesiumUp = true;
     }
   },
-  created() {}
-}
+  created() {
+    let promise = this.$parent.getCesiumInstance();
+    promise.then((instance) => {
+      this.init(instance);
+    })
+  },
+  beforeDestroy() {
+    this.viewer.preRender.removeEventListener(this.preRenderListener);
+  }
+};
 </script>
 
 <style>
 div.float {
   position: absolute;
   display: flex;
+  overflow-x: hidden;
 }
 </style>
