@@ -10,8 +10,7 @@
       >
         <CesiumHtmlOverlay id="testerFloat" :position="{latitude: 32, longitude: 45}">
           <v-card>
-              <v-card-title>台湾</v-card-title>
-            </v-img>
+            <v-card-title>台湾</v-card-title>
             <v-card-text>
               <p>台湾是一个怎么样的地方。</p>
             </v-card-text>
@@ -23,16 +22,6 @@
         </CesiumHtmlOverlay>
       </CesiumViewer>
     </div>
-    <v-card>
-      <v-card-title>{{$t("home.debug_Title")}}</v-card-title>
-      <v-card-text>
-        Longitude: {{camera.position.lng}}
-        <br />
-        Latitude: {{camera.position.lat}}
-        <br />
-        Height: {{camera.position.height}}
-      </v-card-text>
-    </v-card>
     <LocationFAB @click="onFABClick" :state="locationWatcherStates"></LocationFAB>
   </v-container>
 </template>
@@ -116,6 +105,13 @@ export default {
           }
         )
       );
+      this.cesiumData.DataSources.KMLData.push(
+        new KMLData("http://127.0.0.1:7999/statics/sample.kmz").ready(
+          ret => {
+            console.log('New KML Loaded,', ret);
+          }
+        )
+      )
     },
     onFABClick() {
       console.log("clicked.");
@@ -124,15 +120,6 @@ export default {
     locationUpdated(coord) {
       console.log(coord);
       console.log(this.$refs.viewer);
-      // Vue.nextTick(() => {
-      //   this.$refs.viewer.flyTo(new CameraParameters({
-      //     position: {
-      //       lng: coord.longitude,
-      //       lat: coord.latitude,
-      //       height: 50000
-      //     }
-      //   })); // 飞翔到我的位置！
-      // })
     }
   },
   components: {

@@ -10,7 +10,8 @@ import VI18NOptions from './vue-i18n';
 import VueCesium from 'vue-cesium';
 // 在 Vue 中声明要使用这个库。
 Vue.use(VueCesium, {
-  cesiumPath: './Cesium/Cesium.js'
+  cesiumPath: './Cesium/Cesium.js',
+  accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5YjcxZDU2OS0zZThlLTQxMTYtYjE0Ny1jZjIyN2ZlYzRlYTEiLCJpZCI6MTc2ODksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzI1OTU5NDl9.3kZPuGydn6_Ffm6pewG2NbBeyYfTaA72Z3cT_gqGD_w',
 });
 
 Vue.config.productionTip = false

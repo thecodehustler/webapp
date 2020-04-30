@@ -79,3 +79,12 @@ export class ViewerData {
      */
   }
 }
+
+export class LocationOnGlobe {
+  constructor() {
+    this.longitude = 0;
+    this.latitude = 0;
+    this.above = 0;
+    this.height = 0;
+  }
+}

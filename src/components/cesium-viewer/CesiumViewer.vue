@@ -1,5 +1,16 @@
 <template>
   <div class="root">
+    <div class="debug-float">
+      <v-card>
+        <v-card-title>{{$t("home.debug_Title")}}</v-card-title>
+        <v-card-text>
+          {{debug.locationOnGlobe.latitude}}, {{debug.locationOnGlobe.longitude}} <br />
+          {{debug.locationOnGlobe.above}}
+        </v-card-text>
+      </v-card>
+    </div>
+
+
     <vc-viewer
       @ready="onCesiumReady"
       :infoBox="false"
@@ -7,6 +18,8 @@
       :scene3DOnly="true"
       :camera="cameraParameters"
     >
+      <!-- Terrains -->
+      <vc-provider-terrain-cesium ref="terrain"></vc-provider-terrain-cesium>
       <!-- 3D tileset -->
       <vc-primitive-3dtileset
         v-for="tileset in innerData.Primitives.Tilesets"
@@ -51,7 +64,11 @@ function setupViewer(vm, viewer) {
 export default {
   name: "CesiumViewer",
   data() {
-    return {};
+    return {
+      debug: {
+        locationOnGlobe: new CVDataTypes.LocationOnGlobe(),
+      }
+    };
   },
   props: {
     innerData: {
@@ -61,8 +78,7 @@ export default {
     cameraParameters: {
       type: CVDataTypes.CameraParameters,
       required: false
-    },
-
+    }
   },
 
   created() {
@@ -87,6 +103,7 @@ export default {
         }
       }
     };
+
   },
   methods: {
     onCesiumReady(cesiumInstance) {
@@ -96,6 +113,26 @@ export default {
       setupViewer(this, viewer);
       this.$emit("ready", cesiumInstance);
       viewer.scene.globe.depthTestAgainstTerrain = true;
+      this.scrEventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+      this.scrEventHandler.setInputAction(event => {
+        // console.log(event);
+        let ret = new CVDataTypes.LocationOnGlobe();
+        // 屏幕坐标转为世界坐标
+        let ray = viewer.camera.getPickRay(event.endPosition);
+        let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+        // 笛卡尔坐标转为地理坐标
+        let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+
+        ret.longitude = Cesium.Math.toDegrees(cartographic.longitude);
+        ret.latitude = Cesium.Math.toDegrees(cartographic.latitude);
+        ret.above = viewer.scene.globe.getHeight(cartographic);
+        ret.height= cartographic.height;
+
+        this.$emit('mouseOnGlobe', ret);
+
+        this.debug.locationOnGlobe = ret;
+      }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
+
     },
     onCameraMoveStart() {
       this.$emit("cameraMoveStart");
@@ -119,6 +156,9 @@ export default {
       } else {
         return await this.resolveWhenReady();
       }
+    },
+    getVCViewer() {
+
     }
   }
 };
@@ -131,5 +171,12 @@ div.root {
   padding: 0;
   margin: 0;
   overflow: hidden;
+}
+
+div.debug-float {
+  position: fixed;
+  left: 4px;
+  top: 4px;
+  z-index: 9999;
 }
 </style>

@@ -44,7 +44,7 @@ export default {
       let canvasPosition = this.viewer.scene.cartesianToCanvasCoordinates(
         position,
         scratch
-      ); // TODO: 改成异步，也就是等到 Cesium Viewer 初始化好了再来调用。
+      );
       if (Cesium.defined(canvasPosition)) {
         this.top = canvasPosition.y;
         this.left = canvasPosition.x;
@@ -57,7 +57,7 @@ export default {
     }
   },
   created() {
-    let promise = this.$parent.getCesiumInstance();
+    let promise = this.$parent.getCesiumInstance(); // 这要求 CesiumViewer 必须作为他的直接父组件。
     promise.then((instance) => {
       this.init(instance);
     })
