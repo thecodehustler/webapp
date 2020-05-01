@@ -30,11 +30,8 @@
 "use strict";
 
 import "../commons/location-watcher/LocationWatcherComponent";
-import AsyncComponents from "../commons/async-components/AsyncComponents";
+import CesiumViewer from './cesium-viewer/CesiumViewer.vue';
 
-let CesiumViewer = AsyncComponents.build(
-  "components/cesium-viewer/CesiumViewer.vue"
-);
 import {
   ViewerData,
   // eslint-disable-next-line no-unused-vars

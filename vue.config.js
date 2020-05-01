@@ -11,40 +11,44 @@ module.exports = {
         SRC: path.resolve(__dirname, 'src/')
       }
     },
-    optimization: {
-      splitChunks: {
-        cacheGroups: {
-          vuetify: {
-            test: /[\\/]node_modules[\\/]vuetify[\\/]/,
-            chunks: 'all',
-            priority: 1,
-            filename: 'vuetify.js'
-          },
-          vue: {
-            test: /[\\/]node_modules[\\/]vue[\\/]/,
-            chunks: "all",
-            priority: 3,
-            filename: 'vue.js'
-          },
-          vue_cesium: {
-            test: /[\\/]node_modules[\\/]vue-cesium[\\/]/,
-            chunks: "all",
-            priority: 2,
-            filename: 'vc.js'
-          },
-          views_landing: {
-            test: /[\\/]src[\\/]views[\\/]landing[\\/]/,
-            chunks: "all",
-            priority: 4
-          },
-          chunk_commons: {
-            test: /[\\/]src[\\/]commons[\\/]/,
-            chunks: "all",
-            priority: 0,
-          }
-        }
-      }
-    }
+  },
+  chainWebpack: config => {
+    config.when(process.env.NODE_ENV === 'production', config => {
+      config.entry('app').clear().add('./src/main-prod.js');
+
+      let externals = {
+        vue: "Vue",
+        // axios: 'axios',
+        vuetify: 'vuetify',
+        'vue-router': 'VueRouter',
+        'vuex': 'Vuex',
+        'lodash': 'LoDash',
+        'vue-cesium': 'VueCesium'
+      };
+      config.externals(externals);
+      const cdn = {
+        css: [
+        ],
+        js: [
+          'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js', //Vue
+          'https://cdn.jsdelivr.net/npm/vue-router@3.1.6/dist/vue-router.min.js', // Router
+          'https://cdn.jsdelivr.net/npm/vuetify@2.2.26/dist/vuetify.min.js', //Vuetify
+          'https://cdn.jsdelivr.net/npm/vuex@3.3.0/dist/vuex.min.js', // vuex
+          // 'https://cdn.jsdelivr.net/npm/axios@0.19.2/index.min.js', //axios
+          'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js', // LoDash
+          'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.0/lib/index.umd.js' // VueCesium
+        ]
+      };
+      config.plugin('html')
+        .tap(args => {
+          args[0].cdn = cdn
+          return args
+        });
+    });
+    config.when(process.env.NODE_ENV === 'development', config => {
+      config.entry('app').clear().add('./src/main-dev.js');
+    })
+
   },
 
   lintOnSave: false
