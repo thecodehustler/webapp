@@ -21,6 +21,9 @@
             <v-col>{{textInfo.text}}</v-col>
           </v-row>
         </v-card-text>
+        <v-card-actions>
+          <v-btn :href="textInfo.mpUrl">前往公众号查看<v-icon>mdi-link</v-icon></v-btn>
+        </v-card-actions>
       </v-card>
     </v-container>
   </v-overlay>
@@ -35,7 +38,8 @@ export default {
         title: "",
         subtitle: "",
         top_image_url: "",
-        text: ""
+        text: "",
+        mpUrl: ""
       }
     };
   },
