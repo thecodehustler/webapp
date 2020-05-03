@@ -40,9 +40,9 @@ export default {
       cesiumData: new ViewerData(),
       debug: {
         sampleArticle: {
-          title: "Sample Title",
+          name: "Sample Title",
           subtitle: "Sample subtitle",
-          text: "TEXT TEXT"
+          description: "TEXT TEXT"
         },
         sampleURL: 'http://127.0.0.1/info?landmarkID=1',
       },

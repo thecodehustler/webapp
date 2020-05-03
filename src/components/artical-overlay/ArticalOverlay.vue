@@ -10,7 +10,7 @@
           <v-container class="fill-height align-content-end">
             <v-row>
               <v-col>
-                <h2 class="heading">{{ textInfo.title }}</h2>
+                <h2 class="heading">{{ textInfo.name }}</h2>
                 <div class="subheading">{{textInfo.subtitle}}</div>
               </v-col>
             </v-row>
@@ -18,11 +18,11 @@
         </v-img>
         <v-card-text>
           <v-row>
-            <v-col>{{textInfo.text}}</v-col>
+            <v-col>{{textInfo.description}}</v-col>
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-btn :href="textInfo.mpUrl">前往公众号查看<v-icon>mdi-link</v-icon></v-btn>
+          <v-btn :href="textInfo.mp_link">前往公众号查看<v-icon small>mdi-open-in-new</v-icon></v-btn>
         </v-card-actions>
       </v-card>
     </v-container>
@@ -34,12 +34,12 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      textInfo: {
-        title: "",
+      textInfo: { // 需要与后端返回的数据一致
+        name: "",
         subtitle: "",
         top_image_url: "",
-        text: "",
-        mpUrl: ""
+        description: "",
+        mp_link: ""
       }
     };
   },
