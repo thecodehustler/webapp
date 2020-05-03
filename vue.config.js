@@ -4,6 +4,7 @@ module.exports = {
   "transpileDependencies": [
     "vuetify"
   ],
+  crossorigin: 'anonymous',
 
   "configureWebpack": {
     resolve: {

@@ -11,7 +11,7 @@ export default {
     locBtn_StopTrack: '停止跟踪',
     locBtn_GeoLocationFailed: '无法定位。',
     locBtn_Continue: '继续',
-    debug_Title: '调戏信息'
+    debug_Title: '调试信息'
   }
 
 }

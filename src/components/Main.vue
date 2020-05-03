@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height" ma-0>
+  <v-container class="fill-height flex-grow-1 flex-shrink-0 ma-0 pa-0" >
     <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher>
     <div class="viewer-fill fixed">
       <CesiumViewer
@@ -7,22 +7,10 @@
         @ready="onCesiumReady"
         :cameraParameters="camera"
         ref="viewer"
-      >
-        <CesiumHtmlOverlay id="testerFloat" :position="{latitude: 32, longitude: 45}">
-          <v-card>
-            <v-card-title>台湾</v-card-title>
-            <v-card-text>
-              <p>台湾是一个怎么样的地方。</p>
-            </v-card-text>
-            <v-divider />
-            <v-card-actions>
-              <v-btn>想去</v-btn>
-            </v-card-actions>
-          </v-card>
-        </CesiumHtmlOverlay>
-      </CesiumViewer>
+      ></CesiumViewer>
+      <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates"></MainToolbar>
     </div>
-    <LocationFAB @click="onFABClick" :state="locationWatcherStates"></LocationFAB>
+    <ArticalOverlay :url="debug.sampleURL" :show="true"></ArticalOverlay>
   </v-container>
 </template>
 
@@ -30,7 +18,9 @@
 "use strict";
 
 import "../commons/location-watcher/LocationWatcherComponent";
-import CesiumViewer from './cesium-viewer/CesiumViewer.vue';
+import CesiumViewer from "./cesium-viewer/CesiumViewer.vue";
+import ArticalOverlay from "./artical-overlay/ArticalOverlay.vue";
+import MainToolbar from "./main-toolbar/MainToolbar.vue";
 
 import {
   ViewerData,
@@ -39,7 +29,6 @@ import {
   CameraParameters,
   KMLData
 } from "./cesium-viewer/CesiumViewerTypes";
-import LocationFAB from "./location-button/LocationFAB";
 import { States } from "./location-button/LocationFAB";
 import CesiumHtmlOverlay from "./cesium-viewer/cesium-html-overlay/CesiumHtmlOverlay";
 // eslint-disable-next-line no-unused-vars
@@ -49,7 +38,14 @@ export default {
   data: () => {
     return {
       cesiumData: new ViewerData(),
-      _debug: {},
+      debug: {
+        sampleArticle: {
+          title: "Sample Title",
+          subtitle: "Sample subtitle",
+          text: "TEXT TEXT"
+        },
+        sampleURL: 'http://127.0.0.1/info?landmarkID=1',
+      },
       camera: new CameraParameters({
         position: {
           lng: 113,
@@ -96,19 +92,11 @@ export default {
         })
       );
       this.cesiumData.DataSources.KMLData.push(
-        new KMLData("http://127.0.0.1:7999/statics/gadm36_CHN_3.kmz").ready(
-          ret => {
-            console.log("KML loaded!", ret);
-          }
-        )
+        new KMLData("/kmls/sample.kml").ready(ret => {
+          console.log("New KML Loaded,", ret);
+          ret.viewer.flyTo(ret.cesiumObject);
+        })
       );
-      this.cesiumData.DataSources.KMLData.push(
-        new KMLData("http://127.0.0.1:7999/statics/sample.kmz").ready(
-          ret => {
-            console.log('New KML Loaded,', ret);
-          }
-        )
-      )
     },
     onFABClick() {
       console.log("clicked.");
@@ -121,8 +109,9 @@ export default {
   },
   components: {
     CesiumViewer,
-    LocationFAB,
-    CesiumHtmlOverlay
+    CesiumHtmlOverlay,
+    ArticalOverlay,
+    MainToolbar
   },
   created() {},
   computed: {}
@@ -131,15 +120,12 @@ export default {
 
 <style>
 .viewer-fill {
-  height: 100vh;
-  width: 100vw;
-  left: 0;
-  right: 0;
-  padding: 0;
-  margin: 0;
+  height: 100%;
+  width: 100%;
 }
 
 .fixed {
-  position: fixed;
+  position: absolute;
+
 }
 </style>

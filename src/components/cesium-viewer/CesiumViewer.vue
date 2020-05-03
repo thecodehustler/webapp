@@ -4,8 +4,10 @@
       <v-card>
         <v-card-title>{{$t("home.debug_Title")}}</v-card-title>
         <v-card-text>
+          <v-subheader>鼠标所在位置</v-subheader>
           {{debug.locationOnGlobe.latitude}}, {{debug.locationOnGlobe.longitude}} <br />
           {{debug.locationOnGlobe.above}}
+          <v-subheader>相机参数</v-subheader>
         </v-card-text>
       </v-card>
     </div>
@@ -119,18 +121,21 @@ export default {
         let ret = new CVDataTypes.LocationOnGlobe();
         // 屏幕坐标转为世界坐标
         let ray = viewer.camera.getPickRay(event.endPosition);
-        let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
-        // 笛卡尔坐标转为地理坐标
-        let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        if (Cesium.defined(ray)) {
+          let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+          // 笛卡尔坐标转为地理坐标
+          let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
 
-        ret.longitude = Cesium.Math.toDegrees(cartographic.longitude);
-        ret.latitude = Cesium.Math.toDegrees(cartographic.latitude);
-        ret.above = viewer.scene.globe.getHeight(cartographic);
-        ret.height= cartographic.height;
+          ret.longitude = Cesium.Math.toDegrees(cartographic.longitude);
+          ret.latitude = Cesium.Math.toDegrees(cartographic.latitude);
+          ret.above = viewer.scene.globe.getHeight(cartographic);
+          ret.height= cartographic.height;
 
-        this.$emit('mouseOnGlobe', ret);
+          this.$emit('mouseOnGlobe', ret);
 
-        this.debug.locationOnGlobe = ret;
+          this.debug.locationOnGlobe = ret;
+        }
+
       }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
 
     },
@@ -166,8 +171,8 @@ export default {
 
 <style>
 div.root {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   padding: 0;
   margin: 0;
   overflow: hidden;
