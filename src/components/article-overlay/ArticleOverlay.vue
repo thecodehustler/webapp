@@ -1,6 +1,5 @@
 <template>
-  <v-overlay :value="show" @click="selfClose">
-    <v-container fluid>
+  <v-bottom-sheet value="show">
       <v-card width="95vw" max-width="450px">
         <v-img
           :aspect-ratio="16/9"
@@ -22,19 +21,22 @@
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-btn :href="textInfo.mp_link">前往公众号查看<v-icon small>mdi-open-in-new</v-icon></v-btn>
+          <v-btn :href="textInfo.mp_link" text>
+            前往公众号查看
+            <v-icon small>mdi-open-in-new</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-card>
-    </v-container>
-  </v-overlay>
+  </v-bottom-sheet>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   data() {
     return {
-      textInfo: { // 需要与后端返回的数据一致
+      textInfo: {
+        // 需要与后端返回的数据一致
         name: "",
         subtitle: "",
         top_image_url: "",
@@ -53,7 +55,7 @@ export default {
       required: true
     },
     url: {
-      type: String, 
+      type: String,
       required: false
     }
   },
@@ -72,16 +74,19 @@ export default {
       this.show = false;
     },
     loadFromURL(url) {
-      axios.get(url).then(value => {
-        console.log('success,',value);
-      }).catch(reason => {
-        console.log(reason);
-      })
+      axios
+        .get(url)
+        .then(value => {
+          console.log("success,", value);
+          this.textInfo = value.data;
+        })
+        .catch(reason => {
+          console.log(reason);
+        });
     }
   }
 };
 </script>
 
 <style>
-
 </style>

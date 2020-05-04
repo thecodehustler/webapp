@@ -2,6 +2,9 @@
   <v-container class="bottom-absolute">
     <v-card>
       <v-toolbar dense bottom>
+        <v-avatar color="indigo" size="36">
+          <span class="white--text headline">DC</span>
+        </v-avatar>
         <v-text-field hide-details prepend-inner-icon="mdi-magnify" single-line clearable dark></v-text-field>
         <v-btn @click="btnClicked" icon>
           <v-icon>{{iconText}}</v-icon>

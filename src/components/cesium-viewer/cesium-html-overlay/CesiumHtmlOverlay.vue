@@ -1,6 +1,8 @@
 <template>
-  <div class="float" :style="{top: cssTop, left: cssLeft}" v-if="cesiumUp">
-    <slot></slot>
+  <div class="hover" @click="selfClose()">
+    <div class="float" :style="{top: cssTop, left: cssLeft}" v-if="cesiumUp">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -15,7 +17,8 @@ export default {
       required: true
     },
     clampInViewport: {
-      type: Boolean,
+      // 钳制到视图以内。
+      type: Boolean
     }
   },
   name: "CesiumHtmlOverlay",
@@ -23,7 +26,8 @@ export default {
     return {
       top: 0,
       left: 0,
-      cesiumUp: false
+      cesiumUp: false,
+      show: true
     };
   },
   computed: {
@@ -54,13 +58,16 @@ export default {
       this.viewer = cesiumInstance.viewer;
       this.viewer.scene.preRender.addEventListener(this.preRenderListener);
       this.cesiumUp = true;
+    },
+    selfClose() {
+      this.show = false;
     }
   },
   created() {
     let promise = this.$parent.getCesiumInstance(); // 这要求 CesiumViewer 必须作为他的直接父组件。
-    promise.then((instance) => {
+    promise.then(instance => {
       this.init(instance);
-    })
+    });
   },
   beforeDestroy() {
     this.viewer.preRender.removeEventListener(this.preRenderListener);
@@ -69,9 +76,16 @@ export default {
 </script>
 
 <style>
+div.hover {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
 div.float {
   position: absolute;
   display: flex;
-  overflow-x: hidden;
 }
 </style>

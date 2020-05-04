@@ -7,7 +7,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     landed: false,
-    darkMode: false
+    darkMode: false,
+    loginInfo: {
+      id: '',
+      avatarURL: '',
+      name: ''
+    }
   },
   mutations: {
     userLanded(state) { // 关闭 Overlay 之后更新这一状态。
@@ -18,6 +23,9 @@ export default new Vuex.Store({
     },
     darkMode(state, payload) {
       state.darkMode = payload;
+    },
+    userLogin(state, payload) {
+
     }
   },
   actions: {

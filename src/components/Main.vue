@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height flex-grow-1 flex-shrink-0 ma-0 pa-0" >
+  <v-container class="fill-height flex-grow-1 flex-shrink-0 ma-0 pa-0">
     <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher>
     <div class="viewer-fill fixed">
       <CesiumViewer
@@ -9,8 +9,8 @@
         ref="viewer"
       ></CesiumViewer>
       <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates"></MainToolbar>
+      <ArticleOverlay :url="debug.sampleURL" :show="true"></ArticleOverlay>
     </div>
-    <ArticalOverlay :url="debug.sampleURL" :show="true"></ArticalOverlay>
   </v-container>
 </template>
 
@@ -19,7 +19,7 @@
 
 import "../commons/location-watcher/LocationWatcherComponent";
 import CesiumViewer from "./cesium-viewer/CesiumViewer.vue";
-import ArticalOverlay from "./artical-overlay/ArticalOverlay.vue";
+import ArticleOverlay from "./article-overlay/ArticleOverlay.vue";
 import MainToolbar from "./main-toolbar/MainToolbar.vue";
 
 import {
@@ -44,7 +44,8 @@ export default {
           subtitle: "Sample subtitle",
           description: "TEXT TEXT"
         },
-        sampleURL: 'http://127.0.0.1/info?landmarkID=1',
+        sampleURL: "http://127.0.0.1/info?landmarkID=1",
+        showArticle: true,
       },
       camera: new CameraParameters({
         position: {
@@ -110,7 +111,7 @@ export default {
   components: {
     CesiumViewer,
     CesiumHtmlOverlay,
-    ArticalOverlay,
+    ArticleOverlay,
     MainToolbar
   },
   created() {},
@@ -126,6 +127,5 @@ export default {
 
 .fixed {
   position: absolute;
-
 }
 </style>
