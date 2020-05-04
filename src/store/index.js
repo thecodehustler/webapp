@@ -12,6 +12,9 @@ export default new Vuex.Store({
       id: '',
       avatarURL: '',
       name: ''
+    },
+    wx: {
+      ready: false,
     }
   },
   mutations: {
@@ -24,7 +27,10 @@ export default new Vuex.Store({
     darkMode(state, payload) {
       state.darkMode = payload;
     },
-    userLogin(state, payload) {
+    wxReady(state) {
+      state.wx.ready = true;
+    },
+    userInfoObtained(state, payload) {
 
     }
   },

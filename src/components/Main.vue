@@ -1,15 +1,19 @@
 <template>
   <v-container class="fill-height flex-grow-1 flex-shrink-0 ma-0 pa-0">
+    <v-overlay absolute opacity="0.9" :value="!imageryReady">
+      <v-progress-circular size="96" indeterminate></v-progress-circular>
+    </v-overlay>
     <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher>
     <div class="viewer-fill fixed">
       <CesiumViewer
         :innerData="cesiumData"
         @ready="onCesiumReady"
         :cameraParameters="camera"
+        @selectedEntityChanged="entityChanged"
         ref="viewer"
       ></CesiumViewer>
       <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates"></MainToolbar>
-      <ArticleOverlay :url="debug.sampleURL" :show="true"></ArticleOverlay>
+      <ArticleOverlay :url="debug.sampleURL" v-model="debug.showArticle" ref="article"></ArticleOverlay>
     </div>
   </v-container>
 </template>
@@ -38,14 +42,15 @@ export default {
   data: () => {
     return {
       cesiumData: new ViewerData(),
+      imageryReady: false,
       debug: {
         sampleArticle: {
           name: "Sample Title",
           subtitle: "Sample subtitle",
           description: "TEXT TEXT"
         },
-        sampleURL: "http://127.0.0.1/info?landmarkID=1",
-        showArticle: true,
+        sampleURL: "/info?landmarkID=1",
+        showArticle: false,
       },
       camera: new CameraParameters({
         position: {
@@ -95,13 +100,27 @@ export default {
       this.cesiumData.DataSources.KMLData.push(
         new KMLData("/kmls/sample.kml").ready(ret => {
           console.log("New KML Loaded,", ret);
+          this.imageryReady = true;
           ret.viewer.flyTo(ret.cesiumObject);
         })
       );
     },
+    entityChanged(obj) {
+      console.log(obj.entity);
+      if (Cesium.defined(obj.entity)) {
+        this.debug.showArticle = true;
+
+      } else { // 在这里添加逻辑。s
+        this.debug.showArticle = false;
+      }
+    },
     onFABClick() {
       console.log("clicked.");
       this.locationWatcherStates = States.RUNNING;
+      switch(this.locationWatcherStates) {
+        case States.RUNNING:
+          this.locationWatcherStates = States.STOPPED;
+      }
     },
     locationUpdated(coord) {
       console.log(coord);

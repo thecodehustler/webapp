@@ -2,7 +2,7 @@
   <v-container class="bottom-absolute">
     <v-card>
       <v-toolbar dense bottom>
-        <v-avatar color="indigo" size="36">
+        <v-avatar color="indigo" size="36" v-show="wxReady">
           <span class="white--text headline">DC</span>
         </v-avatar>
         <v-text-field hide-details prepend-inner-icon="mdi-magnify" single-line clearable dark></v-text-field>
@@ -29,6 +29,11 @@ export default {
       count: 0,
       iconText: "mdi-crosshairs-gps"
     };
+  },
+  computed: {
+    wxReady() {
+      return this.$store.state.wx.ready;
+    }
   },
   props: {
     state: {

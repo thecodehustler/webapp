@@ -30,3 +30,5 @@ root.$vuetify.theme.dark = true;
 store.commit('initLandingState', localStorage.getItem('landed') == 'true')
 store.commit('darkMode', true);
 root.$mount('#app');
+
+let wx = require('./wx-js');

@@ -5,13 +5,13 @@
         <v-card-title>{{$t("home.debug_Title")}}</v-card-title>
         <v-card-text>
           <v-subheader>鼠标所在位置</v-subheader>
-          {{debug.locationOnGlobe.latitude}}, {{debug.locationOnGlobe.longitude}} <br />
+          {{debug.locationOnGlobe.latitude}}, {{debug.locationOnGlobe.longitude}}
+          <br />
           {{debug.locationOnGlobe.above}}
           <v-subheader>相机参数</v-subheader>
         </v-card-text>
       </v-card>
     </div>
-
 
     <vc-viewer
       @ready="onCesiumReady"
@@ -19,6 +19,8 @@
       :logo="false"
       :scene3DOnly="true"
       :camera="cameraParameters"
+      @MOUSE_MOVE="onMouseMove"
+      @selectedEntityChanged="onSelectedEntityChanged"
     >
       <!-- Terrains -->
       <vc-provider-terrain-cesium ref="terrain"></vc-provider-terrain-cesium>
@@ -68,7 +70,7 @@ export default {
   data() {
     return {
       debug: {
-        locationOnGlobe: new CVDataTypes.LocationOnGlobe(),
+        locationOnGlobe: new CVDataTypes.LocationOnGlobe()
       }
     };
   },
@@ -105,45 +107,61 @@ export default {
         }
       }
     };
-
   },
   methods: {
     onCesiumReady(cesiumInstance) {
-      this.cesiumInstance = cesiumInstance; // 保留一份本地副本。
-      let viewer = cesiumInstance.viewer;
+      this.viewer = cesiumInstance.viewer; // 保留一份本地副本。
+      let viewer = this.viewer;
       console.log("Cesium is ready to operate.");
       setupViewer(this, viewer);
       this.$emit("ready", cesiumInstance);
       viewer.scene.globe.depthTestAgainstTerrain = true;
-      this.scrEventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-      this.scrEventHandler.setInputAction(event => {
-        // console.log(event);
-        let ret = new CVDataTypes.LocationOnGlobe();
-        // 屏幕坐标转为世界坐标
-        let ray = viewer.camera.getPickRay(event.endPosition);
-        if (Cesium.defined(ray)) {
-          let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
-          // 笛卡尔坐标转为地理坐标
-          let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-
-          ret.longitude = Cesium.Math.toDegrees(cartographic.longitude);
-          ret.latitude = Cesium.Math.toDegrees(cartographic.latitude);
-          ret.above = viewer.scene.globe.getHeight(cartographic);
-          ret.height= cartographic.height;
-
-          this.$emit('mouseOnGlobe', ret);
-
-          this.debug.locationOnGlobe = ret;
-        }
-
-      }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
-
+      // this.scrEventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+      // this.scrEventHandler.setInputAction(event => {
+      // }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
     },
     onCameraMoveStart() {
       this.$emit("cameraMoveStart");
     },
     onCameraMoveEnd() {
       this.$emit("cameraMoveEnd");
+    },
+    onMouseMove(event) {
+      let ret = new CVDataTypes.LocationOnGlobe();
+      let viewer = this.viewer;
+      // 屏幕坐标转为世界坐标
+      let ray = viewer.camera.getPickRay(event.endPosition);
+      let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+      if (Cesium.defined(cartesian)) {
+        // 笛卡尔坐标转为地理坐标
+        let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        ret.longitude = Cesium.Math.toDegrees(cartographic.longitude);
+        ret.latitude = Cesium.Math.toDegrees(cartographic.latitude);
+        ret.above = viewer.scene.globe.getHeight(cartographic);
+        ret.height = cartographic.height;
+        this.$emit("mouseOnGlobe", ret);
+        this.debug.locationOnGlobe = ret;
+
+        // 鼠标悬浮在某个尸体上的时候触发。
+        let pickedPrimitive = viewer.scene.pick(event.endPosition);
+        let pickedEntity = Cesium.defined(pickedPrimitive)
+          ? pickedPrimitive.id
+          : undefined;
+        if (Cesium.defined(pickedEntity)) {
+          let toEmit = {
+            entity: pickedEntity,
+            viewer: this.viewer
+          }
+          this.$emit("hoverOnEntity", toEmit);
+        }
+      }
+    },
+    onSelectedEntityChanged(entity) {
+      let toEmit = {
+        entity,
+        viewer: this.viewer
+      };
+      this.$emit("selectedEntityChanged", toEmit);
     },
     resolveWhenReady() {
       return new Promise(resolve => {
@@ -162,9 +180,7 @@ export default {
         return await this.resolveWhenReady();
       }
     },
-    getVCViewer() {
-
-    }
+    getVCViewer() {}
   }
 };
 </script>
