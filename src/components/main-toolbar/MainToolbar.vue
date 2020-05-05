@@ -3,9 +3,9 @@
     <v-card>
       <v-toolbar dense bottom>
         <v-avatar color="indigo" size="36" v-show="wxReady">
-          <span class="white--text headline">DC</span>
+          <span class="white--text">DC</span>
         </v-avatar>
-        <v-text-field hide-details prepend-inner-icon="mdi-magnify" single-line clearable dark></v-text-field>
+        <v-text-field hide-details prepend-inner-icon="mdi-magnify" single-line clearable dark v-model="textInput" solo label="搜索"></v-text-field>
         <v-btn @click="btnClicked" icon>
           <v-icon>{{iconText}}</v-icon>
         </v-btn>
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import lodash from 'lodash';
+
 export const States = {
   STOPPED: 0, // 未开始
   RUNNING: 1, // 已在运行
@@ -27,7 +29,8 @@ export default {
   data() {
     return {
       count: 0,
-      iconText: "mdi-crosshairs-gps"
+      iconText: "mdi-crosshairs-gps",
+      textInput: ''
     };
   },
   computed: {
@@ -43,6 +46,12 @@ export default {
   },
   created() {
     this.intervalID = undefined;
+    // `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
+    // 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+    // AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
+    // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
+    // 请参考：https://lodash.com/docs#debounce
+    this.debouncedGetEntries = lodash.debounce(this.searchQuery, 1500);
   },
   methods: {
     start() {
@@ -70,6 +79,12 @@ export default {
     },
     btnClicked() {
       this.$emit("locBtnClick");
+    },
+    searchQuery() {
+      if (this.textInput !== '') {
+        var vm = this;
+        console.log('searchQuery HERE! 这里做一些异步操作。', vm);
+      }
     }
   },
   watch: {
@@ -92,6 +107,11 @@ export default {
           break;
         default:
           throw new RangeError("Unexpected state of FAB.");
+      }
+    }, 
+    textInput: function(newVal) {
+      if (newVal !== '') {
+        this.debouncedGetEntries();
       }
     }
   }

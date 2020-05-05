@@ -1,15 +1,19 @@
 <template>
   <div class="root">
-    <div class="debug-float">
+    <div class="debug-float" v-if="debug.show">
       <v-card>
-        <v-card-title>{{$t("home.debug_Title")}}</v-card-title>
-        <v-card-text>
+        <v-card-title @click="debug.hide = !debug.hide">{{$t("home.debug_Title")}}</v-card-title>
+        <v-slide-y-transition>
+        <v-card-text v-if="!debug.hide">
           <v-subheader>鼠标所在位置</v-subheader>
           {{debug.locationOnGlobe.latitude}}, {{debug.locationOnGlobe.longitude}}
           <br />
           {{debug.locationOnGlobe.above}}
           <v-subheader>相机参数</v-subheader>
+          <p>位置：(Lng: {{debug.cameraPosition.position.lng}}, Lat: {{debug.cameraPosition.position.lat}}, {{debug.cameraPosition.position.height}})</p>
+          <p>方向：({{debug.cameraPosition.heading}}, {{debug.cameraPosition.pitch}}, {{debug.cameraPosition.roll}})</p>
         </v-card-text>
+        </v-slide-y-transition>
       </v-card>
     </div>
 
@@ -19,19 +23,21 @@
       :logo="false"
       :scene3DOnly="true"
       :camera="cameraParameters"
+      @moveStart="onCameraMoveStart"
+      @moveEnd="onCameraMoveEnd"
       @MOUSE_MOVE="onMouseMove"
       @selectedEntityChanged="onSelectedEntityChanged"
     >
       <!-- Terrains -->
       <vc-provider-terrain-cesium ref="terrain"></vc-provider-terrain-cesium>
       <!-- 3D tileset -->
-      <vc-primitive-3dtileset
+      <vc-primitive-tileset
         v-for="tileset in innerData.Primitives.Tilesets"
         :url="tileset.url"
         :key="tileset.url"
         :modelMatrix="tileset.modelMatrix"
         @readyPromise="tileset.proxyReady($event, tileset)"
-      ></vc-primitive-3dtileset>
+      ></vc-primitive-tileset>
       <!-- Imagerys -->
       <vc-layer-imagery v-for="imagery in innerData.Imagerys" :key="imagery.index">
         <vc-provider-imagery-urltemplate v-if="imagery.URLTemplate" :url="imagery.URLTemplate.url"></vc-provider-imagery-urltemplate>
@@ -60,6 +66,9 @@ import * as CVDataTypes from "./CesiumViewerTypes";
 
 function setupViewer(vm, viewer) {
   viewer.imageryLayers.removeAll(); // 移除掉自带的那个图层；
+  viewer.scene.screenSpaceCameraController.minimumZoomDistance = 100; //
+  viewer.scene.screenSpaceCameraController.maximumZoomDistance = 22000000; //相机高度的最大值
+  viewer.scene.globe.depthTestAgainstTerrain = true;
 }
 
 /**
@@ -70,7 +79,10 @@ export default {
   data() {
     return {
       debug: {
-        locationOnGlobe: new CVDataTypes.LocationOnGlobe()
+        show: true,
+        locationOnGlobe: new CVDataTypes.LocationOnGlobe(),
+        cameraPosition: new CVDataTypes.CameraParameters(),
+        hide: false,
       }
     };
   },
@@ -87,25 +99,21 @@ export default {
 
   created() {
     this.flyTo = options => {
+      let o = {
+        destination: Cesium.Cartesian3.fromDegrees(
+          options.position.lng,
+          options.position.lat,
+          options.position.height
+        ),
+        orientation: Cesium.HeadingPitchRoll.fromDegrees(
+          options.heading,
+          options.pitch,
+          options.roll
+        )
+      };
       console.log("flyTo() called!!!");
-      if (this.cesiumInstance.viewer.scene.camera) {
-        if (typeof options === typeof CameraParameters) {
-          let o = {
-            destination: Cesium.Cartesian3.fromDegrees(
-              options.position.lng,
-              options.position.lat,
-              options.position.height
-            ),
-            orientation: Cesium.HeadingPitchRoll.fromDegrees(
-              options.heading,
-              options.pitch,
-              options.roll
-            )
-          };
 
-          this.cesiumInstance.viewer.scene.camera.flyTo(o);
-        }
-      }
+      this.viewer.scene.camera.flyTo(o);
     };
   },
   methods: {
@@ -115,15 +123,21 @@ export default {
       console.log("Cesium is ready to operate.");
       setupViewer(this, viewer);
       this.$emit("ready", cesiumInstance);
-      viewer.scene.globe.depthTestAgainstTerrain = true;
-      // this.scrEventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-      // this.scrEventHandler.setInputAction(event => {
-      // }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
     },
     onCameraMoveStart() {
       this.$emit("cameraMoveStart");
     },
     onCameraMoveEnd() {
+      let camP = this.debug.cameraPosition;
+      let cat = this.viewer.camera.positionCartographic;
+      camP.position = {
+        lat: Cesium.Math.toDegrees(cat.latitude),
+        lng: Cesium.Math.toDegrees(cat.longitude),
+        height: cat.height
+      };
+      camP.heading = Cesium.Math.toDegrees(this.viewer.camera.heading);
+      camP.pitch = Cesium.Math.toDegrees(this.viewer.camera.pitch);
+      camP.roll = Cesium.Math.toDegrees(this.viewer.camera.roll);
       this.$emit("cameraMoveEnd");
     },
     onMouseMove(event) {

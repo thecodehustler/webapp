@@ -54,8 +54,8 @@ export default {
       camera: new CameraParameters({
         position: {
           lng: 113,
-          lat: 30,
-          height: 300000
+          lat: 40,
+          height: 30000
         }
       }),
       locationWatcherStates: States.STOPPED
@@ -99,7 +99,16 @@ export default {
       this.cesiumData.DataSources.KMLData.push(
         new KMLData("/kmls/sample.kml").ready(ret => {
           console.log("New KML Loaded,", ret);
-          ret.viewer.flyTo(ret.cesiumObject);
+          this.$refs.viewer.flyTo(new CameraParameters({
+            position: {
+              lng: 117.62396258879075,
+              lat: 40.12260573122965,
+              height: 682.0914472453253
+            },
+            heading: 0,
+            pitch: -45,
+            roll: 0
+          }));
           this.imageryReady = true;
         })
       );
