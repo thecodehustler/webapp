@@ -4,7 +4,12 @@ module.exports = {
   "transpileDependencies": [
     "vuetify",
   ],
+
   crossorigin: 'anonymous',
+  productionSourceMap: false,
+  css: {
+    sourceMap: false,
+  }
 
   "configureWebpack": {
     resolve: {
@@ -13,6 +18,7 @@ module.exports = {
       }
     },
   },
+
   // chainWebpack: config => {
   //   config.when(process.env.NODE_ENV === 'production', config => {
   //     config.entry('app').clear().add('./src/main-prod.js');
@@ -51,5 +57,7 @@ module.exports = {
 
   // },
 
-  lintOnSave: false
+  lintOnSave: false,
+
+  productionSourceMap: false
 }
