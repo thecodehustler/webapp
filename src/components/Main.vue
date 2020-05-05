@@ -10,6 +10,7 @@
         @ready="onCesiumReady"
         :cameraParameters="camera"
         @selectedEntityChanged="entityChanged"
+        @mouseOnGlobe="mouseOnGlobe"
         ref="viewer"
       ></CesiumViewer>
       <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates"></MainToolbar>
@@ -35,8 +36,6 @@ import {
 } from "./cesium-viewer/CesiumViewerTypes";
 import { States } from "./location-button/LocationFAB";
 import CesiumHtmlOverlay from "./cesium-viewer/cesium-html-overlay/CesiumHtmlOverlay";
-// eslint-disable-next-line no-unused-vars
-import Vue from "vue";
 
 export default {
   data: () => {
@@ -50,7 +49,7 @@ export default {
           description: "TEXT TEXT"
         },
         sampleURL: "/info?landmarkID=1",
-        showArticle: false,
+        showArticle: false
       },
       camera: new CameraParameters({
         position: {
@@ -100,31 +99,44 @@ export default {
       this.cesiumData.DataSources.KMLData.push(
         new KMLData("/kmls/sample.kml").ready(ret => {
           console.log("New KML Loaded,", ret);
-          this.imageryReady = true;
           ret.viewer.flyTo(ret.cesiumObject);
+          this.imageryReady = true;
         })
       );
     },
     entityChanged(obj) {
-      console.log(obj.entity);
+      console.log(obj);
       if (Cesium.defined(obj.entity)) {
         this.debug.showArticle = true;
-
-      } else { // 在这里添加逻辑。s
+      } else {
+        // 在这里添加逻辑。
         this.debug.showArticle = false;
       }
     },
     onFABClick() {
       console.log("clicked.");
       this.locationWatcherStates = States.RUNNING;
-      switch(this.locationWatcherStates) {
+      switch (this.locationWatcherStates) {
         case States.RUNNING:
           this.locationWatcherStates = States.STOPPED;
       }
     },
+    mouseOnGlobe(obj) {
+      // 鼠标悬浮在某个尸体上的时候触发。
+      let pickedPrimitive = obj.viewer.scene.pick(obj.event.endPosition);
+      let pickedEntity = Cesium.defined(pickedPrimitive)
+        ? pickedPrimitive.id
+        : undefined;
+      if (Cesium.defined(this.cached) && Cesium.defined(this.cached.label)) {
+        this.cached.label.scale = 1.0;
+      }
+      if (Cesium.defined(pickedEntity) && Cesium.defined(pickedEntity.label)) {
+        pickedEntity.label.scale = 1.5;
+        this.cached = pickedEntity;
+      }
+    },
     locationUpdated(coord) {
       console.log(coord);
-      console.log(this.$refs.viewer);
     }
   },
   components: {
@@ -134,7 +146,16 @@ export default {
     MainToolbar
   },
   created() {},
-  computed: {}
+  computed: {},
+  watch: {
+    "debug.showArticle": function(newVal) {
+      if (!newVal) {
+        let v = this.$refs.viewer;
+        console.log(v);
+        v.clearSelection();
+      }
+    }
+  }
 };
 </script>
 

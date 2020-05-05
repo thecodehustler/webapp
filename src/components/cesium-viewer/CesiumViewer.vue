@@ -139,21 +139,12 @@ export default {
         ret.latitude = Cesium.Math.toDegrees(cartographic.latitude);
         ret.above = viewer.scene.globe.getHeight(cartographic);
         ret.height = cartographic.height;
-        this.$emit("mouseOnGlobe", ret);
+        let toEmit = {
+          viewer: this.viewer,
+          event: event
+        };
+        this.$emit("mouseOnGlobe", toEmit);
         this.debug.locationOnGlobe = ret;
-
-        // 鼠标悬浮在某个尸体上的时候触发。
-        let pickedPrimitive = viewer.scene.pick(event.endPosition);
-        let pickedEntity = Cesium.defined(pickedPrimitive)
-          ? pickedPrimitive.id
-          : undefined;
-        if (Cesium.defined(pickedEntity)) {
-          let toEmit = {
-            entity: pickedEntity,
-            viewer: this.viewer
-          }
-          this.$emit("hoverOnEntity", toEmit);
-        }
       }
     },
     onSelectedEntityChanged(entity) {
@@ -173,6 +164,10 @@ export default {
         });
       });
     },
+    clearSelection() {
+      this.viewer.selectedEntity = undefined;
+    },
+
     async getCesiumInstance() {
       if (this.cesiumInstance) {
         return this.cesiumInstance;

@@ -13,12 +13,13 @@ axios.get('/wx/ticket', {
     wx.config({
         debug: true,
         appId: 'wxf72802a4a9dc0581',
-        timestamp: ret.data.timestamp,// ?
+        timestamp: ret.data.timestamp,// ok
         nonceStr: ret.data.nonceStr, // ok
         signature: ret.data.signature, //ok
         jsApiList: ['getLocation', 'openLocation']
     });
     wx.ready(()=> {
+        console.log('wx ready');
         store.commit('wxReady'); // 
     });
     wx.error(e => {

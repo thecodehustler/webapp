@@ -1,7 +1,7 @@
 <template>
   <v-bottom-sheet v-model="contentShow" inset scrollable persistent>
-    <v-card height="85%">
-      <v-overlay value="contentError" absolute color="error">
+    <v-card max-height="90vh">
+      <v-overlay :value="errorReason != 0" absolute color="error">
         <v-row justify="center">
           <v-icon>mdi-alert-circle</v-icon>
         </v-row>
@@ -62,7 +62,6 @@ export default {
       },
       contentReady: false,
       contentLoading: false,
-      contentError: false,
       contentShow: false,
       errorReason: 0,
     };
@@ -74,7 +73,6 @@ export default {
     },
     show: {
       type: Boolean,
-      required: true
     },
     url: {
       type: String,
@@ -117,14 +115,17 @@ export default {
         .get(url)
         .then(value => {
           console.log("success,", value);
-          this.textInfo = value.data;
-          this.contentReady = true;
+          if (value.data.landmark_id) {
+            this.textInfo = value.data;
+            this.contentReady = true;
+          } else {
+            this.errorReason = 2; // 项目不存在
+          }
+
         })
         .catch(reason => {
           console.log(reason);
-          if (reason.response) {
-            this.errorReason = 2;
-          } else {
+          if (!reason.status) { // network error
             this.errorReason = 1;
           }
         })
