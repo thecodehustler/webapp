@@ -65,7 +65,6 @@ export default {
     onCesiumReady(cesiumInstance) {
       this.viewer = cesiumInstance.viewer;
       let viewer = cesiumInstance.viewer;
-      globalThis.Cesium = cesiumInstance.Cesium;
       this.debug = {};
       // Called when Cesium is ready.
       console.log("CesiumViewer is ready to operate.");

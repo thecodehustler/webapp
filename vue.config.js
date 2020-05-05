@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   "transpileDependencies": [
-    "vuetify"
+    "vuetify",
   ],
   crossorigin: 'anonymous',
 

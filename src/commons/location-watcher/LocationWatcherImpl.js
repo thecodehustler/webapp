@@ -99,8 +99,6 @@ class GeoWatch {
     this._cachedCoords = undefined;
   }
 
-
-
   get isWatching() {
     return this._watchID != undefined;
   }
@@ -108,7 +106,7 @@ class GeoWatch {
 
 if (!instance) {
   instance = new GeoWatch;
-  globalThis.GeoWatcher = instance;
+  // globalThis.GeoWatcher = instance;
 }
 
 const GEOWATCHER_STATES = {

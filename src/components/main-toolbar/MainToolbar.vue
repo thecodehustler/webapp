@@ -5,7 +5,7 @@
         <v-avatar color="indigo" size="36" v-show="wxReady">
           <span class="white--text">DC</span>
         </v-avatar>
-        <v-text-field hide-details prepend-inner-icon="mdi-magnify" single-line clearable dark v-model="textInput" solo label="搜索"></v-text-field>
+        <v-text-field hide-details prepend-inner-icon="mdi-magnify" single-line clearable dark v-model="textInput" label="搜索"></v-text-field>
         <v-btn @click="btnClicked" icon>
           <v-icon>{{iconText}}</v-icon>
         </v-btn>
