@@ -1,21 +1,99 @@
 <template>
   <v-container class="bottom-absolute">
     <v-card>
+      <v-expand-transition>
+        <SearchResultList
+          :data="result"
+          :state="searchState"
+          v-show="showResult && textInput != ''"
+        ></SearchResultList>
+      </v-expand-transition>
+
       <v-toolbar dense bottom>
-        <v-avatar color="indigo" size="36" v-show="wxReady">
-          <span class="white--text">DC</span>
-        </v-avatar>
-        <v-text-field hide-details prepend-inner-icon="mdi-magnify" single-line clearable dark v-model="textInput" label="搜索"></v-text-field>
-        <v-btn @click="btnClicked" icon>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn icon v-on="on">
+              <v-avatar color="indigo" size="36">
+                <span class="white--text">DC</span>
+              </v-avatar>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-list>
+              <v-list-item>
+                <v-list-item-avatar>
+                  <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                  <v-list-item-title>John Leider</v-list-item-title>
+                  <v-list-item-subtitle>Founder of Vuetify.js</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn color="error" text>{{$t('toolbar.log_out')}}</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
+
+        <v-divider vertical></v-divider>
+        <v-text-field
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          single-line
+          clearable
+          dark
+          v-model="textInput"
+          :label="$t('toolbar.search')"
+          @focus="showResult = true"
+          @blur="showResult = false"
+        ></v-text-field>
+
+        <!-- 暂时不要显示它 -->
+        <v-btn @click="btnClicked" icon v-if="false">
           <v-icon>{{iconText}}</v-icon>
         </v-btn>
+        <v-btn @click="goHome" icon>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on }">
+            <v-btn icon v-on="on">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list min-width="120">
+            <v-list-item>
+              <v-list-item-action>
+                <v-checkbox v-model="show3D" color="primary" @click="toggle3D"></v-checkbox>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>{{$t('toolbar.menu.show3d')}}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click="1">
+              <v-list-item-content>
+              <v-list-item-title>{{$t('toolbar.menu.about')}}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-toolbar>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import lodash from 'lodash';
+import lodash from "lodash";
+import Axios from "axios";
+import SearchResultList from "./SearchResultList";
+import { mapState } from "vuex";
 
 export const States = {
   STOPPED: 0, // 未开始
@@ -30,13 +108,18 @@ export default {
     return {
       count: 0,
       iconText: "mdi-crosshairs-gps",
-      textInput: ''
+      textInput: "",
+      result: [],
+      showResult: false,
+      searchState: 0,
+      show3d: false, // 我们默认不开这个。
     };
   },
   computed: {
-    wxReady() {
-      return this.$store.state.wx.ready;
-    }
+    ...mapState({
+      wxReady: state => state.wxState == 0,
+      userInfo: state => state.userInfo
+    })
   },
   props: {
     state: {
@@ -52,6 +135,7 @@ export default {
     // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
     // 请参考：https://lodash.com/docs#debounce
     this.debouncedGetEntries = lodash.debounce(this.searchQuery, 1500);
+    this.$store.dispatch();
   },
   methods: {
     start() {
@@ -81,39 +165,63 @@ export default {
       this.$emit("locBtnClick");
     },
     searchQuery() {
-      if (this.textInput !== '') {
+      if (this.textInput !== "") {
         var vm = this;
-        console.log('searchQuery HERE! 这里做一些异步操作。', vm);
+        Axios.get("/api/search", {
+          params: {
+            name: this.textInput
+          }
+        })
+          .then(ret => {
+            let data = ret.data;
+            console.log("search returned", data);
+            vm.searchState = 0;
+            vm.result = data;
+          })
+          .catch(reason => {
+            console.log(reason);
+            vm.searchState = 1;
+          });
       }
+    },
+    goHome() {
+      console.log("goHome");
+      this.$emit("goHome");
+    },
+    toggle3D() {
+
     }
   },
   watch: {
     // 当 State 发生改变时被调用。
-    state: function(newV) {
-      console.log(this);
-      switch (newV) {
-        case States.RUNNING:
-          console.log(this);
-          this.start();
-          break;
-        case States.STOPPED:
-          this.stop();
-          break;
-        case States.ERROR:
-          this.error();
-          break;
-        case States.PAUSED:
-          this.stop();
-          break;
-        default:
-          throw new RangeError("Unexpected state of FAB.");
-      }
-    }, 
+    // state: function(newV) {
+    //   console.log(this);
+    //   switch (newV) {
+    //     case States.RUNNING:
+    //       console.log(this);
+    //       this.start();
+    //       break;
+    //     case States.STOPPED:
+    //       this.stop();
+    //       break;
+    //     case States.ERROR:
+    //       this.error();
+    //       break;
+    //     case States.PAUSED:
+    //       this.stop();
+    //       break;
+    //     default:
+    //       throw new RangeError("Unexpected state of FAB.");
+    //   }
+    // },
     textInput: function(newVal) {
-      if (newVal !== '') {
+      if (newVal !== "") {
         this.debouncedGetEntries();
       }
     }
+  },
+  components: {
+    SearchResultList
   }
 };
 </script>

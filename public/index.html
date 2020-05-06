@@ -3,12 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
 
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roboto-fontface@0.10.0/css/roboto/roboto-fontface.css" as="style">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" as="style">
+    <!-- A workaround  -->
+    <script>
+      window.zip = {};
+    </script>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.68/Build/Cesium/ThirdParty/Workers/inflate.js"></script>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.68/Build/Cesium/ThirdParty/Workers/deflate.js"></script>
 
     <style>
       #app {
@@ -17,8 +23,6 @@
         top: 0;
         right: 0;
         bottom: 0;
-        /* height: 100vh; */
-        /* width: 100vw; */
         margin: 0;
         padding: 0;
         overflow-y: auto;

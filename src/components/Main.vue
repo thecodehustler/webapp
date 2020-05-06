@@ -13,8 +13,8 @@
         @mouseOnGlobe="mouseOnGlobe"
         ref="viewer"
       ></CesiumViewer>
-      <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates"></MainToolbar>
-      <ArticleOverlay :url="debug.sampleURL" v-model="debug.showArticle" ref="article"></ArticleOverlay>
+      <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates" ref="toolbar"></MainToolbar>
+      <ArticleOverlay ref="article"></ArticleOverlay>
     </div>
   </v-container>
 </template>
@@ -27,6 +27,17 @@ import CesiumViewer from "./cesium-viewer/CesiumViewer.vue";
 import ArticleOverlay from "./article-overlay/ArticleOverlay.vue";
 import MainToolbar from "./main-toolbar/MainToolbar.vue";
 
+let home = new CameraParameters({
+            position: {
+              lng: 117.62396258879075,
+              lat: 40.12260573122965,
+              height: 682.0914472453253
+            },
+            heading: 0,
+            pitch: -45,
+            roll: 0
+          });
+
 import {
   ViewerData,
   // eslint-disable-next-line no-unused-vars
@@ -35,7 +46,7 @@ import {
   KMLData
 } from "./cesium-viewer/CesiumViewerTypes";
 import { States } from "./location-button/LocationFAB";
-import CesiumHtmlOverlay from "./cesium-viewer/cesium-html-overlay/CesiumHtmlOverlay";
+import { mapState } from 'vuex';
 
 export default {
   data: () => {
@@ -48,7 +59,7 @@ export default {
           subtitle: "Sample subtitle",
           description: "TEXT TEXT"
         },
-        sampleURL: "/info?landmarkID=1",
+        sampleURL: "/api/info?landmarkID=2",
         showArticle: false
       },
       camera: new CameraParameters({
@@ -65,7 +76,6 @@ export default {
     onCesiumReady(cesiumInstance) {
       this.viewer = cesiumInstance.viewer;
       let viewer = cesiumInstance.viewer;
-      this.debug = {};
       // Called when Cesium is ready.
       console.log("CesiumViewer is ready to operate.");
       // console.log(Cesium); // Cesium 现在已经可以以一个全局变量的方式被访问。
@@ -79,7 +89,7 @@ export default {
 
       this.cesiumData.Primitives.Tilesets.push(
         new Tileset({
-          url: "http://127.0.0.1:7999/upgraded/Production_1.json",
+          url: Cesium.IonResource.fromAssetId(97412),
           onReady(e, t) {
             console.log(e, t);
 
@@ -88,7 +98,7 @@ export default {
                 modelMatrix: Cesium.Matrix4.fromTranslation(
                   e.boundingSphere.center
                 ),
-                length: 30000000.0,
+                length: 15000.0,
                 width: 2.0
               })
             );
@@ -96,29 +106,21 @@ export default {
         })
       );
       this.cesiumData.DataSources.KMLData.push(
-        new KMLData("/kmls/sample.kml").ready(ret => {
+        new KMLData("/kmls/sample.kmz").ready(ret => {
           console.log("New KML Loaded,", ret);
-          this.$refs.viewer.flyTo(new CameraParameters({
-            position: {
-              lng: 117.62396258879075,
-              lat: 40.12260573122965,
-              height: 682.0914472453253
-            },
-            heading: 0,
-            pitch: -45,
-            roll: 0
-          }));
+          this.$refs.viewer.flyTo(home);
           this.imageryReady = true;
         })
       );
+
+      this.$refs.toolbar.$on('goHome', () => {
+        this.$refs.viewer.flyTo(home);
+      })
     },
     entityChanged(obj) {
       console.log(obj);
-      if (Cesium.defined(obj.entity)) {
-        this.debug.showArticle = true;
-      } else {
-        // 在这里添加逻辑。
-        this.debug.showArticle = false;
+      if (obj.entity && obj.entity.kml.snippet && obj.entity.kml.snippet != '') {
+        this.$store.dispatch('loadFromURL', `/api/info?landmarkID=${obj.entity.kml.snippet}`)
       }
     },
     onFABClick() {
@@ -149,18 +151,21 @@ export default {
   },
   components: {
     CesiumViewer,
-    CesiumHtmlOverlay,
+    // CesiumHtmlOverlay,
     ArticleOverlay,
     MainToolbar
   },
   created() {},
-  computed: {},
+  computed: {
+    ...mapState({
+      open: state=>state.overlay.open,
+    })
+  },
   watch: {
-    "debug.showArticle": function(newVal) {
-      if (!newVal) {
+    open: function(newVal) {
+      if (!newVal) { // 文章预览关闭之后……
         let v = this.$refs.viewer;
-        console.log(v);
-        v.clearSelection();
+        v.clearSelection(); // 清除 Cesium 的选择。
       }
     }
   }

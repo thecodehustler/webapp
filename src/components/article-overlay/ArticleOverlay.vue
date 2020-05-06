@@ -1,7 +1,7 @@
 <template>
-  <v-bottom-sheet v-model="contentShow" inset scrollable persistent>
-    <v-card max-height="90vh">
-      <v-overlay :value="errorReason != 0" absolute color="error">
+  <v-bottom-sheet v-model="open" inset persistent max-width="425" scrollable>
+    <v-card>
+      <v-overlay :value="overlay.errorReason != 0" absolute color="error">
         <v-row justify="center">
           <v-icon>mdi-alert-circle</v-icon>
         </v-row>
@@ -9,36 +9,48 @@
           <h2 class="title">{{errorMessage}}</h2>
         </v-row>
         <v-row justify="center">
-            <v-btn @click="contentShow=false" color="error" text>知道了</v-btn>
+          <v-btn @click="close" color="error" text>知道了</v-btn>
         </v-row>
       </v-overlay>
-      <v-img
-        :aspect-ratio="16/9"
-        gradient="to bottom, rgba(100,115,201,.33), rgba(25,32,72,.7)"
-        src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"
-      >
-        <v-container class="fill-height align-content-end">
-          <v-btn icon right top absolute @click="contentShow=false">
-            <v-icon>mdi-close-circle</v-icon>
-          </v-btn>
-          <v-row>
-            <v-col v-if="contentReady">
-              <h2 class="heading">{{ textInfo.name }}</h2>
-              <div class="subheading">{{textInfo.subtitle}}</div>
-            </v-col>
-            <v-col v-else>
-              <v-progress-linear absolute bottom :active="contentLoading"></v-progress-linear>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-img>
-      <v-card-text v-if="contentReady">
-        <v-row>
-          <v-col>{{textInfo.description}}</v-col>
-        </v-row>
+
+      <v-card-text class="ma-0 pa-0">
+        <v-toolbar prominent height="120" color="primary">
+          <template slot="extension">
+            <v-container class="px-0 mx-0 mb-2">
+              <v-row>
+                <v-col v-if="overlay.contentReady">
+                  <h2 class="heading">{{ overlay.data.name }}</h2>
+                  <p class="subheading">{{overlay.data.subtitle}}</p>
+                </v-col>
+              </v-row>
+            </v-container>
+          </template>
+
+          <template slot="img">
+            <v-img
+              gradient="to bottom, rgba(100,115,201,.33), rgba(25,32,72,.7)"
+              :src="overlay.data.head_image_url"
+            ></v-img>
+          </template>
+
+          <template>
+            <v-spacer />
+            <v-btn icon @click="close">
+              <v-icon>mdi-close-circle</v-icon>
+            </v-btn>
+            <v-progress-linear absolute top :active="overlay.loading" indeterminate></v-progress-linear>
+          </template>
+        </v-toolbar>
+
+        <!-- <v-card-text v-if="overlay.contentReady"> -->
+        <!-- <v-container class="me-3 ps-3"> -->
+        <!-- <v-row>{{overlay.data.description}}</v-row> -->
+        <!-- </v-container> -->
+        <v-card-text class="text-as-is">{{overlay.data.description}}</v-card-text>
       </v-card-text>
-      <v-card-actions v-if="contentReady">
-        <v-btn :href="textInfo.mp_link" text>
+      <v-divider></v-divider>
+      <v-card-actions v-if="overlay.contentReady">
+        <v-btn :href="overlay.data.mp_link" text>
           {{$t('article.goto')}}
           <v-icon small>mdi-open-in-new</v-icon>
         </v-btn>
@@ -48,102 +60,68 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapState } from "vuex";
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-      textInfo: {
-        // 需要与后端返回的数据一致
-        name: "",
-        subtitle: "",
-        top_image_url: "",
-        description: "",
-        mp_link: ""
-      },
-      contentReady: false,
-      contentLoading: false,
-      contentShow: false,
-      errorReason: 0,
+      // textInfo: {
+      //   // 需要与后端返回的数据一致
+      //   name: "",
+      //   subtitle: "",
+      //   top_image_url: "",
+      //   description: "",
+      //   mp_link: ""
+      // },
+      // contentReady: false,
+      // contentLoading: false,
+      // contentShow: false,
+      // errorReason: 0,
     };
   },
-  props: {
-    debugInfo: {
-      type: Object,
-      required: false
-    },
-    show: {
-      type: Boolean,
-    },
-    url: {
-      type: String,
-      required: false
-    }
-  },
-  created() {
-    if (this.$props.debugInfo) {
-      this.textInfo = this.$props.debugInfo;
-      this.contentReady = true;
-      this.contentShow = this.show; // 初始值.
-    }
-  },
-  model: {
-    prop: "show",
-    event: "update"
-  },
-  mounted() {
-    if (this.$props.url) {
-      this.loadFromURL(this.$props.url);
-    }
-  },
+  // props: {
+  //   debugInfo: {
+  //     type: Object,
+  //     required: false
+  //   },
+  //   show: {
+  //     type: Boolean,
+  //   },
+  //   url: {
+  //     type: String,
+  //     required: false
+  //   }
+  // },
   computed: {
     errorMessage() {
-      switch(this.errorReason) {
-        case 0: return '正常。';
-        case 1: return this.$t('article.errors.network');
-        case 2: return this.$t('article.errors.not_exist');
-        default: return this.$t('article.errors.unknown');
+      switch (this.overlay.errorReason) {
+        case 0:
+          return "正常。";
+        case 1:
+          return this.$t("article.errors.network");
+        case 2:
+          return this.$t("article.errors.not_exist");
+        case 3:
+          return this.$t("article.errors.internal_server_error");
+        default:
+          return this.$t("article.errors.unknown");
       }
-    }
+    },
+    ...mapState({
+      open: state => state.overlay.open,
+      overlay: state => state.overlay.overlay
+    })
   },
   methods: {
-    selfClose() {
-      this.show = false;
-    },
-    loadFromURL(url) {
-      this.contentLoading = true;
-      axios
-        .get(url)
-        .then(value => {
-          console.log("success,", value);
-          if (value.data.landmark_id) {
-            this.textInfo = value.data;
-            this.contentReady = true;
-          } else {
-            this.errorReason = 2; // 项目不存在
-          }
-
-        })
-        .catch(reason => {
-          console.log(reason);
-          if (!reason.status) { // network error
-            this.errorReason = 1;
-          }
-        })
-        .finally(() => {
-          this.contentLoading = false;
-        });
-    }
-  },
-  watch: {
-    contentShow: function(newVal) {
-      this.$emit("update", newVal);
-    },
-    show: function(newVal) {
-      this.contentShow = newVal;
-    }
+    ...mapMutations({
+      close: "close"
+    })
   }
 };
 </script>
 
 <style>
+.text-as-is {
+  white-space: pre-wrap;
+}
 </style>

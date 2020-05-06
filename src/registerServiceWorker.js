@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import { register } from 'register-service-worker'
-
+// Try to workaround with this.
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready () {
@@ -11,7 +11,8 @@ if (process.env.NODE_ENV === 'production') {
       )
     },
     registered () {
-      console.log('Service worker has been registered.')
+      console.log('Service worker has been registered.');
+      // importScripts('https://cesium.com/downloads/cesiumjs/releases/1.68/Build/Cesium/ThirdParty/Workers/inflate.js');
     },
     cached () {
       console.log('Content has been cached for offline use.')

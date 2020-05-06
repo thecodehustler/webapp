@@ -9,7 +9,16 @@ module.exports = {
   productionSourceMap: false,
   css: {
     sourceMap: false,
-  }
+  },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:80',
+        ws: true,
+        changeOrigin: true,
+      }
+    }
+  },
 
   "configureWebpack": {
     resolve: {
@@ -59,5 +68,4 @@ module.exports = {
 
   lintOnSave: false,
 
-  productionSourceMap: false
 }

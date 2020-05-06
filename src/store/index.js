@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+import modOverlay from './module-overlay';
+
 export default new Vuex.Store({
   state: {
     landed: false,
@@ -15,7 +17,7 @@ export default new Vuex.Store({
     },
     wx: {
       ready: false,
-    }
+    },
   },
   mutations: {
     userLanded(state) { // 关闭 Overlay 之后更新这一状态。
@@ -30,12 +32,10 @@ export default new Vuex.Store({
     wxReady(state) {
       state.wx.ready = true;
     },
-    userInfoObtained(state, payload) {
-
-    }
   },
   actions: {
   },
   modules: {
+    overlay: modOverlay
   }
 })

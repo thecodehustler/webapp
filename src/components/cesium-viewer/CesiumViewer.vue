@@ -67,7 +67,7 @@ import * as CVDataTypes from "./CesiumViewerTypes";
 function setupViewer(vm, viewer) {
   viewer.imageryLayers.removeAll(); // 移除掉自带的那个图层；
   viewer.scene.screenSpaceCameraController.minimumZoomDistance = 100; //
-  viewer.scene.screenSpaceCameraController.maximumZoomDistance = 22000000; //相机高度的最大值
+  viewer.scene.screenSpaceCameraController.maximumZoomDistance = 300000; //相机高度的最大值
   viewer.scene.globe.depthTestAgainstTerrain = true;
 }
 
@@ -82,7 +82,7 @@ export default {
         show: true,
         locationOnGlobe: new CVDataTypes.LocationOnGlobe(),
         cameraPosition: new CVDataTypes.CameraParameters(),
-        hide: false,
+        hide: true,
       }
     };
   },
@@ -118,6 +118,11 @@ export default {
   },
   methods: {
     onCesiumReady(cesiumInstance) {
+      // a workaround to load KMZ
+      Cesium.zip.useWebWorkers = false;
+      Cesium.zip.Inflater = window.zip.Inflater;
+      Cesium.zip.Deflater = window.zip.Deflater;      
+
       this.viewer = cesiumInstance.viewer; // 保留一份本地副本。
       let viewer = this.viewer;
       console.log("Cesium is ready to operate.");

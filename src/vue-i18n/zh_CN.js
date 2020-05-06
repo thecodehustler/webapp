@@ -18,9 +18,18 @@ export default {
       network: '与服务器的连接发生错误。',
       not_exist: '请求的项目不存在。',
       corrupted: '无法理解服务器传输的数据。\n请向服务器管理员反馈该问题。',
+      internal_server_error: '服务器内部错误。',
       unknown: '未知错误。'
     },
     goto: '前往公众号查看'
+  },
+  toolbar: {
+    search: '搜索…',
+    log_out: '登出',
+    menu: {
+      show3d: '显示 3D 建筑',
+      about: '关于'
+    }
   }
 
 }
