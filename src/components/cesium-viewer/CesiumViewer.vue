@@ -34,8 +34,9 @@
       <vc-primitive-tileset
         v-for="tileset in innerData.Primitives.Tilesets"
         :url="tileset.url"
-        :key="tileset.url"
+        :key="tileset.key"
         :modelMatrix="tileset.modelMatrix"
+        :show="tileset.show"
         @readyPromise="tileset.proxyReady($event, tileset)"
       ></vc-primitive-tileset>
       <!-- Imagerys -->

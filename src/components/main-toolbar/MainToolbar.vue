@@ -10,39 +10,39 @@
       </v-expand-transition>
 
       <v-toolbar dense bottom>
-        <v-menu offset-y>
-          <template v-slot:activator="{ on }">
-            <v-btn icon v-on="on">
-              <v-avatar color="indigo" size="36">
-                <span class="white--text">DC</span>
-              </v-avatar>
-            </v-btn>
-          </template>
-          <v-card>
-            <v-list>
-              <v-list-item>
-                <v-list-item-avatar>
-                  <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-                </v-list-item-avatar>
+          <v-menu offset-y transition="v-slide-y-transition">
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-avatar color="indigo" size="36">
+                  <p v-if="!userInfo.avatar_url">DC</p>
+                  <v-img :src="userInfo.avatar_url"></v-img>
+                </v-avatar>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-list>
+                <v-list-item>
+                  <v-list-item-avatar size="64">
+                    <img :src="userInfo.avatar_url" height="64" width="64" />
+                  </v-list-item-avatar>
 
-                <v-list-item-content>
-                  <v-list-item-title>John Leider</v-list-item-title>
-                  <v-list-item-subtitle>Founder of Vuetify.js</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+                  <v-list-item-content>
+                    <v-list-item-title>{{userInfo.name}}</v-list-item-title>
+                    <v-list-item-subtitle>{{userInfo.id}}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
 
-            <v-divider></v-divider>
+              <v-divider></v-divider>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-card-actions>
+                <v-spacer></v-spacer>
 
-              <v-btn color="error" text>{{$t('toolbar.log_out')}}</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
+                <v-btn color="error" text>{{$t('toolbar.log_out')}}</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-menu>
 
-        <v-divider vertical></v-divider>
         <v-text-field
           hide-details
           prepend-inner-icon="mdi-magnify"
@@ -70,16 +70,13 @@
           </template>
           <v-list min-width="120">
             <v-list-item>
-              <v-list-item-action>
-                <v-checkbox v-model="show3D" color="primary" @click="toggle3D"></v-checkbox>
-              </v-list-item-action>
               <v-list-item-content>
-                <v-list-item-title>{{$t('toolbar.menu.show3d')}}</v-list-item-title>
+                <v-list-item-title><v-checkbox v-model="show3D" color="primary" :label="$t('toolbar.menu.show3d')" /></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click="1">
               <v-list-item-content>
-              <v-list-item-title>{{$t('toolbar.menu.about')}}</v-list-item-title>
+                <v-list-item-title>{{$t('toolbar.menu.about')}}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -112,13 +109,13 @@ export default {
       result: [],
       showResult: false,
       searchState: 0,
-      show3d: false, // 我们默认不开这个。
+      show3D: false // 我们默认不开这个。
     };
   },
   computed: {
     ...mapState({
-      wxReady: state => state.wxState == 0,
-      userInfo: state => state.userInfo
+      wxReady: state => state.wx.wxState == 0,
+      userInfo: state => state.wx.userInfo
     })
   },
   props: {
@@ -135,7 +132,13 @@ export default {
     // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
     // 请参考：https://lodash.com/docs#debounce
     this.debouncedGetEntries = lodash.debounce(this.searchQuery, 1500);
-    this.$store.dispatch();
+    this.$store.commit("updateInfo", {
+      // Some fake user info.
+      name: "DaChuang User",
+      id: "daxueshengchaungye!",
+      avatar_url:
+        "https://gitlab.com/uploads/-/system/user/avatar/615016/avatar.png"
+    });
   },
   methods: {
     start() {
@@ -188,9 +191,6 @@ export default {
       console.log("goHome");
       this.$emit("goHome");
     },
-    toggle3D() {
-
-    }
   },
   watch: {
     // 当 State 发生改变时被调用。
@@ -218,6 +218,9 @@ export default {
       if (newVal !== "") {
         this.debouncedGetEntries();
       }
+    },
+    show3D: function(newVal) {
+      this.$emit('show3DToggled', newVal);
     }
   },
   components: {

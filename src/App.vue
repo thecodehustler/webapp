@@ -26,6 +26,9 @@ export default {
     dark: function() {
       return this.$store.state.darkMode;
     }
+  },
+  created() {
+    this.$store.dispatch('initWX'); // 开始准备微信
   }
 };
 </script>

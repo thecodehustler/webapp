@@ -20,6 +20,9 @@ const mod = {
         },
         wxFail(state) {
             state.wxState = 1;
+        },
+        updateInfo(state, info) {
+            state.userInfo = info;
         }
     },
     actions: {

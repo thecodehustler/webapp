@@ -13,7 +13,7 @@
         @mouseOnGlobe="mouseOnGlobe"
         ref="viewer"
       ></CesiumViewer>
-      <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates" ref="toolbar"></MainToolbar>
+      <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates" ref="toolbar" @show3DToggled="show3DToggle"></MainToolbar>
       <ArticleOverlay ref="article"></ArticleOverlay>
     </div>
   </v-container>
@@ -89,6 +89,8 @@ export default {
 
       this.cesiumData.Primitives.Tilesets.push(
         new Tileset({
+          show: false,
+          key: '1',
           url: Cesium.IonResource.fromAssetId(97412),
           onReady(e, t) {
             console.log(e, t);
@@ -147,6 +149,9 @@ export default {
     },
     locationUpdated(coord) {
       console.log(coord);
+    },
+    show3DToggle(state) {
+      this.cesiumData.Primitives.Tilesets[0].show = state;
     }
   },
   components: {

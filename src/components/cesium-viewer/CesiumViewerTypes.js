@@ -20,6 +20,7 @@ export function CameraParameters(options) {
 
 export class Tileset {
   constructor(options) {
+    this.show = false;
     LD.assign(this, options);
     this.proxyReady = function (vueEvent, tileset) {
       console.log('proxy called.');

@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import modOverlay from './module-overlay';
+import modWx from './module.wx';
 
 export default new Vuex.Store({
   state: {
@@ -14,9 +15,6 @@ export default new Vuex.Store({
       id: '',
       avatarURL: '',
       name: ''
-    },
-    wx: {
-      ready: false,
     },
   },
   mutations: {
@@ -36,6 +34,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    overlay: modOverlay
+    overlay: modOverlay,
+    wx: modWx
   }
 })
