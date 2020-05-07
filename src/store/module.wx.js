@@ -3,6 +3,7 @@ import axios from "axios";
 
 const APPID = 'wxf72802a4a9dc0581';
 
+// 暂时是这样的了。
 let thisURL = window.location.href.split('#')[0];
 
 const mod = {
@@ -27,7 +28,7 @@ const mod = {
     },
     actions: {
         initWX({commit}) {
-            console.log('obtaining signature...');
+            console.log('obtaining signature from our server...');
             axios.get('/wx/ticket', {
                 params: {
                     url: thisURL,

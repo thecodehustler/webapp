@@ -17,10 +17,10 @@ const mod = {
     close(state) {
       state.open = false;
     },
-    updateErrorReason(state, reason) {
+    updateErrorReason(state, reason) { 
       state.overlay.errorReason = reason;
     },
-    startLoading(state) {
+    startLoading(state) { // 让 UI 变为正在加载的状态。
       state.overlay.errorReason = 0; // 重设错误。
       state.overlay.loading = true;
       state.overlay.contentReady = false;
@@ -30,7 +30,8 @@ const mod = {
     },
     updateData(state, data) {
       if (data.head_image_url == null) {
-        data.head_image_url = '';
+        data.head_image_url = ' '; // 传一个无用的数据，强迫 IMG 刷新。
+        // SB Vuetify 是你逼我的。
       }
       state.overlay.data = data
     },
@@ -45,6 +46,7 @@ const mod = {
        *  请求完之后把数据填充进去。
        */
       let errorReason = 0;
+      commit('updateData', {}); // 清空之前的数据
       let data = {};
       commit('open'); // 打开面板
       commit('startLoading');

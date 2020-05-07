@@ -7,9 +7,11 @@ module.exports = {
 
   crossorigin: 'anonymous',
   productionSourceMap: false,
+
   css: {
     sourceMap: false,
   },
+
   devServer: {
     proxy: {
       '/api': {
@@ -68,4 +70,15 @@ module.exports = {
 
   lintOnSave: false,
 
+  pluginOptions: {
+    prerenderSpa: {
+      registry: undefined,
+      renderRoutes: [
+        '/'
+      ],
+      useRenderEvent: false,
+      headless: false,
+      onlyProduction: true
+    }
+  }
 }

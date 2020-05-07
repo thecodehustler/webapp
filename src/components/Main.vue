@@ -3,7 +3,7 @@
     <v-overlay absolute opacity="0.9" :value="!imageryReady">
       <v-progress-circular size="96" indeterminate></v-progress-circular>
     </v-overlay>
-    <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher>
+    <!-- <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher> -->
     <div class="viewer-fill fixed">
       <CesiumViewer
         :innerData="cesiumData"
@@ -13,7 +13,9 @@
         @mouseOnGlobe="mouseOnGlobe"
         ref="viewer"
       ></CesiumViewer>
-      <MainToolbar @locBtnClick="onFABClick" :state="locationWatcherStates" ref="toolbar" @show3DToggled="show3DToggle"></MainToolbar>
+      <MainToolbar
+        ref="toolbar"
+      ></MainToolbar>
       <ArticleOverlay ref="article"></ArticleOverlay>
     </div>
   </v-container>
@@ -28,15 +30,17 @@ import ArticleOverlay from "./article-overlay/ArticleOverlay.vue";
 import MainToolbar from "./main-toolbar/MainToolbar.vue";
 
 let home = new CameraParameters({
-            position: {
-              lng: 117.62396258879075,
-              lat: 40.12260573122965,
-              height: 682.0914472453253
-            },
-            heading: 0,
-            pitch: -45,
-            roll: 0
-          });
+  position: {
+    lng: 117.62396258879075,
+    lat: 40.12260573122965,
+    height: 682.0914472453253
+  },
+  heading: 0,
+  pitch: -45,
+  roll: 0
+});
+
+let tileset = undefined;
 
 import {
   ViewerData,
@@ -46,22 +50,22 @@ import {
   KMLData
 } from "./cesium-viewer/CesiumViewerTypes";
 import { States } from "./location-button/LocationFAB";
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   data: () => {
     return {
       cesiumData: new ViewerData(),
       imageryReady: false,
-      debug: {
-        sampleArticle: {
-          name: "Sample Title",
-          subtitle: "Sample subtitle",
-          description: "TEXT TEXT"
-        },
-        sampleURL: "/api/info?landmarkID=2",
-        showArticle: false
-      },
+      // debug: {
+      //   sampleArticle: {
+      //     name: "Sample Title",
+      //     subtitle: "Sample subtitle",
+      //     description: "TEXT TEXT"
+      //   },
+      //   sampleURL: "/api/info?landmarkID=2",
+      //   showArticle: false
+      // },
       camera: new CameraParameters({
         position: {
           lng: 113,
@@ -87,26 +91,16 @@ export default {
         }
       }); // 加入 Google 地球图层。
 
-      this.cesiumData.Primitives.Tilesets.push(
-        new Tileset({
-          show: false,
-          key: '1',
-          url: Cesium.IonResource.fromAssetId(97412),
-          onReady(e, t) {
-            console.log(e, t);
+      Cesium.IonResource.fromAssetId(97713).then(resURL => {
+        this.tileset = viewer.scene.primitives.add(
+          new Cesium.Cesium3DTileset({
+            url: resURL,
+            show: this.show3D
+          })
+        );
+        console.log(this.tileset);
+      }); 
 
-            viewer.scene.primitives.add(
-              new Cesium.DebugModelMatrixPrimitive({
-                modelMatrix: Cesium.Matrix4.fromTranslation(
-                  e.boundingSphere.center
-                ),
-                length: 15000.0,
-                width: 2.0
-              })
-            );
-          }
-        })
-      );
       this.cesiumData.DataSources.KMLData.push(
         new KMLData("/kmls/sample.kmz").ready(ret => {
           console.log("New KML Loaded,", ret);
@@ -115,24 +109,31 @@ export default {
         })
       );
 
-      this.$refs.toolbar.$on('goHome', () => {
+      this.$refs.toolbar.$on("goHome", () => {
         this.$refs.viewer.flyTo(home);
-      })
+      });
     },
     entityChanged(obj) {
       console.log(obj);
-      if (obj.entity && obj.entity.kml.snippet && obj.entity.kml.snippet != '') {
-        this.$store.dispatch('loadFromURL', `/api/info?landmarkID=${obj.entity.kml.snippet}`)
+      if (
+        obj.entity &&
+        obj.entity.kml.snippet &&
+        obj.entity.kml.snippet != ""
+      ) {
+        this.$store.dispatch(
+          "loadFromURL",
+          `/api/info?landmarkID=${obj.entity.kml.snippet}`
+        );
       }
     },
-    onFABClick() {
-      console.log("clicked.");
-      this.locationWatcherStates = States.RUNNING;
-      switch (this.locationWatcherStates) {
-        case States.RUNNING:
-          this.locationWatcherStates = States.STOPPED;
-      }
-    },
+    // onFABClick() {
+    //   console.log("clicked.");
+    //   this.locationWatcherStates = States.RUNNING;
+    //   switch (this.locationWatcherStates) {
+    //     case States.RUNNING:
+    //       this.locationWatcherStates = States.STOPPED;
+    //   }
+    // },
     mouseOnGlobe(obj) {
       // 鼠标悬浮在某个尸体上的时候触发。
       let pickedPrimitive = obj.viewer.scene.pick(obj.event.endPosition);
@@ -143,34 +144,34 @@ export default {
         this.cached.label.scale = 1.0;
       }
       if (Cesium.defined(pickedEntity) && Cesium.defined(pickedEntity.label)) {
-        pickedEntity.label.scale = 1.5;
+        pickedEntity.label.scale = 1.3;
         this.cached = pickedEntity;
       }
     },
-    locationUpdated(coord) {
-      console.log(coord);
-    },
-    show3DToggle(state) {
-      this.cesiumData.Primitives.Tilesets[0].show = state;
-    }
   },
   components: {
     CesiumViewer,
-    // CesiumHtmlOverlay,
     ArticleOverlay,
     MainToolbar
   },
   created() {},
   computed: {
     ...mapState({
-      open: state=>state.overlay.open,
+      open: state => state.overlay.open,
+      show3D: state => state.show3DBuildings
     })
   },
   watch: {
     open: function(newVal) {
-      if (!newVal) { // 文章预览关闭之后……
+      if (!newVal) {
+        // 文章预览关闭之后……
         let v = this.$refs.viewer;
-        v.clearSelection(); // 清除 Cesium 的选择。
+        v.clearSelection(); // 清除 Cesium 的选择状态。
+      }
+    },
+    show3D: function(newVal) {
+      if (this.tileset) {
+        this.tileset.show = newVal;
       }
     }
   }

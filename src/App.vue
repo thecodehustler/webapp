@@ -4,7 +4,7 @@
       <Main/>
     </v-content>
     <v-footer>
-      备案号：XXXXXXXXX
+      <a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a>
     </v-footer>
   </v-app>
 </template>

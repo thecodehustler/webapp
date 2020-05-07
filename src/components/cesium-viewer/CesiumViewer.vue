@@ -1,7 +1,8 @@
 <template>
   <div class="root">
-    <div class="debug-float" v-if="debug.show">
-      <v-card>
+    
+    <!-- <div class="debug-float" v-if="debug.show">
+      <v-card max-height="320">
         <v-card-title @click="debug.hide = !debug.hide">{{$t("home.debug_Title")}}</v-card-title>
         <v-slide-y-transition>
         <v-card-text v-if="!debug.hide">
@@ -15,7 +16,7 @@
         </v-card-text>
         </v-slide-y-transition>
       </v-card>
-    </div>
+    </div> -->
 
     <vc-viewer
       @ready="onCesiumReady"
@@ -79,12 +80,12 @@ export default {
   name: "CesiumViewer",
   data() {
     return {
-      debug: {
-        show: true,
-        locationOnGlobe: new CVDataTypes.LocationOnGlobe(),
-        cameraPosition: new CVDataTypes.CameraParameters(),
-        hide: true,
-      }
+      // debug: {
+      //   show: true,
+      //   locationOnGlobe: new CVDataTypes.LocationOnGlobe(),
+      //   cameraPosition: new CVDataTypes.CameraParameters(),
+      //   hide: true,
+      // }
     };
   },
   props: {
@@ -117,12 +118,14 @@ export default {
       this.viewer.scene.camera.flyTo(o);
     };
   },
-  methods: {
+  methods: { // Called when Cesium and viewer is ready.
     onCesiumReady(cesiumInstance) {
-      // a workaround to load KMZ
+      // 当前版本的 Cesium 有一个 bug，
+      // 导致无法加载用于解压被压缩过的 KMZ 的 Worker.
+      // 这里与 HTML 代码配对，来直接载入
       Cesium.zip.useWebWorkers = false;
       Cesium.zip.Inflater = window.zip.Inflater;
-      Cesium.zip.Deflater = window.zip.Deflater;      
+      Cesium.zip.Deflater = window.zip.Deflater;
 
       this.viewer = cesiumInstance.viewer; // 保留一份本地副本。
       let viewer = this.viewer;
@@ -134,7 +137,7 @@ export default {
       this.$emit("cameraMoveStart");
     },
     onCameraMoveEnd() {
-      let camP = this.debug.cameraPosition;
+      let camP = new CVDataTypes.CameraParameters();
       let cat = this.viewer.camera.positionCartographic;
       camP.position = {
         lat: Cesium.Math.toDegrees(cat.latitude),
@@ -144,7 +147,7 @@ export default {
       camP.heading = Cesium.Math.toDegrees(this.viewer.camera.heading);
       camP.pitch = Cesium.Math.toDegrees(this.viewer.camera.pitch);
       camP.roll = Cesium.Math.toDegrees(this.viewer.camera.roll);
-      this.$emit("cameraMoveEnd");
+      this.$emit("cameraMoveEnd", camP);
     },
     onMouseMove(event) {
       let ret = new CVDataTypes.LocationOnGlobe();
@@ -164,7 +167,7 @@ export default {
           event: event
         };
         this.$emit("mouseOnGlobe", toEmit);
-        this.debug.locationOnGlobe = ret;
+        // this.debug.locationOnGlobe = ret;
       }
     },
     onSelectedEntityChanged(entity) {
@@ -172,30 +175,34 @@ export default {
         entity,
         viewer: this.viewer
       };
-      this.$emit("selectedEntityChanged", toEmit);
+      this.$nextTick(() => {
+        this.$emit("selectedEntityChanged", toEmit);
+        // 尝试规避一些鼠标单击事件的问题。
+      })
     },
-    resolveWhenReady() {
-      return new Promise(resolve => {
-        let id = setInterval(() => {
-          if (this.cesiumInstance) {
-            resolve(this.cesiumInstance);
-            clearInterval(id);
-          }
-        });
-      });
-    },
+    // resolveWhenReady() {
+    //   return new Promise(resolve => {
+    //     let id = setInterval(() => {
+    //       if (this.cesiumInstance) {
+    //         resolve(this.cesiumInstance);
+    //         clearInterval(id);
+    //       }
+    //     });
+    //   });
+    // },
+    // 这些方法事实上没有被使用了
     clearSelection() {
       this.viewer.selectedEntity = undefined;
     },
 
-    async getCesiumInstance() {
-      if (this.cesiumInstance) {
-        return this.cesiumInstance;
-      } else {
-        return await this.resolveWhenReady();
-      }
-    },
-    getVCViewer() {}
+    // async getCesiumInstance() {
+    //   if (this.cesiumInstance) {
+    //     return this.cesiumInstance;
+    //   } else {
+    //     return await this.resolveWhenReady();
+    //   }
+    // },
+    // getVCViewer() {}
   }
 };
 </script>
@@ -208,11 +215,11 @@ div.root {
   margin: 0;
   overflow: hidden;
 }
-
+/* 
 div.debug-float {
   position: fixed;
   left: 4px;
   top: 4px;
   z-index: 9999;
-}
+} */
 </style>

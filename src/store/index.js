@@ -16,6 +16,7 @@ export default new Vuex.Store({
       avatarURL: '',
       name: ''
     },
+    show3DBuildings: false
   },
   mutations: {
     userLanded(state) { // 关闭 Overlay 之后更新这一状态。
@@ -27,9 +28,9 @@ export default new Vuex.Store({
     darkMode(state, payload) {
       state.darkMode = payload;
     },
-    wxReady(state) {
-      state.wx.ready = true;
-    },
+    toggle3DBuildings(state, option) {
+      state.show3DBuildings = option;
+    }
   },
   actions: {
   },

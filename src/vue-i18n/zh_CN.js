@@ -29,7 +29,8 @@ export default {
     menu: {
       show3d: '显示 3D 建筑',
       about: '关于'
-    }
+    },
+    search_error: '尝试搜索时出错。'
   }
 
 }

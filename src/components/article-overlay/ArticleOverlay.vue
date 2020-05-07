@@ -1,6 +1,7 @@
 <template>
-  <v-bottom-sheet v-model="open" inset persistent max-width="425" scrollable>
+  <v-bottom-sheet v-model="open" inset max-width="425" scrollable persistent no-click-animation>
     <v-card>
+      <!-- 显示错误信息用的 -->
       <v-overlay :value="overlay.errorReason != 0" absolute color="error">
         <v-row justify="center">
           <v-icon>mdi-alert-circle</v-icon>
@@ -12,9 +13,30 @@
           <v-btn @click="close" color="error" text>知道了</v-btn>
         </v-row>
       </v-overlay>
-
+      <!-- 由于 Bottom Sheet 的一些限制，这里直接用 Card Text 承载内容。
+      并移除掉内边距、外边距。-->
       <v-card-text class="ma-0 pa-0">
-        <v-toolbar prominent height="120" color="primary">
+        <v-img
+          gradient="to bottom, rgba(100,115,201,.33), rgba(25,32,72,.7)"
+          :src="overlay.data.head_image_url"
+          lazy-src="/placeholder.jpg"
+          height="180"
+        >
+          <v-btn icon right absolute @click="close">
+            <v-icon>mdi-close-circle</v-icon>
+          </v-btn>
+          <v-progress-linear absolute top :active="overlay.loading" indeterminate></v-progress-linear>
+
+          <v-container class="fill-height align-content-end pb-0">
+            <v-row v-if="overlay.contentReady" class="pb-0 mb-0">
+              <v-col class="mb-0">
+                <h2 class="headline font-weight-medium">{{ overlay.data.name }}</h2>
+                <p class="subtitle-1 mb-0 pb-0">{{ overlay.data.subtitle }}</p>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-img>
+        <!-- <v-toolbar prominent height="120" color="primary">
           <template slot="extension">
             <v-container class="px-0 mx-0 mb-2">
               <v-row>
@@ -38,23 +60,27 @@
             <v-btn icon @click="close">
               <v-icon>mdi-close-circle</v-icon>
             </v-btn>
-            <v-progress-linear absolute top :active="overlay.loading" indeterminate></v-progress-linear>
           </template>
-        </v-toolbar>
+        </v-toolbar>-->
 
         <!-- <v-card-text v-if="overlay.contentReady"> -->
         <!-- <v-container class="me-3 ps-3"> -->
         <!-- <v-row>{{overlay.data.description}}</v-row> -->
         <!-- </v-container> -->
-        <v-card-text class="text-as-is">{{overlay.data.description}}</v-card-text>
+        <v-slide-y-transition>
+          <v-card-text class="text-as-is" v-show="overlay.contentReady">{{overlay.data.description}}</v-card-text>
+        </v-slide-y-transition>
       </v-card-text>
       <v-divider></v-divider>
-      <v-card-actions v-if="overlay.contentReady">
-        <v-btn :href="overlay.data.mp_link" text>
-          {{$t('article.goto')}}
-          <v-icon small>mdi-open-in-new</v-icon>
-        </v-btn>
-      </v-card-actions>
+      <v-expand-transition>
+        <v-card-actions v-show="overlay.contentReady">
+          <v-spacer />
+          <v-btn :href="overlay.data.mp_link" text :disabled="!overlay.data.mp_link">
+            {{$t('article.goto')}}
+            <v-icon small>mdi-open-in-new</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-expand-transition>
     </v-card>
   </v-bottom-sheet>
 </template>
@@ -108,9 +134,17 @@ export default {
       }
     },
     ...mapState({
-      open: state => state.overlay.open,
       overlay: state => state.overlay.overlay
-    })
+    }),
+    open: {
+      set(val) {
+        if (val == false)
+        this.$store.commit('close');
+      },
+      get() {
+        return this.$store.state.overlay.open;
+      }
+    }
   },
   methods: {
     ...mapMutations({

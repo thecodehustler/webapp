@@ -1,5 +1,8 @@
 <template>
   <v-container class="bottom-absolute">
+    <v-dialog v-model="showAbout">
+      <About />
+    </v-dialog>
     <v-card>
       <v-expand-transition>
         <SearchResultList
@@ -21,7 +24,7 @@
             </template>
             <v-card>
               <v-list>
-                <v-list-item>
+                <v-list-item @click.stop="">
                   <v-list-item-avatar size="64">
                     <img :src="userInfo.avatar_url" height="64" width="64" />
                   </v-list-item-avatar>
@@ -62,6 +65,7 @@
         <v-btn @click="goHome" icon>
           <v-icon>mdi-home</v-icon>
         </v-btn>
+        <!-- 三点菜单 -->
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <v-btn icon v-on="on">
@@ -74,7 +78,7 @@
                 <v-list-item-title><v-checkbox v-model="show3D" color="primary" :label="$t('toolbar.menu.show3d')" /></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click="1">
+            <v-list-item @click="openAboutDialog">
               <v-list-item-content>
                 <v-list-item-title>{{$t('toolbar.menu.about')}}</v-list-item-title>
               </v-list-item-content>
@@ -91,6 +95,9 @@ import lodash from "lodash";
 import Axios from "axios";
 import SearchResultList from "./SearchResultList";
 import { mapState } from "vuex";
+import AsyncComponents from '../../commons/async-components/AsyncComponents';
+
+let About = AsyncComponents.build('views/About.vue');
 
 export const States = {
   STOPPED: 0, // 未开始
@@ -109,7 +116,8 @@ export default {
       result: [],
       showResult: false,
       searchState: 0,
-      show3D: false // 我们默认不开这个。
+      show3D: false, // 我们默认不开这个。
+      showAbout: false,
     };
   },
   computed: {
@@ -119,10 +127,10 @@ export default {
     })
   },
   props: {
-    state: {
-      required: true,
-      type: Number
-    }
+    // state: {
+    //   required: true,
+    //   type: Number
+    // }
   },
   created() {
     this.intervalID = undefined;
@@ -191,6 +199,9 @@ export default {
       console.log("goHome");
       this.$emit("goHome");
     },
+    openAboutDialog() {
+      this.showAbout = true;
+    }
   },
   watch: {
     // 当 State 发生改变时被调用。
@@ -220,11 +231,12 @@ export default {
       }
     },
     show3D: function(newVal) {
-      this.$emit('show3DToggled', newVal);
+      this.$store.commit('toggle3DBuildings', newVal);
     }
   },
   components: {
-    SearchResultList
+    SearchResultList,
+    About
   }
 };
 </script>
