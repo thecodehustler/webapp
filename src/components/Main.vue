@@ -29,6 +29,8 @@ import CesiumViewer from "./cesium-viewer/CesiumViewer.vue";
 import ArticleOverlay from "./article-overlay/ArticleOverlay.vue";
 import MainToolbar from "./main-toolbar/MainToolbar.vue";
 
+// let MainToolbar = AsyncComponents('main-toolbar/MainToolbar.vue');
+
 let home = new CameraParameters({
   position: {
     lng: 117.62396258879075,
@@ -40,8 +42,6 @@ let home = new CameraParameters({
   roll: 0
 });
 
-let tileset = undefined;
-
 import {
   ViewerData,
   // eslint-disable-next-line no-unused-vars
@@ -51,6 +51,7 @@ import {
 } from "./cesium-viewer/CesiumViewerTypes";
 import { States } from "./location-button/LocationFAB";
 import { mapState } from "vuex";
+import AsyncComponents from '../commons/async-components/AsyncComponents';
 
 export default {
   data: () => {
@@ -126,14 +127,7 @@ export default {
         );
       }
     },
-    // onFABClick() {
-    //   console.log("clicked.");
-    //   this.locationWatcherStates = States.RUNNING;
-    //   switch (this.locationWatcherStates) {
-    //     case States.RUNNING:
-    //       this.locationWatcherStates = States.STOPPED;
-    //   }
-    // },
+
     mouseOnGlobe(obj) {
       // 鼠标悬浮在某个尸体上的时候触发。
       let pickedPrimitive = obj.viewer.scene.pick(obj.event.endPosition);

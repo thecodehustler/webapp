@@ -1,6 +1,6 @@
 <template>
   <v-container class="bottom-absolute">
-    <v-dialog v-model="showAbout">
+    <v-dialog v-model="showAbout" max-width="680"
       <About />
     </v-dialog>
     <v-card>

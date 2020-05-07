@@ -1,4 +1,5 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   "transpileDependencies": [
@@ -28,6 +29,21 @@ module.exports = {
         SRC: path.resolve(__dirname, 'src/')
       }
     },
+    optimization: {
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              // warnings: false,
+              drop_console: true,//console
+              drop_debugger: false,
+              pure_funcs: ['console.log']//移除console
+            }
+          }
+      })
+    ]
+    }
+
   },
 
   // chainWebpack: config => {

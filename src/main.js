@@ -22,9 +22,6 @@ let root = new Vue({
   vuetify,
   i18n: VI18NOptions,
   render: h => h(App), // 等效于 createElement: createElement(App)
-  mounted() {
-    document.dispatchEvent(new Event('render-event'));
-  }
 });
 
 root.$vuetify.theme.dark = true;
