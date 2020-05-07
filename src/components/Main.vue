@@ -51,7 +51,6 @@ import {
 } from "./cesium-viewer/CesiumViewerTypes";
 import { States } from "./location-button/LocationFAB";
 import { mapState } from "vuex";
-import AsyncComponents from '../commons/async-components/AsyncComponents';
 
 export default {
   data: () => {
