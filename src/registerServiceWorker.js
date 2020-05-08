@@ -12,7 +12,6 @@ if (process.env.NODE_ENV === 'production') {
     },
     registered () {
       console.log('Service worker has been registered.');
-      // importScripts('https://cesium.com/downloads/cesiumjs/releases/1.68/Build/Cesium/ThirdParty/Workers/inflate.js');
     },
     cached () {
       console.log('Content has been cached for offline use.')
@@ -20,23 +19,26 @@ if (process.env.NODE_ENV === 'production') {
     updatefound () {
       console.log('New content is downloading.')
     },
-    updated (reg) {
-      let refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (refreshing) return;  // 应该是防止重复刷新了。
-        window.location.reload();
-        refreshing = true;
-      });
+    updated () {
+      // 不做了 这个 Register Service Worker 就是个垃圾。
+      // let refreshing = false;
+      // navigator.serviceWorker.addEventListener('controllerchange', () => {
+      //   if (refreshing) return;  // 应该是防止重复刷新了。
+      //   window.location.reload();
+      //   refreshing = true;
+      // });
+
+      // console.log(self, this);
+      // this.clients.matchAll({type: 'window'}).then(clients => {
+      //   // client.postMessage({type: 'updateAvaliable'});
+      //   clients.forEach(client => {
+      //     client.postMessage({type: 'updateAvaliable'});
+      //   });
+      // });
+      // console.log(reg)
       // for (const client of await clients.matchAll({type: 'window'})) {
       //   client.postMessage({type: 'updateAvaliable'});
       // }
-
-      self.clients.matchAll({type: 'window'}).then(clients => {
-        // client.postMessage({type: 'updateAvaliable'});
-        clients.forEach(client => {
-          client.postMessage({type: 'updateAvaliable'});
-        });
-      });
 
          
       // reg.waiting.postMessage({ type: 'SKIP_WAITING' });
