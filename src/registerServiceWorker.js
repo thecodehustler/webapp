@@ -31,11 +31,15 @@ if (process.env.NODE_ENV === 'production') {
       //   client.postMessage({type: 'updateAvaliable'});
       // }
 
-      clients.matchAll({type: 'window'}).then(client => {
-        client.postMessage({type: 'updateAvaliable'});
+      self.clients.matchAll({type: 'window'}).then(clients => {
+        // client.postMessage({type: 'updateAvaliable'});
+        clients.forEach(client => {
+          client.postMessage({type: 'updateAvaliable'});
+        });
       });
+
          
-      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+      // reg.waiting.postMessage({ type: 'SKIP_WAITING' });
       
       console.log('New content is available; please refresh.');
       // Service Worker 不能直接操作 DOM，因此要主动发送消息给主线程。

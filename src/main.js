@@ -25,8 +25,8 @@ let root = new Vue({
 });
 
 if ('serviceWorker' in navigator) {
-  navigator.addEventListener('message', (msg) => {
-    
+  navigator.serviceWorker.addEventListener('message', (msg) => {
+    console.log(msg);
     if (msg.type == 'updateAvaliable') {
       store.commit('updateAvaliable');
       console.log('Should update!');
