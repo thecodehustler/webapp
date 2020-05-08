@@ -35,20 +35,20 @@ module.exports = {
         SRC: path.resolve(__dirname, 'src/')
       }
     },
-    // optimization: {
-    //   minimizer: [
-    //     new UglifyJsPlugin({
-    //       uglifyOptions: {
-    //         compress: {
-    //           // warnings: false,
-    //           drop_console: true,//console
-    //           drop_debugger: false,
-    //           pure_funcs: ['console.log']//移除console
-    //         }
-    //       }
-    //   })
-    // ]
-    // }
+    optimization: {
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              // warnings: false,
+              drop_console: true,//console
+              drop_debugger: false,
+              pure_funcs: ['console.log']//移除console
+            }
+          }
+      })
+    ]
+    }
 
   },
 
@@ -98,8 +98,8 @@ module.exports = {
       renderRoutes: [
         '/'
       ],
-      useRenderEvent: false,
-      headless: false,
+      useRenderEvent: true,
+      headless: true,
       onlyProduction: true
     }
   }
