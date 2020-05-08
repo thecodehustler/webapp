@@ -24,8 +24,13 @@ let root = new Vue({
   render: h => h(App), // 等效于 createElement: createElement(App)
 });
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', () => {
+    store.commit('updateAvaliable');
+  })
+}
+
 root.$vuetify.theme.dark = true;
 
-store.commit('initLandingState', localStorage.getItem('landed') == 'true')
 store.commit('darkMode', true);
 root.$mount('#app');

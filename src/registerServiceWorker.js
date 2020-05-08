@@ -20,11 +20,30 @@ if (process.env.NODE_ENV === 'production') {
     updatefound () {
       console.log('New content is downloading.')
     },
-    updated () {
-      console.log('New content is available; please refresh.')
+    updated (reg) {
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;  // 应该是防止重复刷新了。
+        window.location.reload();
+        refreshing = true;
+      });
+      // for (const client of await clients.matchAll({type: 'window'})) {
+      //   client.postMessage({type: 'updateAvaliable'});
+      // }
+
+      clients.matchAll({type: 'window'}).then(client => {
+        client.postMessage({type: 'updateAvaliable'});
+      });
+         
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+      
+      console.log('New content is available; please refresh.');
+      // Service Worker 不能直接操作 DOM，因此要主动发送消息给主线程。
     },
     offline () {
-      console.log('No internet connection found. App is running in offline mode.')
+      console.log('No internet connection found. App is running in offline mode.');
+      postMessage('offline');
+      
     },
     error (error) {
       console.error('Error during service worker registration:', error)

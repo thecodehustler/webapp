@@ -1,9 +1,10 @@
 export default {
   app: {
-    title: '项目叫什么？',
-    offlineMessage: '您的设备已离线。',
-    home: '主页',
-    about: '关于'
+    title: '天空旅行团',
+    offlineMessage: '您的设备已离线，部分内容可能过期或者不可用。',
+    update_avaliable: '新内容已可用，请刷新页面。',
+    action_refresh: '刷新',
+    action_dismiss: '知道了',
   },
   home: {
     locBtn_TrackGeo: '跟踪当前位置',

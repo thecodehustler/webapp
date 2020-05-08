@@ -2,6 +2,8 @@
   <v-app :dark="dark">
     <v-content>
       <Main/>
+      <v-snackbar vertical>
+      </v-snackbar>
     </v-content>
     <v-footer>
       <a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a>

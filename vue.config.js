@@ -13,6 +13,12 @@ module.exports = {
     sourceMap: false,
   },
 
+  pwa: {
+    workboxOptions: {
+      cleanupOutdatedCaches: true, // 让 Workbox 尝试去清除过时的缓存。
+    }
+  },
+
   devServer: {
     proxy: {
       '/api': {
@@ -29,20 +35,20 @@ module.exports = {
         SRC: path.resolve(__dirname, 'src/')
       }
     },
-    optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            compress: {
-              // warnings: false,
-              drop_console: true,//console
-              drop_debugger: false,
-              pure_funcs: ['console.log']//移除console
-            }
-          }
-      })
-    ]
-    }
+    // optimization: {
+    //   minimizer: [
+    //     new UglifyJsPlugin({
+    //       uglifyOptions: {
+    //         compress: {
+    //           // warnings: false,
+    //           drop_console: true,//console
+    //           drop_debugger: false,
+    //           pure_funcs: ['console.log']//移除console
+    //         }
+    //       }
+    //   })
+    // ]
+    // }
 
   },
 
