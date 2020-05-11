@@ -25,15 +25,15 @@ let root = new Vue({
   mounted: () => document.dispatchEvent(new Event("x-app-rendered")),
 });
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.addEventListener('message', (msg) => {
-    console.log(msg);
-    if (msg.data.type == 'updateAvaliable') {
-      store.commit('updateAvaliable');
-      console.log('Should update!');
-    }
-  })
-}
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker.addEventListener('message', (msg) => {
+//     console.log(msg);
+//     if (msg.data.type == 'updateAvaliable') {
+//       store.commit('updateAvaliable');
+//       console.log('Should update!');
+//     }
+//   })
+// }
 
 root.$vuetify.theme.dark = true;
 
