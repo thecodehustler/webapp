@@ -73,7 +73,7 @@
       </v-card-text>
       <v-divider></v-divider>
       <v-expand-transition>
-        <v-card-actions v-show="overlay.contentReady">
+        <v-card-actions v-show="overlay.contentReady && overlay.data.mp_link">
           <v-spacer />
           <v-btn :href="overlay.data.mp_link" text :disabled="!overlay.data.mp_link">
             {{$t('article.goto')}}

@@ -12,7 +12,6 @@
 
 <script>
 import AsyncComponents from "./commons/async-components/AsyncComponents";
-import axios from "axios";
 
 let Main = AsyncComponents.build("components/Main.vue");
 
@@ -29,8 +28,8 @@ export default {
   },
   created() {
     this.$store.dispatch("initWX"); // 开始准备微信
+    
     // 解析参数
-
     let query = window.location.search.substring(1);
     let vars = (function() {
       let vs = query.split("&");
@@ -41,6 +40,7 @@ export default {
       });
       return ret;
     })();
+    console.log(vars);
 
     if (vars.has("code")) {
       // let url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx116c7ab3d519b006&secret=SECRET_CODE&code=${vars.get('code')}&grant_type=authorization_code`
@@ -52,7 +52,9 @@ export default {
       //     this.$store.commit('updateUserInfo');
       //   })
       this.$store.commit("redirected", vars.get("code"));
-      this.$store.subscribe
+      this.$store.dispatch('obtainUserinfo');
+    } else {
+      this.$store.commit('useFake');
     }
   }
 };

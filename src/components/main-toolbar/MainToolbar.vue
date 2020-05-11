@@ -13,38 +13,18 @@
       </v-expand-transition>
 
       <v-toolbar dense bottom>
-          <v-menu offset-y transition="v-slide-y-transition">
-            <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on">
-                <v-avatar color="indigo" size="36">
-                  <p v-if="!userInfo.avatar_url">DC</p>
-                  <v-img :src="userInfo.avatar_url"></v-img>
-                </v-avatar>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-list>
-                <v-list-item @click.stop="">
-                  <v-list-item-avatar size="64">
-                    <img :src="userInfo.avatar_url" height="64" width="64" />
-                  </v-list-item-avatar>
+        <v-menu offset-y transition="v-slide-y-transition">
+          <template v-slot:activator="{ on }">
+            <v-btn icon v-on="on" v-show="wxReady || fake">
+              <v-avatar color="grey" size="36">
+                <span v-if="!userInfo.avatar_url" class="white--text headline">{{avatarAlt}}</span>
+                <v-img :src="userInfo.avatar_url"></v-img>
+              </v-avatar>
+            </v-btn>
+          </template>
 
-                  <v-list-item-content>
-                    <v-list-item-title>{{userInfo.name}}</v-list-item-title>
-                    <v-list-item-subtitle>{{userInfo.id}}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-
-              <v-divider></v-divider>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-
-                <v-btn color="error" text>{{$t('toolbar.log_out')}}</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-menu>
+          <UserInfoCard></UserInfoCard>
+        </v-menu>
 
         <v-text-field
           hide-details
@@ -75,7 +55,9 @@
           <v-list min-width="120">
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title><v-checkbox v-model="show3D" color="primary" :label="$t('toolbar.menu.show3d')" /></v-list-item-title>
+                <v-list-item-title>
+                  <v-checkbox v-model="show3D" color="primary" :label="$t('toolbar.menu.show3d')" />
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click="openAboutDialog">
@@ -94,10 +76,11 @@
 import lodash from "lodash";
 import Axios from "axios";
 import SearchResultList from "./SearchResultList";
+import UserInfoCard from "./UserInfoCard";
 import { mapState } from "vuex";
-import AsyncComponents from '../../commons/async-components/AsyncComponents';
+import AsyncComponents from "../../commons/async-components/AsyncComponents";
 
-let About = AsyncComponents.build('views/About.vue');
+let About = AsyncComponents.build("views/About.vue");
 
 export const States = {
   STOPPED: 0, // 未开始
@@ -117,14 +100,29 @@ export default {
       showResult: false,
       searchState: 0,
       show3D: false, // 我们默认不开这个。
-      showAbout: false,
+      showAbout: false
     };
   },
   computed: {
     ...mapState({
       wxReady: state => state.wx.wxState == 0,
-      userInfo: state => state.wx.userInfo
-    })
+      userInfo: state => {
+        if (state.wx.useFake) return state.wx.localFake;
+        return state.wx.userInfo;
+      },
+      fake: state => state.wx.useFake
+    }),
+    avatarAlt() {
+      let text = "";
+      if (this.userInfo.name) {
+        let arr = this.userInfo.name.split(" ");
+        text.concat(arr[0].charAt(0));
+        if (arr.length > 1) {
+          text.concat(arr[arr.length - 1].charAt(0));
+        }
+      }
+      return text;
+    }
   },
   props: {
     // state: {
@@ -139,13 +137,14 @@ export default {
     // AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
     // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
     // 请参考：https://lodash.com/docs#debounce
-    this.debouncedGetEntries = lodash.debounce(this.searchQuery, 1500);
-    this.$store.commit("updateInfo", {
+    this.debouncedGetEntries = lodash.debounce(this.searchQuery, 500);
+    this.$store.commit("updateFake", {
       // Some fake user info.
       name: "DaChuang User",
-      id: "daxueshengchaungye!",
+      id: "大学生创业测试用户信息。",
       avatar_url:
-        "https://gitlab.com/uploads/-/system/user/avatar/615016/avatar.png"
+        "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1cfa619f-ac21-4dd8-b4fb-e5aa12ac465d/d8ual6l-7dadd771-ea61-46db-abac-818eab12eaa8.png/v1/fill/w_1024,h_1024,strp/hakase_shinonome_by_numenoreano_d8ual6l-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNCIsInBhdGgiOiJcL2ZcLzFjZmE2MTlmLWFjMjEtNGRkOC1iNGZiLWU1YWExMmFjNDY1ZFwvZDh1YWw2bC03ZGFkZDc3MS1lYTYxLTQ2ZGItYWJhYy04MThlYWIxMmVhYTgucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.DOrXOCBO1lKffcxiCF2JWOkkeKmjff-DUc8siBN5r8k",
+      gender: 2
     });
   },
   methods: {
@@ -231,12 +230,13 @@ export default {
       }
     },
     show3D: function(newVal) {
-      this.$store.commit('toggle3DBuildings', newVal);
+      this.$store.commit("toggle3DBuildings", newVal);
     }
   },
   components: {
     SearchResultList,
-    About
+    About,
+    UserInfoCard
   }
 };
 </script>

@@ -1,27 +1,38 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const PrerenderSPAPlugin = require('prerender-spa-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 
 module.exports = {
   "transpileDependencies": [
     "vuetify",
   ],
 
-  crossorigin: 'anonymous',
+  // crossorigin: 'anonymous',
   productionSourceMap: false,
 
   css: {
     sourceMap: false,
   },
 
+
+
   pwa: {
     workboxOptions: {
-      cleanupOutdatedCaches: true, // 让 Workbox 尝试去清除过时的缓存。
-    }
+      cleanupOutdatedCaches: true
+    },
+    name: '天空旅行团'
   },
 
   devServer: {
     proxy: {
       '/api': {
+        target: 'http://localhost:80',
+        ws: true,
+        changeOrigin: true,
+      },
+      '/wx': {
         target: 'http://localhost:80',
         ws: true,
         changeOrigin: true,
@@ -42,14 +53,51 @@ module.exports = {
             compress: {
               // warnings: false,
               drop_console: true,//console
-              drop_debugger: false,
-              pure_funcs: ['console.log']//移除console
+              drop_debugger: true,
+              unused: true,
+              pure_funcs: ['console.log', 'console.warn', 'console.error']//移除console
+            },
+            output: {
+              comments: false
             }
           }
-      })
-    ]
-    }
+        })
+      ]
+    },
+    // productionGzip: true,
+    // productionGzipExtensions: ['js', 'css'],
 
+  },
+  chainWebpack: config => {
+    if (process.env.NODE_ENV !== 'production') return;
+    return {
+      plugins: [
+        new PrerenderSPAPlugin({
+          // 生成文件的路径，也可以与webpakc打包的一致。
+          // 下面这句话非常重要！！！
+          // 这个目录只能有一级，如果目录层次大于一级，在生成的时候不会有任何错误提示，在预渲染的时候只会卡着不动。
+          staticDir: path.join(__dirname, 'dist'),
+          // 对应自己的路由文件，比如a有参数，就需要写成 /a/param1。
+          routes: ['/'],
+          // 这个很重要，如果没有配置这段，也不会进行预编译
+          renderer: new Renderer({
+            inject: {
+              foo: 'bar'
+            },
+            headless: true,
+            // 在 main.js 中 document.dispatchEvent(new Event('render-event'))，两者的事件名称要对应上。
+            renderAfterDocumentEvent: 'x-render-event'
+          })
+        }),
+        new CompressionPlugin({
+          filename: "[path].gz[query]",
+          test: /\.js$|\.html$|\.css$/,    //压缩 js 与 css
+          algorithm: 'gzip',
+          threshold: 10240,
+          minRatio: 0.8
+        })
+      ],
+    };
   },
 
   // chainWebpack: config => {
@@ -91,16 +139,4 @@ module.exports = {
   // },
 
   lintOnSave: false,
-
-  pluginOptions: {
-    prerenderSpa: {
-      registry: undefined,
-      renderRoutes: [
-        '/'
-      ],
-      useRenderEvent: true,
-      headless: true,
-      onlyProduction: true
-    }
-  }
 }

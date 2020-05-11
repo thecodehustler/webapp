@@ -1,48 +1,54 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-    <meta name="renderer" content="webkit"/>
-    <meta name="force-rendering" content="webkit"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
-    <!-- 国产浏览器们求你们别用IE -->
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
 
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roboto-fontface@0.10.0/css/roboto/roboto-fontface.css" as="style">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" as="style">
-    <!-- A workaround  -->
-    <script>
-      window.zip = {};
-    </script>
-    <script src="https://cesium.com/downloads/cesiumjs/releases/1.68/Build/Cesium/ThirdParty/Workers/inflate.js"></script>
-    <script src="https://cesium.com/downloads/cesiumjs/releases/1.68/Build/Cesium/ThirdParty/Workers/deflate.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta name="renderer" content="webkit" />
+  <meta name="force-rendering" content="webkit" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <!-- 国产浏览器们求你们别用 IE -->
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
 
-    <style>
-      #app {
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        margin: 0;
-        padding: 0;
-        overflow-y: auto;
-        box-sizing: border-box;
-      }
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roboto-fontface@0.10.0/css/roboto/roboto-fontface.css"
+    as="style">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
+    as="style">
+  <!-- A workaround  -->
+  <script>
+    window.zip = {};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/cesium@1.69.0/Build/Cesium/ThirdParty/Workers/deflate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cesium@1.69.0/Build/Cesium/ThirdParty/Workers/inflate.min.js"></script>
 
-      ::-webkit-scrollbar {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+  <style>
+    #app {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+      Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
