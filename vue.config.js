@@ -16,8 +16,6 @@ module.exports = {
     sourceMap: false,
   },
 
-
-
   pwa: {
     workboxOptions: {
       cleanupOutdatedCaches: true
@@ -85,6 +83,7 @@ module.exports = {
 
     
   },
+
   // chainWebpack: () => {
   //   if (process.env.NODE_ENV !== 'production') return;
   //   return {
@@ -156,4 +155,16 @@ module.exports = {
   // },
 
   lintOnSave: false,
+
+  pluginOptions: {
+    prerenderSpa: {
+      registry: undefined,
+      renderRoutes: [
+        '/'
+      ],
+      useRenderEvent: true,
+      headless: true,
+      onlyProduction: true
+    }
+  }
 }
