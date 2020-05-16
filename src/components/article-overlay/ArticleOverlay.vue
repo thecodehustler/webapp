@@ -19,7 +19,7 @@
         <v-img
           gradient="to bottom, rgba(100,115,201,.33), rgba(25,32,72,.7)"
           :src="overlay.data.head_image_url"
-          lazy-src="/placeholder.jpg"
+          lazy-src="../../assets/placeholder.jpg"
           height="180"
         >
           <v-btn icon right absolute @click="close">
@@ -156,7 +156,6 @@ export default {
 </script>
 
 <style lang="sass">
-@import '~vuetify/src/styles/styles.sass'
 
 #card-text
   h2

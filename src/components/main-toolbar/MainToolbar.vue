@@ -3,13 +3,12 @@
     <v-dialog v-model="showAbout" max-width="680">
       <About />
     </v-dialog>
-    <v-card @focusout.native="showResult = false">
+    <v-card>
       <v-expand-transition>
         <SearchResultList
           :data="result"
           :state="searchState"
           v-show="showResult && textInput != ''"
-          @mouseout="showResult = false"
         ></SearchResultList>
       </v-expand-transition>
 
@@ -97,7 +96,10 @@ export default {
       iconText: "mdi-crosshairs-gps",
       textInput: "",
       result: [],
+      // focusOnEdit: false,
+      // focusOnList: false,
       showResult: false,
+      keep: true,
       searchState: 0,
       show3D: false, // 我们默认不开这个。
       showAbout: false
@@ -122,7 +124,8 @@ export default {
         }
       }
       return text;
-    }
+    },
+
   },
   props: {
     // state: {
@@ -203,6 +206,10 @@ export default {
     },
     cardBlur() {
       console.log('Card blur!');
+      this.showResult = false;
+    },
+    alert(msg) {
+      alert(msg);
     }
   },
   watch: {
@@ -228,8 +235,11 @@ export default {
     //   }
     // },
     textInput: function(newVal) {
-      if (newVal !== "") {
+      if (newVal && newVal !== "") {
+        this.showResult = true;
         this.debouncedGetEntries();
+      } else {
+        this.showResult = false;
       }
     },
     show3D: function(newVal) {
