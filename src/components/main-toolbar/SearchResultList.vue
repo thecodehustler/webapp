@@ -37,7 +37,8 @@ export default {
     itemClicked(result) {
       console.log(result);
       // this.$emit("selected", result);
-      this.$store.dispatch('loadLocalContent', result);
+      this.$store.dispatch('loadFromURL', `/api/info?landmarkID=${result.landmark_id}`);
+      // this.$store.dispatch('loadLocalContent', result);
     }
   },
   computed: {

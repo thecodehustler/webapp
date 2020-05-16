@@ -3,7 +3,7 @@
     <v-dialog v-model="showAbout" max-width="680">
       <About />
     </v-dialog>
-    <v-card>
+    <v-card @focusout.native="showResult = false">
       <v-expand-transition>
         <SearchResultList
           :data="result"
@@ -36,7 +36,6 @@
           v-model="textInput"
           :label="$t('toolbar.search')"
           @focus="showResult = true"
-          @blur="showResult = false"
         ></v-text-field>
 
         <!-- 暂时不要显示它 -->
@@ -201,6 +200,9 @@ export default {
     },
     openAboutDialog() {
       this.showAbout = true;
+    },
+    cardBlur() {
+      console.log('Card blur!');
     }
   },
   watch: {
