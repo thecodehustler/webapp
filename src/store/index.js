@@ -5,7 +5,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import modOverlay from './module-overlay';
-import modWx from './module.wx';
+import modWx from './module-wx';
 import modSWS from './service-worker-state';
 
 export default new Vuex.Store({

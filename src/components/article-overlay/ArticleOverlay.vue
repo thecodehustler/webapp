@@ -68,7 +68,9 @@
         <!-- <v-row>{{overlay.data.description}}</v-row> -->
         <!-- </v-container> -->
         <v-slide-y-transition>
-          <v-card-text class="text-as-is" v-show="overlay.contentReady">{{overlay.data.description}}</v-card-text>
+          <v-card-text v-show="overlay.contentReady">
+            <div id="card-text" v-html="overlay.data.rawHTML"></div>
+          </v-card-text>
         </v-slide-y-transition>
       </v-card-text>
       <v-divider></v-divider>
@@ -138,8 +140,7 @@ export default {
     }),
     open: {
       set(val) {
-        if (val == false)
-        this.$store.commit('close');
+        if (val == false) this.$store.commit("close");
       },
       get() {
         return this.$store.state.overlay.open;
@@ -154,8 +155,15 @@ export default {
 };
 </script>
 
-<style>
-.text-as-is {
-  white-space: pre-wrap;
-}
+<style lang="sass">
+@import '~vuetify/src/styles/styles.sass'
+
+#card-text
+  h2
+    font-weight: 500
+    font-size: 1em
+    color: #2196F3
+    margin-bottom: 12px
+  strong
+    font-weight: 600
 </style>

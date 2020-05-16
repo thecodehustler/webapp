@@ -9,6 +9,7 @@
           :data="result"
           :state="searchState"
           v-show="showResult && textInput != ''"
+          @mouseout="showResult = false"
         ></SearchResultList>
       </v-expand-transition>
 
