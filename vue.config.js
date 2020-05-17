@@ -84,22 +84,38 @@ module.exports = {
           global: 'Vue'
         },
         {
+          id: 'vue-router',
+          assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.1.6/dist/vue-router.min.js',
+          global: 'VueRouter'
+        },
+        {
+          id: 'vuex',
+          assets: 'https://cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js',
+          global: 'Vuex'
+        },
+        {
           id: 'vuetify',
           assets: [
             'https://cdn.jsdelivr.net/npm/vuetify@2.2.28/dist/vuetify.min.js',
             'https://cdn.jsdelivr.net/npm/vuetify@2.2.28/dist/vuetify.min.css'
           ],
+          global: 'Vuetify'
+        },
+        {
+          id: 'vue-cesium',
+          assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.0/lib/index.umd.js',
+          global: 'VueCesium'
+        },
+        {
+          id: 'lodash',
+          assets: 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js',
+          global: '_'
         },
         {
           id: 'axios',
           assets: 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
           global: 'axios'
         },
-        {
-          id: 'vuex',
-          assets: 'https://cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js'
-        }
-        
       ]
     }
   },

@@ -5,6 +5,8 @@ export default {
     update_avaliable: '新内容已可用，请刷新页面。',
     action_refresh: '刷新',
     action_dismiss: '知道了',
+    loading_text: '正在载入……',
+    loading_longer: '载入的时间似乎比预期要慢一些。请稍等片刻。'
   },
   home: {
     locBtn_TrackGeo: '跟踪当前位置',

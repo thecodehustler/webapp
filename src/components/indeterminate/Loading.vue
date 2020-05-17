@@ -12,15 +12,16 @@ export default {
 name: 'Loading',
 data() {
     return {
-        loadingText: '正在载入',
+        loadingText: '',
         timeout: 5000
     }
 },
 mounted() {
-    console.log('Mounted. still loading?')
+    console.log('Mounted. still loading?');
+    this.loadingText = this.$t('app.loading_text');
     setTimeout(() => {
-        console.log('timeout reached.')
-        this.loadingText = '载入的时间似乎比预期要慢一些。\n请稍等片刻。'
+        console.log('timeout reached.');
+        this.loadingText = this.$t('app.loading_longer');
     }, this.timeout);
 }
 }

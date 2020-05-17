@@ -165,4 +165,6 @@ export default {
     margin-bottom: 12px
   strong
     font-weight: 600
+  img
+    max-width: 95%
 </style>
