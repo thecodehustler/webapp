@@ -22,7 +22,7 @@ let root = new Vue({
   vuetify,
   i18n: VI18NOptions,
   render: h => h(App), // 等效于 createElement: createElement(App),
-  beforeMount: () => document.dispatchEvent(new Event("x-app-rendered")),
+  mounted: () => document.dispatchEvent(new Event("x-app-rendered")),
 });
 
 // if ('serviceWorker' in navigator) {
