@@ -5,7 +5,8 @@
       <v-snackbar vertical></v-snackbar>
     </v-content>
     <v-footer>
-      <a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a>
+      <div><a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a></div> 
+      <v-spacer></v-spacer>
     </v-footer>
   </v-app>
 </template>

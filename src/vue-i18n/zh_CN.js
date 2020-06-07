@@ -6,7 +6,19 @@ export default {
     action_refresh: '刷新',
     action_dismiss: '知道了',
     loading_text: '正在载入……',
-    loading_longer: '载入的时间似乎比预期要慢一些。请稍等片刻。'
+    loading_longer: '载入的时间似乎比预期要慢一些。请稍等片刻。',
+    
+    close: '关闭',
+  },
+  about: {
+    open_source_libraries: '本项目使用的开源项目',
+    build_version: '构建版本：',
+    map: '2D 地图：',
+    website: '网站：',
+    modeling: '3D 模型：',
+    articles: '文案：',
+    homepage: '主页',
+    staff: '天空旅行团 - 人员',
   },
   home: {
     locBtn_TrackGeo: '跟踪当前位置',
@@ -35,5 +47,4 @@ export default {
     },
     search_error: '尝试搜索时出错。'
   }
-
 }

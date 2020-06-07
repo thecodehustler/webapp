@@ -1,7 +1,7 @@
 <template>
-  <v-container class="bottom-absolute">
-    <v-dialog v-model="showAbout" max-width="680">
-      <About />
+  <v-container class="bottom-absolute" max-width="730">
+    <v-dialog v-model="showAbout" max-width="540">
+      <About @close="showAbout = false" />
     </v-dialog>
     <v-card>
       <v-expand-transition>
@@ -180,6 +180,7 @@ export default {
     searchQuery() {
       if (this.textInput !== "") {
         var vm = this;
+        this.searchState = 2; // Mark state as pending.
         Axios.get("/api/search", {
           params: {
             name: this.textInput

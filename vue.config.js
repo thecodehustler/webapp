@@ -64,6 +64,14 @@ module.exports = {
     },
   },
 
+  chainWebpack: config => {
+    // 添加全局变量。
+    config.plugin('define').tap(args => {
+      args[0]["MY_APP_VERSION"] = JSON.stringify((function () { let a = new Date(); return a.getUTCFullYear() * 10000 + (a.getUTCMonth() + 1) * 100 + a.getUTCDate() + 1; })());
+      return args;
+    })
+  },
+
   lintOnSave: false,
 
   pluginOptions: {
@@ -80,12 +88,12 @@ module.exports = {
       common: [
         {
           id: 'vue',
-          assets: 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
+          assets: 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.runtime.min.js',
           global: 'Vue'
         },
         {
           id: 'vue-router',
-          assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.1.6/dist/vue-router.min.js',
+          assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.3.2/dist/vue-router.min.js',
           global: 'VueRouter'
         },
         {
@@ -96,14 +104,14 @@ module.exports = {
         {
           id: 'vuetify',
           assets: [
-            'https://cdn.jsdelivr.net/npm/vuetify@2.2.28/dist/vuetify.min.js',
-            'https://cdn.jsdelivr.net/npm/vuetify@2.2.28/dist/vuetify.min.css'
+            'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.js',
+            'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.css'
           ],
           global: 'Vuetify'
         },
         {
           id: 'vue-cesium',
-          assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.0/lib/index.umd.js',
+          assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.4/lib/index.umd.min.js',
           global: 'VueCesium'
         },
         {
@@ -119,5 +127,5 @@ module.exports = {
       ]
     }
   },
-  
+
 }

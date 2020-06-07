@@ -1,10 +1,8 @@
 <template>
   <v-list>
-    <v-list-item v-if="state == 1" color="error">
-      {{$t('toolbar.search_error')}}
-    </v-list-item>
-    
-    <v-subheader v-if="state == 0">{{count}} 条结果</v-subheader>
+    <v-subheader v-if="state == 1">{{$t('toolbar.search_error')}}</v-subheader>
+    <v-subheader v-else-if="state == 0">{{count}} 条结果</v-subheader>
+    <v-progress-linear indeterminate v-if="state == 2"></v-progress-linear>
     <transition-group name="expand">
       <!-- 这里对点击事件用.stop以防止向下传播。 -->
     <v-list-item v-for="result in data" :key="result.landmark_id" @click="itemClicked(result)">
@@ -26,8 +24,9 @@ export default {
       required: true
       /**
        * State:
-       * 0 = Success
-       * 1 = Failed
+       * 0 = Success,
+       * 1 = Failed,
+       * 2 = Pending.
        */
     },
     data: {

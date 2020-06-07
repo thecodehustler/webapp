@@ -1,20 +1,37 @@
 <template>
-  <v-card max-width="680">
-    <v-sheet tile color="primary" height="150">
+  <v-card max-width="540">
+    <v-sheet tile color="primary" height="160">
       <v-container class="align-content-end fill-height">
         <v-row no-gutters>
-          <h1 class="display-2 font-weight-thin">天空旅行团</h1>
+          <h1 class="display-2 font-weight-thin">{{$t('app.title')}}</h1>
         </v-row>
       </v-container>
     </v-sheet>
     <v-container>
       <v-row>
-        <v-subheader>本项目使用到的框架：</v-subheader>
-      </v-row>
+        <v-col>
+          <v-subheader>{{$t('about.open_source_libraries')}}</v-subheader>
 
-      <v-row>
-        <v-list>
-          <v-list-item >
+          <v-expansion-panels flat>
+            <v-expansion-panel v-for="lib of LIBRARIES" :key="lib.name">
+              <v-expansion-panel-header>
+                {{lib.name}}
+                <span style="padding-left: 8px">
+                  <v-chip x-small label :href="lib.licenseURL" target="_blank">{{lib.license}}</v-chip>
+                </span>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-btn small color="primary" :href="lib.homepage" target="_blank">
+                  <v-icon small>mdi-home</v-icon>
+                  {{$t('about.homepage')}}
+                </v-btn>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-col>
+
+        <!-- <v-list class="fill-width">
+          <v-list-item>
             <v-card outlined href="https://github.com/vuejs/vue" class="god-damn-vuetify-grid">
               <v-container>
                 <v-row>
@@ -33,7 +50,11 @@
           </v-list-item>
 
           <v-list-item>
-            <v-card outlined href="https://github.com/vuetifyjs/vuetify" class="god-damn-vuetify-grid">
+            <v-card
+              outlined
+              href="https://github.com/vuetifyjs/vuetify"
+              class="god-damn-vuetify-grid"
+            >
               <v-container>
                 <v-row>
                   <v-col class="flex-shrink-1 flex-grow-0">
@@ -49,14 +70,74 @@
               </v-container>
             </v-card>
           </v-list-item>
-        </v-list>
+        </v-list>-->
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-subheader>{{$t('about.staff')}}</v-subheader>
+          <v-card-text>
+            <p>{{$t('about.website')}}SHERRY / APTX</p>
+            <p>{{$t('about.map')}}某位不愿透露姓名的路边小伙</p>
+            <p>{{$t('about.modeling')}}艺鸣</p>
+            <p>{{$t('about.articles')}}晋华、恺、斯斯、球球</p>
+            <p class="text--secondary text-right">build {{VERSION}} · ©2020 SHERRY / APTX.</p>
+          </v-card-text>
+        </v-col>
       </v-row>
     </v-container>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn @click="close" text>{{$t('app.close')}}</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
-<style scoped>
-.god-damn-vuetify-grid {
-  width: 100%;
-}
-</style>
+<script>
+export default {
+  data() {
+    return {
+      // eslint-disable-next-line no-undef
+      VERSION: MY_APP_VERSION,
+      LIBRARIES: [
+        {
+          name: "Vue.js",
+          license: "MIT",
+          licenseURL: "https://opensource.org/licenses/MIT",
+          homepage: "https://vuejs.org/"
+        },
+        {
+          name: "Vuetify",
+          license: "MIT",
+          licenseURL: "https://opensource.org/licenses/MIT",
+          homepage: "https://vuetifyjs.com/"
+        },
+        {
+          name: "Vuex",
+          license: "MIT",
+          licenseURL: "https://opensource.org/licenses/MIT",
+          homepage: "https://vuex.vuejs.org/"
+        },
+        {
+          name: "Cesium",
+          license: "Apache-2.0",
+          licenseURL:
+            "https://github.com/CesiumGS/cesium/blob/master/LICENSE.md",
+          homepage: "https://cesium.org"
+        },
+        {
+          name: "Vue I18n",
+          license: "MIT",
+          licenseURL: "https://opensource.org/licenses/MIT",
+          homepage: "https://kazupon.github.io/vue-i18n/"
+        }
+      ]
+    };
+  },
+  methods: {
+    close() {
+      this.$emit("close");
+    }
+  }
+};
+</script>

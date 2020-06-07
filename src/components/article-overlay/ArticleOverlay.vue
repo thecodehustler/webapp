@@ -77,7 +77,7 @@
       <v-expand-transition>
         <v-card-actions v-show="overlay.contentReady && overlay.data.mp_link">
           <v-spacer />
-          <v-btn :href="overlay.data.mp_link" text :disabled="!overlay.data.mp_link">
+          <v-btn :href="overlay.data.mp_link" text :disabled="!overlay.data.mp_link" target="_blank">
             {{$t('article.goto')}}
             <v-icon small>mdi-open-in-new</v-icon>
           </v-btn>
