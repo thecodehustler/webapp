@@ -7,30 +7,31 @@
         </v-row>
       </v-container>
     </v-sheet>
-    <v-container>
-      <v-row>
-        <v-col>
-          <v-subheader>{{$t('about.open_source_libraries')}}</v-subheader>
+    <v-card-text>
+      <v-container class="pa-0">
+        <v-row no-gutters>
+          <v-col>
+            <h3 class="subtitle-2 font-weight-medium py-3 light-blue--text">{{$t('about.open_source_libraries')}}</h3>
 
-          <v-expansion-panels flat>
-            <v-expansion-panel v-for="lib of LIBRARIES" :key="lib.name">
-              <v-expansion-panel-header>
-                {{lib.name}}
-                <span style="padding-left: 8px">
-                  <v-chip x-small label :href="lib.licenseURL" target="_blank">{{lib.license}}</v-chip>
-                </span>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <v-btn small color="primary" :href="lib.homepage" target="_blank">
-                  <v-icon small>mdi-home</v-icon>
-                  {{$t('about.homepage')}}
-                </v-btn>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-col>
+            <v-expansion-panels flat>
+              <v-expansion-panel v-for="lib of LIBRARIES" :key="lib.name">
+                <v-expansion-panel-header>
+                  {{lib.name}}
+                  <span style="padding-left: 8px">
+                    <v-chip x-small label :href="lib.licenseURL" target="_blank">{{lib.license}}</v-chip>
+                  </span>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-btn small color="primary" :href="lib.homepage" target="_blank">
+                    <v-icon small>mdi-home</v-icon>
+                    {{$t('about.homepage')}}
+                  </v-btn>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-col>
 
-        <!-- <v-list class="fill-width">
+          <!-- <v-list class="fill-width">
           <v-list-item>
             <v-card outlined href="https://github.com/vuejs/vue" class="god-damn-vuetify-grid">
               <v-container>
@@ -70,22 +71,22 @@
               </v-container>
             </v-card>
           </v-list-item>
-        </v-list>-->
-      </v-row>
+          </v-list>-->
+        </v-row>
 
-      <v-row>
-        <v-col>
-          <v-subheader>{{$t('about.staff')}}</v-subheader>
-          <v-card-text>
+        <v-row no-gutters>
+          <v-col>
+            <h3 class="subtitle-2 font-weight-medium py-3 light-blue--text">{{$t('about.staff')}}</h3>
             <p>{{$t('about.website')}}SHERRY / APTX</p>
             <p>{{$t('about.map')}}某位不愿透露姓名的路边小伙</p>
             <p>{{$t('about.modeling')}}艺鸣</p>
-            <p>{{$t('about.articles')}}晋华、恺、斯斯、球球</p>
+            <p>{{$t('about.articles')}}晋华、恺、<span title="？？？在一起？？？">斯斯、秋秋</span></p>
+            <p>{{$t('about.guide')}}虹吾、佰林</p>
             <p class="text--secondary text-right">build {{VERSION}} · ©2020 SHERRY / APTX.</p>
-          </v-card-text>
-        </v-col>
-      </v-row>
-    </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn @click="close" text>{{$t('app.close')}}</v-btn>

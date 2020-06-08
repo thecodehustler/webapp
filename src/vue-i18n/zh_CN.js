@@ -18,7 +18,9 @@ export default {
     modeling: '3D 模型：',
     articles: '文案：',
     homepage: '主页',
-    staff: '天空旅行团 - 人员',
+    guide: '指导：',
+    
+    staff: '人员',
   },
   home: {
     locBtn_TrackGeo: '跟踪当前位置',
