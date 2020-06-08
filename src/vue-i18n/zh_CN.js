@@ -7,7 +7,9 @@ export default {
     action_dismiss: '知道了',
     loading_text: '正在载入……',
     loading_longer: '载入的时间似乎比预期要慢一些。请稍等片刻。',
-    
+    webgl_unsupported: '您的浏览器不支持 WebGL。',
+    webgl_unsupported_description: '请考虑更改您浏览器的相关设定，或者更新您的浏览器。',
+    upgrade_help: '需要帮助？',
     close: '关闭',
   },
   about: {
@@ -19,7 +21,6 @@ export default {
     articles: '文案：',
     homepage: '主页',
     guide: '指导：',
-    
     staff: '人员',
   },
   home: {
@@ -38,6 +39,7 @@ export default {
       internal_server_error: '服务器内部错误。',
       unknown: '未知错误。'
     },
+    got_it: '知道了',
     goto: '前往公众号查看'
   },
   toolbar: {

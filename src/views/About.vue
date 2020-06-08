@@ -3,7 +3,7 @@
     <v-sheet tile color="primary" height="160">
       <v-container class="align-content-end fill-height">
         <v-row no-gutters>
-          <h1 class="display-2 font-weight-thin">{{$t('app.title')}}</h1>
+          <h1 class="display-2 font-weight-light condensed">{{$t('app.title')}}</h1>
         </v-row>
       </v-container>
     </v-sheet>
@@ -76,13 +76,13 @@
 
         <v-row no-gutters>
           <v-col>
-            <h3 class="subtitle-2 font-weight-medium py-3 light-blue--text">{{$t('about.staff')}}</h3>
+            <h3 class="subtitle-2 font-weight-medium py-3 light-blue--text">{{$t('app.title')}} - {{$t('about.staff')}}</h3>
             <p>{{$t('about.website')}}SHERRY / APTX</p>
             <p>{{$t('about.map')}}某位不愿透露姓名的路边小伙</p>
             <p>{{$t('about.modeling')}}艺鸣</p>
             <p>{{$t('about.articles')}}晋华、恺、<span title="？？？在一起？？？">斯斯、秋秋</span></p>
             <p>{{$t('about.guide')}}虹吾、佰林</p>
-            <p class="text--secondary text-right">build {{VERSION}} · ©2020 SHERRY / APTX.</p>
+            <p class="text--disabled text-right">build {{VERSION}} · ©2020 SHERRY / APTX.</p>
           </v-col>
         </v-row>
       </v-container>
@@ -124,7 +124,7 @@ export default {
           license: "Apache-2.0",
           licenseURL:
             "https://github.com/CesiumGS/cesium/blob/master/LICENSE.md",
-          homepage: "https://cesium.org"
+          homepage: "https://cesiumjs.org"
         },
         {
           name: "Vue I18n",

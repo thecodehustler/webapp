@@ -10,7 +10,7 @@
           <h2 class="title">{{errorMessage}}</h2>
         </v-row>
         <v-row justify="center">
-          <v-btn @click="close" color="error" text>知道了</v-btn>
+          <v-btn @click="close" color="error" text>{{$t('article.got_it')}}</v-btn>
         </v-row>
       </v-overlay>
       <!-- 由于 Bottom Sheet 的一些限制，这里直接用 Card Text 承载内容。
@@ -31,7 +31,7 @@
             <v-row v-if="overlay.contentReady" class="pb-0 mb-0">
               <v-col class="mb-0">
                 <h2 class="headline font-weight-medium">{{ overlay.data.name }}</h2>
-                <p class="subtitle-1 mb-0 pb-0">{{ overlay.data.subtitle }}</p>
+                <p class="subtitle-1 mb-0 pb-0" id="subheading">{{ overlay.data.subtitle }}</p>
               </v-col>
             </v-row>
           </v-container>
@@ -156,13 +156,15 @@ export default {
 </script>
 
 <style lang="sass">
-
+#subheading
+  line-height: 1.2
 #card-text
   h2
     font-weight: 500
     font-size: 1em
     color: #2196F3
     margin-bottom: 12px
+    margin-top: 12px
   strong
     font-weight: 600
   img

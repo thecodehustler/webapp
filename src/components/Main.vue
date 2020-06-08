@@ -1,23 +1,26 @@
 <template>
-  <v-container class="fill-height flex-grow-1 flex-shrink-0 ma-0 pa-0">
-    <v-overlay absolute opacity="0.9" :value="!imageryReady">
-      <v-progress-circular size="96" indeterminate></v-progress-circular>
-    </v-overlay>
-    <!-- <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher> -->
-    <div class="viewer-fill fixed">
-      <CesiumViewer
-        :innerData="cesiumData"
-        @ready="onCesiumReady"
-        :cameraParameters="camera"
-        @selectedEntityChanged="entityChanged"
-        @mouseOnGlobe="mouseOnGlobe"
-        ref="viewer"
-      ></CesiumViewer>
-      <MainToolbar
-        ref="toolbar"
-      ></MainToolbar>
-      <ArticleOverlay ref="article"></ArticleOverlay>
-    </div>
+  <v-container class="fill-height flex-grow-1 flex-shrink-0 ma-0 pa-0" fluid>
+    <v-row no-gutters class="fill-height">
+      <v-col>
+        <v-overlay absolute opacity="0.9" :value="!imageryReady">
+          <v-progress-circular size="96" indeterminate></v-progress-circular>
+        </v-overlay>
+        <!-- <LocationWatcher :enabled="true" id="CB" @update="locationUpdated"></LocationWatcher> -->
+        <div class="viewer-fill">
+          <!-- 这就很神必了好伐 -->
+          <CesiumViewer
+            :innerData="cesiumData"
+            @ready="onCesiumReady"
+            :cameraParameters="camera"
+            @selectedEntityChanged="entityChanged"
+            @mouseOnGlobe="mouseOnGlobe"
+            ref="viewer"
+          ></CesiumViewer>
+        </div>
+        <MainToolbar ref="toolbar"></MainToolbar>
+        <ArticleOverlay ref="article"></ArticleOverlay>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -99,7 +102,7 @@ export default {
           })
         );
         console.log(this.tileset);
-      }); 
+      });
 
       this.cesiumData.DataSources.KMLData.push(
         new KMLData("/kmls/sample.kmz").ready(ret => {
@@ -140,7 +143,7 @@ export default {
         pickedEntity.label.scale = 1.3;
         this.cached = pickedEntity;
       }
-    },
+    }
   },
   components: {
     CesiumViewer,
@@ -176,7 +179,6 @@ export default {
   height: 100%;
   width: 100%;
 }
-
 .fixed {
   position: absolute;
 }

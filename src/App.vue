@@ -1,30 +1,43 @@
 <template>
   <v-app :dark="dark">
     <v-content>
-      <Main />
+      <Main v-if="supported"></Main>
+      <NotSupported v-else></NotSupported>
       <v-snackbar vertical></v-snackbar>
     </v-content>
     <v-footer>
       <div><a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a></div> 
       <v-spacer></v-spacer>
+      <div v-if="!supported"><LangSelect /></div>
+      <div v-if="!supported" class="text--disabled">© 2020 SHERRY / APTX</div>
     </v-footer>
   </v-app>
 </template>
 
 <script>
 import AsyncComponents from "./commons/async-components/AsyncComponents";
-
+let NotSupported = AsyncComponents.build('components/not-supported-view/NotSupported.vue');
 let Main = AsyncComponents.build("components/Main.vue");
+import LangSelect from './components/lang-select/LangSelect';
 
 export default {
   name: "App",
   components: {
-    Main
+    Main,
+    NotSupported,
+    LangSelect
   },
-  data: () => ({}),
+  data: () => ({
+    supported: true
+  }),
   computed: {
     dark: function() {
       return this.$store.state.darkMode;
+    }
+  },
+  methods: {
+    isSupported() {
+
     }
   },
   created() {
@@ -57,6 +70,11 @@ export default {
     } else {
       this.$store.commit('useFake');
     }
+  },
+  mounted() {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    this.supported = context && context instanceof WebGLRenderingContext;
   }
 };
 </script>

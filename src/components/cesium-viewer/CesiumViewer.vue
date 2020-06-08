@@ -28,6 +28,7 @@
       @moveEnd="onCameraMoveEnd"
       @MOUSE_MOVE="onMouseMove"
       @selectedEntityChanged="onSelectedEntityChanged"
+      @renderError="onRenderError"
     >
       <!-- Terrains -->
       <vc-provider-terrain-cesium ref="terrain"></vc-provider-terrain-cesium>
@@ -180,6 +181,11 @@ export default {
         // 尝试规避一些鼠标单击事件的问题。
       })
     },
+    onRenderError(param) {
+      let {scene, error} = param;
+      console.log('Render error: ', error);
+      this.$emit('error', error);
+    },
     // resolveWhenReady() {
     //   return new Promise(resolve => {
     //     let id = setInterval(() => {
@@ -209,11 +215,16 @@ export default {
 
 <style>
 div.root {
-  height: 100%;
-  width: 100%;
+  /* height: 100%;
+  width: 100%; */
   padding: 0;
   margin: 0;
   overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 /* 
 div.debug-float {

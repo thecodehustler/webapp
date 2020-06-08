@@ -104,14 +104,14 @@ module.exports = {
           assets: 'https://cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js',
           global: 'Vuex'
         },
-        {
-          id: 'vuetify',
-          assets: [
-            'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.js',
-            'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.css'
-          ],
-          global: 'Vuetify'
-        },
+        // {
+        //   id: 'vuetify',
+        //   assets: [
+        //     'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.js',
+        //     'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.css'
+        //   ],
+        //   global: 'Vuetify'
+        // },
         {
           id: 'vue-cesium',
           assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.4/lib/index.umd.min.js',

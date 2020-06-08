@@ -51,7 +51,10 @@
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
-          <v-list min-width="120">
+          <v-list min-width="150" width="200">
+            <v-list-item>
+              <LangSelect></LangSelect>
+            </v-list-item>
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
@@ -78,6 +81,7 @@ import SearchResultList from "./SearchResultList";
 import UserInfoCard from "./UserInfoCard";
 import { mapState } from "vuex";
 import AsyncComponents from "../../commons/async-components/AsyncComponents";
+import LangSelect from '../../components/lang-select/LangSelect';
 
 let About = AsyncComponents.build("views/About.vue");
 
@@ -250,7 +254,8 @@ export default {
   components: {
     SearchResultList,
     About,
-    UserInfoCard
+    UserInfoCard,
+    LangSelect
   }
 };
 </script>
