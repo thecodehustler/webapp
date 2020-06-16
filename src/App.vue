@@ -1,14 +1,20 @@
 <template>
   <v-app :dark="dark">
     <v-content>
-      <Main v-if="supported"></Main>
-      <NotSupported v-else></NotSupported>
+      <Main v-if="supported == true"></Main>
+      <NotSupported v-else-if="supported == false"></NotSupported>
+      <div v-else></div>
       <v-snackbar vertical></v-snackbar>
+      <vue-headful :title="$t('app.title')"></vue-headful>
     </v-content>
     <v-footer>
-      <div><a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a></div> 
+      <div>
+        <a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a>
+      </div>
       <v-spacer></v-spacer>
-      <div v-if="!supported"><LangSelect /></div>
+      <div v-if="!supported">
+        <LangSelect />
+      </div>
       <div v-if="!supported" class="text--disabled">© 2020 SHERRY / APTX</div>
     </v-footer>
   </v-app>
@@ -16,9 +22,13 @@
 
 <script>
 import AsyncComponents from "./commons/async-components/AsyncComponents";
-let NotSupported = AsyncComponents.build('components/not-supported-view/NotSupported.vue');
+let NotSupported = AsyncComponents.build(
+  "components/not-supported-view/NotSupported.vue"
+);
 let Main = AsyncComponents.build("components/Main.vue");
-import LangSelect from './components/lang-select/LangSelect';
+import "./components/headful";
+import LangSelect from "./components/lang-select/LangSelect";
+import Vue from "vue";
 
 export default {
   name: "App",
@@ -28,7 +38,7 @@ export default {
     LangSelect
   },
   data: () => ({
-    supported: true
+    supported: undefined
   }),
   computed: {
     dark: function() {
@@ -36,13 +46,11 @@ export default {
     }
   },
   methods: {
-    isSupported() {
-
-    }
+    isSupported() {}
   },
   created() {
     this.$store.dispatch("initWX"); // 开始准备微信
-    
+
     // 解析参数
     let query = window.location.search.substring(1);
     let vars = (function() {
@@ -66,15 +74,20 @@ export default {
       //     this.$store.commit('updateUserInfo');
       //   })
       this.$store.commit("redirected", vars.get("code"));
-      this.$store.dispatch('obtainUserinfo');
+      this.$store.dispatch("obtainUserinfo");
     } else {
-      this.$store.commit('useFake');
+      this.$store.commit("useFake");
     }
   },
   mounted() {
-    let canvas = document.createElement('canvas');
-    let context = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    this.supported = context && context instanceof WebGLRenderingContext;
+    document.dispatchEvent(new Event("x-app-rendered"));
+    // 判断浏览器是否支持 WebGL
+    Vue.nextTick(() => {
+      let canvas = document.createElement("canvas");
+      let context =
+        canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      this.supported = context && context instanceof WebGLRenderingContext;
+    });
   }
 };
 </script>

@@ -1,7 +1,6 @@
 import wx from 'weixin-js-sdk';
 import axios from "axios";
-
-const APPID = 'wxf72802a4a9dc0581';
+import {wxSettings} from '../config/config';
 
 // const SECRET = ''; // 微信开发者密钥；
 // 不要存在前端
@@ -58,7 +57,7 @@ const mod = {
         console.log(ret);
         wx.config({
           debug: false,
-          appId: APPID,
+          appId: wxSettings.APPID,
           timestamp: ret.data.timestamp,// ok
           nonceStr: ret.data.nonceStr, // ok
           signature: ret.data.signature, //ok
@@ -109,7 +108,7 @@ const mod = {
         //     }
         //   })
         // });
-            // ....
+        // ....
     }
   },
 }

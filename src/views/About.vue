@@ -1,17 +1,20 @@
 <template>
   <v-card max-width="540">
     <v-sheet tile color="primary" height="160">
-      <v-container class="align-content-end fill-height">
+      <v-container class="align-content-end fill-height relative">
         <v-row no-gutters>
           <h1 class="display-2 font-weight-light condensed">{{$t('app.title')}}</h1>
         </v-row>
+          <!-- <img class="absolute-image" src="img/icons/drone-pngrepo-com.png"/> -->
       </v-container>
     </v-sheet>
     <v-card-text>
       <v-container class="pa-0">
         <v-row no-gutters>
           <v-col>
-            <h3 class="subtitle-2 font-weight-medium py-3 light-blue--text">{{$t('about.open_source_libraries')}}</h3>
+            <h3
+              class="subtitle-2 font-weight-medium py-3 light-blue--text"
+            >{{$t('about.open_source_libraries')}}</h3>
 
             <v-expansion-panels flat>
               <v-expansion-panel v-for="lib of LIBRARIES" :key="lib.name">
@@ -76,13 +79,21 @@
 
         <v-row no-gutters>
           <v-col>
-            <h3 class="subtitle-2 font-weight-medium py-3 light-blue--text">{{$t('app.title')}} - {{$t('about.staff')}}</h3>
+            <h3
+              class="subtitle-2 font-weight-medium py-3 light-blue--text"
+            >{{$t('app.title')}} - {{$t('about.staff')}}</h3>
             <p>{{$t('about.website')}}SHERRY / APTX</p>
             <p>{{$t('about.map')}}某位不愿透露姓名的路边小伙</p>
             <p>{{$t('about.modeling')}}艺鸣</p>
-            <p>{{$t('about.articles')}}晋华、恺、<span title="？？？在一起？？？">斯斯、秋秋</span></p>
+            <p>
+              {{$t('about.articles')}}晋华、恺、
+              <span title="？？？在一起？？？">斯斯、秋秋</span>
+            </p>
             <p>{{$t('about.guide')}}虹吾、佰林</p>
-            <p class="text--disabled text-right">build {{VERSION}} · ©2020 SHERRY / APTX.</p>
+            <div class="text--disabled text-right">
+              <span>build {{VERSION}}</span> ·
+              <span>©2020 SHERRY / APTX.</span>
+            </div>
           </v-col>
         </v-row>
       </v-container>
@@ -142,3 +153,27 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+// .absolute-image {
+//   position: absolute;
+//   height: 256px;
+//   bottom: 12px;
+//   right: 12px;
+//   transform: translateY(62px);
+//   opacity: 0.55;
+// }
+
+.relative {
+  position: relative;
+  background: no-repeat url("/img/icons/drone-pngrepo-com.png");
+  background-position: right 12px bottom -36px;
+  background-size: 200px;
+  background-origin: border-box;
+}
+
+
+path {
+  fill: white;
+}
+</style>

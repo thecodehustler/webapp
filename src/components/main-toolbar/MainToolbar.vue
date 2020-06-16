@@ -1,6 +1,6 @@
 <template>
   <v-container class="bottom-absolute" max-width="730">
-    <v-dialog v-model="showAbout" max-width="540">
+    <v-dialog v-model="showAbout" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile">
       <About @close="showAbout = false" />
     </v-dialog>
     <v-card>
@@ -82,6 +82,7 @@ import UserInfoCard from "./UserInfoCard";
 import { mapState } from "vuex";
 import AsyncComponents from "../../commons/async-components/AsyncComponents";
 import LangSelect from '../../components/lang-select/LangSelect';
+import {wxSettings} from '../../config/config';
 
 let About = AsyncComponents.build("views/About.vue");
 
@@ -145,14 +146,7 @@ export default {
     // `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
     // 请参考：https://lodash.com/docs#debounce
     this.debouncedGetEntries = lodash.debounce(this.searchQuery, 500);
-    this.$store.commit("updateFake", {
-      // Some fake user info.
-      name: "DaChuang User",
-      id: "大学生创业测试用户信息。",
-      avatar_url:
-        "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1cfa619f-ac21-4dd8-b4fb-e5aa12ac465d/d8ual6l-7dadd771-ea61-46db-abac-818eab12eaa8.png/v1/fill/w_1024,h_1024,strp/hakase_shinonome_by_numenoreano_d8ual6l-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNCIsInBhdGgiOiJcL2ZcLzFjZmE2MTlmLWFjMjEtNGRkOC1iNGZiLWU1YWExMmFjNDY1ZFwvZDh1YWw2bC03ZGFkZDc3MS1lYTYxLTQ2ZGItYWJhYy04MThlYWIxMmVhYTgucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.DOrXOCBO1lKffcxiCF2JWOkkeKmjff-DUc8siBN5r8k",
-      gender: 2
-    });
+    this.$store.commit("updateFake", wxSettings.fakeUserInfo);
   },
   methods: {
     start() {
@@ -240,6 +234,7 @@ export default {
     //   }
     // },
     textInput: function(newVal) {
+      newVal = newVal.trim();
       if (newVal && newVal !== "") {
         this.showResult = true;
         this.debouncedGetEntries();

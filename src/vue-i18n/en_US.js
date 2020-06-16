@@ -8,7 +8,7 @@ export default {
       loading_text: 'Loading...',
       loading_longer: 'This loading takes more time than expected. Be patient...',
       webgl_unsupported: 'Your browser doesn\'t support WebGL.',
-      webgl_unsupported_description: 'Please check your browser config, or consider upgrading to a modern browser.',
+      webgl_unsupported_description: 'Please check your browser configuration, or consider upgrading to a modern browser.',
       upgrade_help: 'Need help?',
       close: 'Close',
     },

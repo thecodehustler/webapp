@@ -69,7 +69,7 @@ module.exports = {
     // 添加全局变量。
     config.plugin('define').tap(args => {
       let a = new Date();
-      args[0]["MY_APP_VERSION"] = JSON.stringify(`${a.getFullYear() * 10000 + (a.getMonth() + 1) * 100 + a.getDate() + 1}@${new GitRevision().version()}`);
+      args[0]["MY_APP_VERSION"] = JSON.stringify(`${a.getFullYear() % 1000 * 10000 + (a.getMonth() + 1) * 100 + a.getDate()}@${new GitRevision().version()}`);
       // args[0]['MY_APP_VERSION'] = `${a.getUTCFullYear() * 10000 + (a.getUTCMonth() + 1) * 100 + a.getUTCDate() + 1}@${new GitRevision().commithash()}`;
       return args;
     })

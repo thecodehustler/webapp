@@ -32,14 +32,8 @@ import CesiumViewer from "./cesium-viewer/CesiumViewer.vue";
 import ArticleOverlay from "./article-overlay/ArticleOverlay.vue";
 import MainToolbar from "./main-toolbar/MainToolbar.vue";
 
-// let MainToolbar = AsyncComponents('main-toolbar/MainToolbar.vue');
-
 let home = new CameraParameters({
-  position: {
-    lng: 117.62396258879075,
-    lat: 40.12260573122965,
-    height: 682.0914472453253
-  },
+  position: cesiumSettings.homePosition,
   heading: 0,
   pitch: -45,
   roll: 0
@@ -54,6 +48,7 @@ import {
 } from "./cesium-viewer/CesiumViewerTypes";
 import { States } from "./location-button/LocationFAB";
 import { mapState } from "vuex";
+import {cesiumSettings} from '../config/config';
 
 export default {
   data: () => {
@@ -90,11 +85,11 @@ export default {
       this.cesiumData.Imagerys.push({
         index: 1,
         URLTemplate: {
-          url: "https://www.google.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}"
+          url: cesiumSettings.imageryURLTemplate
         }
       }); // 加入 Google 地球图层。
 
-      Cesium.IonResource.fromAssetId(97713).then(resURL => {
+      Cesium.IonResource.fromAssetId(cesiumSettings.tileset.cesiumIonAssetID).then(resURL => {
         this.tileset = viewer.scene.primitives.add(
           new Cesium.Cesium3DTileset({
             url: resURL,
@@ -105,7 +100,7 @@ export default {
       });
 
       this.cesiumData.DataSources.KMLData.push(
-        new KMLData("/kmls/sample.kmz").ready(ret => {
+        new KMLData(cesiumSettings.kmlDataURL).ready(ret => {
           console.log("New KML Loaded,", ret);
           this.$refs.viewer.flyTo(home);
           this.imageryReady = true;
