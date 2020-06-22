@@ -28,9 +28,10 @@
 "use strict";
 
 import "../commons/location-watcher/LocationWatcherComponent";
-import CesiumViewer from "./cesium-viewer/CesiumViewer.vue";
-import ArticleOverlay from "./article-overlay/ArticleOverlay.vue";
-import MainToolbar from "./main-toolbar/MainToolbar.vue";
+
+import CesiumViewer from "../components/cesium-viewer/CesiumViewer.vue";
+import ArticleOverlay from "../components/article-overlay/ArticleOverlay.vue";
+import MainToolbar from "../components/main-toolbar/MainToolbar.vue";
 
 let home = new CameraParameters({
   position: cesiumSettings.homePosition,
@@ -45,10 +46,10 @@ import {
   Tileset,
   CameraParameters,
   KMLData
-} from "./cesium-viewer/CesiumViewerTypes";
-import { States } from "./location-button/LocationFAB";
+} from "../components/cesium-viewer/CesiumViewerTypes";
+import { States } from "../components/location-button/LocationFAB";
 import { mapState } from "vuex";
-import {cesiumSettings} from '../config/config';
+import { cesiumSettings } from '../config/config';
 
 export default {
   data: () => {

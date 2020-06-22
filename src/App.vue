@@ -1,21 +1,21 @@
 <template>
   <v-app :dark="dark">
-    <v-content>
-      <Main v-if="supported == true"></Main>
-      <NotSupported v-else-if="supported == false"></NotSupported>
+    <v-main>
+      <Main v-if="notSupportedReason === 0"></Main>
+      <NotSupported v-else-if="notSupportedReason === 1"></NotSupported>
       <div v-else></div>
       <v-snackbar vertical></v-snackbar>
-      <vue-headful :title="$t('app.title')"></vue-headful>
-    </v-content>
+      <vue-headful :title="$vuetify.lang.t('app.title')"></vue-headful>
+    </v-main>
     <v-footer>
       <div>
         <a href="http://www.beian.miit.gov.cn">赣ICP备20005831号-1</a>
       </div>
       <v-spacer></v-spacer>
-      <div v-if="!supported">
+      <div v-if="notSupportedReason !== 0">
         <LangSelect />
       </div>
-      <div v-if="!supported" class="text--disabled">© 2020 SHERRY / APTX</div>
+      <div v-if="notSupportedReason !== 0" class="text--disabled">© 2020 SHERRY / APTX</div>
     </v-footer>
   </v-app>
 </template>
@@ -25,10 +25,9 @@ import AsyncComponents from "./commons/async-components/AsyncComponents";
 let NotSupported = AsyncComponents.build(
   "components/not-supported-view/NotSupported.vue"
 );
-let Main = AsyncComponents.build("components/Main.vue");
+let Main = AsyncComponents.build("views/Main.vue");
 import "./components/headful";
 import LangSelect from "./components/lang-select/LangSelect";
-import Vue from "vue";
 
 export default {
   name: "App",
@@ -38,7 +37,7 @@ export default {
     LangSelect
   },
   data: () => ({
-    supported: undefined
+    notSupportedReason: -1,
   }),
   computed: {
     dark: function() {
@@ -82,11 +81,11 @@ export default {
   mounted() {
     document.dispatchEvent(new Event("x-app-rendered"));
     // 判断浏览器是否支持 WebGL
-    Vue.nextTick(() => {
+    this.$nextTick(() => {
       let canvas = document.createElement("canvas");
       let context =
         canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      this.supported = context && context instanceof WebGLRenderingContext;
+      this.notSupportedReason = (context && context instanceof WebGLRenderingContext)? 0: 1;
     });
   }
 };

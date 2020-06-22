@@ -87,6 +87,7 @@ module.exports = {
       headless: false,
       onlyProduction: true
     },
+    /*
     externals: {
       common: [
         {
@@ -129,6 +130,7 @@ module.exports = {
         },
       ]
     }
+    */
   },
 
 }
