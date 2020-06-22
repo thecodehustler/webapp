@@ -13,6 +13,7 @@ export default {
       webgl_unsupported_description: 'Please check your browser configuration, or consider upgrading to a modern browser.',
       upgrade_help: 'Need help?',
       close: 'Close',
+      ie_warning: 'You\'re using Internet Explorer, which is not fully supported by this site. We recommend switching to a modern browser.',
     },
     about: {
       open_source_libraries: 'Open-source Projects',

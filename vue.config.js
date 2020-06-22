@@ -87,7 +87,7 @@ module.exports = {
       headless: false,
       onlyProduction: true
     },
-    /*
+
     externals: {
       common: [
         {
@@ -97,7 +97,7 @@ module.exports = {
         },
         {
           id: 'vue-router',
-          assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.3.2/dist/vue-router.min.js',
+          assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js',
           global: 'VueRouter'
         },
         {
@@ -128,9 +128,13 @@ module.exports = {
           assets: 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
           global: 'axios'
         },
+        {
+          id: 'weixin-js-sdk',
+          assets: 'https://cdn.jsdelivr.net/npm/weixin-js-sdk@1.6.0/index.min.js',
+          global: 'wx'
+        }
       ]
     }
-    */
   },
 
 }

@@ -7,10 +7,13 @@ export default {
     action_dismiss: '知道了',
     loading_text: '正在载入……',
     loading_longer: '载入的时间似乎比预期要慢一些。请稍等片刻。',
+    load_failed_title: '啊哦，出错了。',
+    load_failed_text: '这可能是网络连接问题导致的，也可能是程序自己的问题。请刷新页面。',
     webgl_unsupported: '您的浏览器不支持 WebGL。',
     webgl_unsupported_description: '请考虑更改您浏览器的相关设定，或者更新您的浏览器。',
     upgrade_help: '需要帮助？',
     close: '关闭',
+    ie_warning: '您正在使用 IE 浏览器，而该网站对其的支持比较有限。我们建议您切换到现代浏览器。'
   },
   about: {
     open_source_libraries: '本项目使用的开源项目',

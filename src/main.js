@@ -4,7 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
-import VI18NOptions from './vue-i18n';
+import VI18NOptions from './vue-i18n/index';
 
 import {MainConfig} from './config/config'
 
