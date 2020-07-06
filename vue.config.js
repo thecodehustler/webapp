@@ -1,4 +1,4 @@
-const path = require('path');
+// const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const GitRevision = require('git-revision-webpack-plugin');
 // const PrerenderSPAPlugin = require('prerender-spa-plugin');
@@ -9,10 +9,8 @@ module.exports = {
   "transpileDependencies": [
     "vuetify",
   ],
-
-  // crossorigin: 'anonymous',
+  // 生产模式下关闭 SourceMap。
   productionSourceMap: false,
-
   css: {
     sourceMap: false,
   },
@@ -25,6 +23,7 @@ module.exports = {
   },
 
   devServer: {
+    // devServer 这段将向以下两个 URL 的请求导向 80 端口。
     proxy: {
       '/api': {
         target: 'http://localhost:80',
@@ -40,11 +39,11 @@ module.exports = {
   },
 
   "configureWebpack": {
-    resolve: {
-      alias: {
-        SRC: path.resolve(__dirname, 'src/')
-      }
-    },
+    // resolve: {
+    //   alias: {
+    //     SRC: path.resolve(__dirname, 'src/')
+    //   }
+    // },
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
@@ -66,7 +65,7 @@ module.exports = {
   },
 
   chainWebpack: config => {
-    // 添加全局变量。
+    // 添加全局变量。这些变量仅在构建环境中可用。
     config.plugin('define').tap(args => {
       let a = new Date();
       args[0]["MY_APP_VERSION"] = JSON.stringify(`${a.getFullYear() % 1000 * 10000 + (a.getMonth() + 1) * 100 + a.getDate()}@${new GitRevision().version()}`);
@@ -127,11 +126,6 @@ module.exports = {
           id: 'axios',
           assets: 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
           global: 'axios'
-        },
-        {
-          id: 'weixin-js-sdk',
-          assets: 'https://cdn.jsdelivr.net/npm/weixin-js-sdk@1.6.0/index.min.js',
-          global: 'wx'
         }
       ]
     }
