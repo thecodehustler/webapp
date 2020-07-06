@@ -12,7 +12,7 @@ import {MainConfig} from './config/config'
 import VueCesium from 'vue-cesium';
 // 在 Vue 中声明要使用这个库。
 Vue.use(VueCesium, {
-  cesiumPath: 'https://cdn.jsdelivr.net/npm/cesium@1.70.0/Build/Cesium/Cesium.js',
+  cesiumPath: 'https://cdn.jsdelivr.net/npm/cesium@1.71.0/Build/Cesium/Cesium.js',
   accessToken: MainConfig.cesiumAccessToken,
 });
 

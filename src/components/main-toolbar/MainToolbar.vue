@@ -1,8 +1,5 @@
 <template>
   <v-container class="bottom-absolute" max-width="730">
-    <v-dialog v-model="showAbout" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile">
-      <About @close="showAbout = false" />
-    </v-dialog>
     <v-card>
       <v-expand-transition>
         <SearchResultList
@@ -80,11 +77,8 @@ import Axios from "axios";
 import SearchResultList from "./SearchResultList";
 import UserInfoCard from "./UserInfoCard";
 import { mapState } from "vuex";
-import AsyncComponents from "../../commons/async-components/AsyncComponents";
 import LangSelect from '../../components/lang-select/LangSelect';
 import {wxSettings} from '../../config/config';
-
-let About = AsyncComponents.build("views/About.vue");
 
 export const States = {
   STOPPED: 0, // 未开始
@@ -201,7 +195,8 @@ export default {
       this.$emit("goHome");
     },
     openAboutDialog() {
-      this.showAbout = true;
+      this.$router.push('/about');
+      // this.showAbout = true;
     },
     cardBlur() {
       console.log('Card blur!');
@@ -248,7 +243,6 @@ export default {
   },
   components: {
     SearchResultList,
-    About,
     UserInfoCard,
     LangSelect
   }

@@ -18,7 +18,12 @@
           ></CesiumViewer>
         </div>
         <MainToolbar ref="toolbar"></MainToolbar>
-        <ArticleOverlay ref="article"></ArticleOverlay>
+        <!-- 计划是通过路由来控制组件的可见性 -->
+        <div id="scrub">
+          <router-view name="fs"></router-view>
+        </div>
+        <!-- <ArticleOverlay ref="article"></ArticleOverlay>
+        <About></About>-->
       </v-col>
     </v-row>
   </v-container>
@@ -30,7 +35,7 @@
 import "../commons/location-watcher/LocationWatcherComponent";
 
 import CesiumViewer from "../components/cesium-viewer/CesiumViewer.vue";
-import ArticleOverlay from "../components/article-overlay/ArticleOverlay.vue";
+// import ArticleOverlay from "../components/article-overlay/ArticleOverlay.vue";
 import MainToolbar from "../components/main-toolbar/MainToolbar.vue";
 
 let home = new CameraParameters({
@@ -49,7 +54,7 @@ import {
 } from "../components/cesium-viewer/CesiumViewerTypes";
 import { States } from "../components/location-button/LocationFAB";
 import { mapState } from "vuex";
-import { cesiumSettings } from '../config/config';
+import { cesiumSettings } from "../config/config";
 
 export default {
   data: () => {
@@ -90,7 +95,9 @@ export default {
         }
       }); // 加入 Google 地球图层。
 
-      Cesium.IonResource.fromAssetId(cesiumSettings.tileset.cesiumIonAssetID).then(resURL => {
+      Cesium.IonResource.fromAssetId(
+        cesiumSettings.tileset.cesiumIonAssetID
+      ).then(resURL => {
         this.tileset = viewer.scene.primitives.add(
           new Cesium.Cesium3DTileset({
             url: resURL,
@@ -112,6 +119,7 @@ export default {
         this.$refs.viewer.flyTo(home);
       });
     },
+
     entityChanged(obj) {
       console.log(obj);
       if (
@@ -119,10 +127,16 @@ export default {
         obj.entity.kml.snippet &&
         obj.entity.kml.snippet != ""
       ) {
-        this.$store.dispatch(
-          "loadFromURL",
-          `/api/info?landmarkID=${obj.entity.kml.snippet}`
-        );
+        this.$router
+          .push({
+            name: "Landmark",
+            query: { id: obj.entity.kml.snippet }
+          })
+          .then(() => {
+
+          });
+      } else {
+        this.$router.replace('/');
       }
     },
 
@@ -143,7 +157,7 @@ export default {
   },
   components: {
     CesiumViewer,
-    ArticleOverlay,
+    // ArticleOverlay,
     MainToolbar
   },
   created() {},
@@ -170,12 +184,15 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .viewer-fill {
   height: 100%;
   width: 100%;
 }
 .fixed {
   position: absolute;
+}
+div#scrub {
+  position: fixed;
 }
 </style>

@@ -1,4 +1,5 @@
 <template>
+<v-dialog v-model="model" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile">
   <v-card max-width="540">
     <v-sheet tile color="primary" height="160">
       <v-container class="align-content-end fill-height relative">
@@ -21,7 +22,7 @@
                 <v-expansion-panel-header>
                   {{lib.name}}
                   <span style="padding-left: 8px">
-                    <v-chip x-small label :href="lib.licenseURL" target="_blank">{{lib.license}}</v-chip>
+                    <v-chip x-small label :href="lib.licenseURL" target="_blank" @click.stop>{{lib.license}}</v-chip>
                   </span>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
@@ -103,6 +104,7 @@
       <v-btn @click="close" text>{{$t('app.close')}}</v-btn>
     </v-card-actions>
   </v-card>
+</v-dialog>
 </template>
 
 <script>
@@ -111,6 +113,7 @@ export default {
     return {
       // eslint-disable-next-line no-undef
       VERSION: MY_APP_VERSION,
+      model: true,
       LIBRARIES: [
         {
           name: "Vue.js",
@@ -149,6 +152,16 @@ export default {
   methods: {
     close() {
       this.$emit("close");
+      this.model = false;
+    }
+  },
+  watch: {
+    model(newVal) {
+      if (newVal == false) {
+        setTimeout(()=>{
+          this.$router.go(-1);
+        }, 200);
+      }
     }
   }
 };

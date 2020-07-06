@@ -22,7 +22,7 @@
           lazy-src="../../assets/placeholder.jpg"
           height="180"
         >
-          <v-btn icon right absolute @click="close">
+          <v-btn icon right absolute @click="close" v-show="overlay.errorReason === 0">
             <v-icon>mdi-close-circle</v-icon>
           </v-btn>
           <v-progress-linear absolute top :active="overlay.loading" indeterminate></v-progress-linear>
@@ -77,7 +77,12 @@
       <v-expand-transition>
         <v-card-actions v-show="overlay.contentReady && overlay.data.mp_link">
           <v-spacer />
-          <v-btn :href="overlay.data.mp_link" text :disabled="!overlay.data.mp_link" target="_blank">
+          <v-btn
+            :href="overlay.data.mp_link"
+            text
+            :disabled="!overlay.data.mp_link"
+            target="_blank"
+          >
             {{$t('article.goto')}}
             <v-icon small>mdi-open-in-new</v-icon>
           </v-btn>
@@ -107,19 +112,6 @@ export default {
       // errorReason: 0,
     };
   },
-  // props: {
-  //   debugInfo: {
-  //     type: Object,
-  //     required: false
-  //   },
-  //   show: {
-  //     type: Boolean,
-  //   },
-  //   url: {
-  //     type: String,
-  //     required: false
-  //   }
-  // },
   computed: {
     errorMessage() {
       switch (this.overlay.errorReason) {
@@ -151,22 +143,40 @@ export default {
     ...mapMutations({
       close: "close"
     })
+  },
+  mounted() {
+    if (this.$route.query.id) {
+      this.$store.dispatch(
+        "loadFromURL",
+        `/api/info?landmarkID=${this.$route.query.id}`
+      );
+    }
+  },
+  beforeDestroy() {
+    console.log('Overlay beforeDestroy!');
   }
 };
 </script>
 
-<style lang="sass">
-#subheading
-  line-height: 1.2
-#card-text
-  h2
-    font-weight: 500
-    font-size: 1em
-    color: #2196F3
-    margin-bottom: 12px
-    margin-top: 12px
-  strong
-    font-weight: 600
-  img
-    max-width: 95%
+<style lang="scss">
+#subheading {
+  line-height: 1.2;
+}
+#card-text {
+  h2 {
+    font-weight: 500;
+    font-size: 1em;
+    color: #2196f3;
+    margin-bottom: 12px;
+    margin-top: 12px;
+  }
+  strong {
+    font-weight: 600;
+  }
+
+  img {
+    max-width: 95%;
+  }
+}
+
 </style>

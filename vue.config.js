@@ -1,9 +1,7 @@
-// const path = require('path');
+const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const GitRevision = require('git-revision-webpack-plugin');
-// const PrerenderSPAPlugin = require('prerender-spa-plugin');
-// const CompressionPlugin = require('compression-webpack-plugin');
-// const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
+// const { default: router } = require('./src/router');
 
 module.exports = {
   "transpileDependencies": [
@@ -39,11 +37,11 @@ module.exports = {
   },
 
   "configureWebpack": {
-    // resolve: {
-    //   alias: {
-    //     SRC: path.resolve(__dirname, 'src/')
-    //   }
-    // },
+    resolve: {
+      alias: {
+        SRC: path.resolve(__dirname, 'src/')
+      }
+    },
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
@@ -86,9 +84,13 @@ module.exports = {
       headless: false,
       onlyProduction: true
     },
-
     externals: {
       common: [
+        {
+          id: 'weixin-js-sdk',
+          assets: 'https://cdn.jsdelivr.net/npm/weixin-js-sdk@1.6.0/index.original.js',
+          global: 'jWeixin'
+        },
         {
           id: 'vue',
           assets: 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.runtime.min.js',
@@ -101,17 +103,14 @@ module.exports = {
         },
         {
           id: 'vuex',
-          assets: 'https://cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js',
+          assets: 'https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
           global: 'Vuex'
         },
-        // {
-        //   id: 'vuetify',
-        //   assets: [
-        //     'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.js',
-        //     'https://cdn.jsdelivr.net/npm/vuetify@2.2.32/dist/vuetify.min.css'
-        //   ],
-        //   global: 'Vuetify'
-        // },
+        {
+          id: 'vue-i18n',
+          assets: 'https://cdn.jsdelivr.net/npm/vue-i18n@8.18.2/dist/vue-i18n.min.js',
+          global: 'VueI18n'
+        },
         {
           id: 'vue-cesium',
           assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.4/lib/index.umd.min.js',
@@ -122,13 +121,14 @@ module.exports = {
           assets: 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js',
           global: '_'
         },
+
+
         {
           id: 'axios',
           assets: 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
           global: 'axios'
-        }
+        },
       ]
     }
-  },
-
+  }
 }

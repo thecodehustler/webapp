@@ -1,26 +1,41 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Main from '../views/Main.vue'
+// import AsyncComponents from '../commons/async-components/AsyncComponents';
+// import Main from '../views/Main.vue';
+import ArticleOverlay from '../components/article-overlay/ArticleOverlay.vue';
+import About from '../views/About.vue';
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
     name: 'Main',
-    component: Main
+    components: {
+      default: () => import( /* webpackChunkName: "main" */'../views/Main.vue')
+    },
+    children: [
+      {
+        path: 'about',
+        name: 'About',
+        
+        components: {
+          fs: About,
+        }
+      },
+      {
+        path: 'landmark',
+        name: 'Landmark',
+        components: {
+          fs: ArticleOverlay
+        }
+      }
+    ]
   },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

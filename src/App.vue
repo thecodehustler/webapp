@@ -1,7 +1,8 @@
 <template>
   <v-app :dark="dark">
     <v-main>
-      <Main v-if="notSupportedReason === 0"></Main>
+      <router-view v-if="notSupportedReason === 0"></router-view>
+      <!-- <Main v-if="notSupportedReason === 0"></Main> -->
       <NotSupported v-else-if="notSupportedReason === 1"></NotSupported>
       <div v-else></div>
       <v-snackbar vertical top right color="warning" v-model="ieWarningSnackbar" timeout="14000">
@@ -26,21 +27,16 @@
 </template>
 
 <script>
-import AsyncComponents from "./commons/async-components/AsyncComponents";
-let NotSupported = AsyncComponents.build(
-  "components/not-supported-view/NotSupported.vue"
-);
-let Main = AsyncComponents.build("views/Main.vue");
 import "./components/headful";
+import NotSupported from './components/not-supported-view/NotSupported';
 import LangSelect from "./components/lang-select/LangSelect";
 import isIE from './commons/is-ie';
 
 export default {
   name: "App",
   components: {
-    Main,
+    LangSelect,
     NotSupported,
-    LangSelect
   },
   data: () => ({
     notSupportedReason: -1,
@@ -86,8 +82,9 @@ export default {
     }
   },
   mounted() {
-    if (!isIE())
+    if (!isIE()) {
       document.dispatchEvent(new Event("x-app-rendered"));
+    }
     // 判断浏览器是否支持 WebGL
     this.$nextTick(() => {
       let canvas = document.createElement("canvas");
