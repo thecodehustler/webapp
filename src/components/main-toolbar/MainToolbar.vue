@@ -1,6 +1,15 @@
 <template>
-  <v-container class="bottom-absolute" max-width="730" >
+  <v-container class="bottom-absolute" max-width="730">
     <v-card id="main-toolbar-container">
+      <v-expand-transition>
+        <SearchResultList
+          :data="searchResult"
+          :state="searchState"
+          v-show="showResult && textInput != ''"
+          @selected="selected"
+        ></SearchResultList>
+      </v-expand-transition>
+      
       <v-toolbar dense bottom ref="main-toolbar">
         <v-menu
           top
@@ -22,7 +31,7 @@
           <UserInfoCard></UserInfoCard>
         </v-menu>
 
-        <!-- <v-text-field
+        <v-text-field
           hide-details
           prepend-inner-icon="mdi-magnify"
           single-line
@@ -31,8 +40,7 @@
           v-model="textInput"
           :label="$t('toolbar.search')"
           @focus="showResult = true"
-        ></v-text-field> -->
-        <AutoCompleteSearch></AutoCompleteSearch>
+        ></v-text-field>
 
         <!-- 暂时不要显示它 -->
         <!-- <v-btn @click="btnClicked" icon v-if="false">
@@ -64,7 +72,10 @@
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>{{$t('toolbar.menu.show3d')}}</v-list-item-title>
-                <v-list-item-subtitle><v-icon small>mdi-alert</v-icon> {{$t('toolbar.menu.show3dHint')}}</v-list-item-subtitle>
+                <v-list-item-subtitle>
+                  <v-icon small>mdi-alert</v-icon>
+                  {{$t('toolbar.menu.show3dHint')}}
+                </v-list-item-subtitle>
               </v-list-item-content>
               <!-- </template> -->
             </v-list-item>
@@ -95,7 +106,6 @@ import Axios from "axios";
 import LangSelect from "../../components/lang-select/LangSelect.vue";
 import SearchResultList from "./SearchResultList.vue";
 import UserInfoCard from "./UserInfoCard.vue";
-import AutoCompleteSearch from './AutoCompleteSearch.vue';
 
 import { Vue, Component, Emit, Watch, Ref } from "vue-property-decorator";
 import { State, Mutation } from "vuex-class";
@@ -106,8 +116,7 @@ import { wxSettings } from "../../config/config";
   components: {
     LangSelect,
     SearchResultList,
-    UserInfoCard,
-    AutoCompleteSearch
+    UserInfoCard
   }
 })
 export default class MainToolbar extends Vue {
@@ -143,12 +152,17 @@ export default class MainToolbar extends Vue {
         .then(ret => {
           let data = ret.data;
           this.searchResult = data;
+          this.searchState = SearchState.PENDING;
         })
         .catch(reason => {
           console.warn(reason);
           this.searchState = SearchState.ERROR;
         });
     }
+  }
+
+  selected() {
+    this.textInput = "";
   }
 
   // 从 Vuex 传来的微信相关数据。

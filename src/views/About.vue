@@ -107,7 +107,7 @@
 </v-dialog>
 </template>
 
-<script>
+<script lang="tsx">
 export default {
   data() {
     return {
@@ -119,32 +119,36 @@ export default {
           name: "Vue.js",
           license: "MIT",
           licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://vuejs.org/"
+          homepage: "https://vuejs.org/",
         },
         {
           name: "Vuetify",
           license: "MIT",
           licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://vuetifyjs.com/"
+          homepage: "https://vuetifyjs.com/",
+
         },
         {
           name: "Vuex",
           license: "MIT",
           licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://vuex.vuejs.org/"
+          homepage: "https://vuex.vuejs.org/",
+
         },
         {
           name: "Cesium",
           license: "Apache-2.0",
           licenseURL:
             "https://github.com/CesiumGS/cesium/blob/master/LICENSE.md",
-          homepage: "https://cesiumjs.org"
+          homepage: "https://cesiumjs.org",
+
         },
         {
           name: "Vue I18n",
           license: "MIT",
           licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://kazupon.github.io/vue-i18n/"
+          homepage: "https://kazupon.github.io/vue-i18n/",
+
         }
       ]
     };
@@ -168,15 +172,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .absolute-image {
-//   position: absolute;
-//   height: 256px;
-//   bottom: 12px;
-//   right: 12px;
-//   transform: translateY(62px);
-//   opacity: 0.55;
-// }
-
 .relative {
   position: relative;
   background: no-repeat url("/img/icons/drone-pngrepo-com.png");
@@ -184,7 +179,6 @@ export default {
   background-size: 200px;
   background-origin: border-box;
 }
-
 
 path {
   fill: white;

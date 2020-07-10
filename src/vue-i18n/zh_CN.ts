@@ -47,10 +47,15 @@ export default {
   },
   toolbar: {
     search: '搜索…',
+    searchResult: '无结果。 | {count} 条结果。 | {count} 条结果。',
     log_out: '登出',
     menu: {
       show3d: '显示 3D 建筑',
+      show3dHint: '这可能会消耗大量的数据流量和处理性能。',
       about: '关于'
+    },
+    userCard: {
+      myCollection: '我的收藏'
     },
     search_error: '尝试搜索时出错。'
   }

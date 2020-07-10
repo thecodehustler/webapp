@@ -140,9 +140,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      close: "close"
-    })
+    close() {
+      this.$store.commit('close');
+      this.$router.back();
+    }
   },
   mounted() {
     if (this.$route.query.id) {
@@ -150,6 +151,8 @@ export default {
         "loadFromURL",
         `/api/info?landmarkID=${this.$route.query.id}`
       );
+    } else {
+      this.$router.back();
     }
   },
   beforeDestroy() {

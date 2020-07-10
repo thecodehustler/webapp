@@ -29,7 +29,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 "use strict";
 
 import "../commons/location-watcher/LocationWatcherComponent";
@@ -136,7 +136,7 @@ export default {
 
           });
       } else {
-        this.$router.replace('/');
+        // this.$router.replace('/');
       }
     },
 

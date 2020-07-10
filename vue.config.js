@@ -24,7 +24,7 @@ module.exports = {
     // devServer 这段将向以下两个 URL 的请求导向 80 端口。
     proxy: {
       '/api': {
-        target: 'http://localhost:80',
+        target: 'https://uni-inno-webapp.top:443',
         ws: true,
         changeOrigin: true,
       },
@@ -42,6 +42,7 @@ module.exports = {
         SRC: path.resolve(__dirname, 'src/')
       }
     },
+    devtool: 'source-map', // 调试用的选项
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
@@ -84,51 +85,51 @@ module.exports = {
       headless: false,
       onlyProduction: true
     },
-    externals: {
-      common: [
-        {
-          id: 'weixin-js-sdk',
-          assets: 'https://cdn.jsdelivr.net/npm/weixin-js-sdk@1.6.0/index.original.js',
-          global: 'jWeixin'
-        },
-        {
-          id: 'vue',
-          assets: 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.runtime.min.js',
-          global: 'Vue'
-        },
-        {
-          id: 'vue-router',
-          assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js',
-          global: 'VueRouter'
-        },
-        {
-          id: 'vuex',
-          assets: 'https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
-          global: 'Vuex'
-        },
-        {
-          id: 'vue-i18n',
-          assets: 'https://cdn.jsdelivr.net/npm/vue-i18n@8.18.2/dist/vue-i18n.min.js',
-          global: 'VueI18n'
-        },
-        {
-          id: 'vue-cesium',
-          assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.4/lib/index.umd.min.js',
-          global: 'VueCesium'
-        },
-        {
-          id: 'lodash',
-          assets: 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js',
-          global: '_'
-        },
+    // externals: {
+    //   common: [
+    //     {
+    //       id: 'weixin-js-sdk',
+    //       assets: 'https://cdn.jsdelivr.net/npm/weixin-js-sdk@1.6.0/index.original.js',
+    //       global: 'jWeixin'
+    //     },
+    //     {
+    //       id: 'vue',
+    //       assets: 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.runtime.min.js',
+    //       global: 'Vue'
+    //     },
+    //     {
+    //       id: 'vue-router',
+    //       assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js',
+    //       global: 'VueRouter'
+    //     },
+    //     {
+    //       id: 'vuex',
+    //       assets: 'https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
+    //       global: 'Vuex'
+    //     },
+    //     {
+    //       id: 'vue-i18n',
+    //       assets: 'https://cdn.jsdelivr.net/npm/vue-i18n@8.18.2/dist/vue-i18n.min.js',
+    //       global: 'VueI18n'
+    //     },
+    //     {
+    //       id: 'vue-cesium',
+    //       assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.4/lib/index.umd.min.js',
+    //       global: 'VueCesium'
+    //     },
+    //     {
+    //       id: 'lodash',
+    //       assets: 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js',
+    //       global: '_'
+    //     },
 
 
-        {
-          id: 'axios',
-          assets: 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
-          global: 'axios'
-        },
-      ]
-    }
+    //     {
+    //       id: 'axios',
+    //       assets: 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
+    //       global: 'axios'
+    //     },
+    //   ]
+    // }
   }
 }

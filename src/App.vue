@@ -26,10 +26,10 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import "./components/headful";
-import NotSupported from './components/not-supported-view/NotSupported';
-import LangSelect from "./components/lang-select/LangSelect";
+import NotSupported from './components/not-supported-view/NotSupported.vue';
+import LangSelect from "./components/lang-select/LangSelect.vue";
 import isIE from './commons/is-ie';
 
 export default {
@@ -98,3 +98,8 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+a {
+  text-decoration: none;
+}
+</style>

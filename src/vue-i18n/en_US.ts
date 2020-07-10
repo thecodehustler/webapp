@@ -46,10 +46,15 @@ export default {
     },
     toolbar: {
       search: 'Search...',
+      searchResult: 'No result. | {count} result. | {count} results',
       log_out: 'Log out',
       menu: {
         show3d: 'Show 3D buildings',
+        show3dHint: 'This may cause a major data usage and some lag.',
         about: 'About...'
+      },
+      userCard: {
+        myCollection: 'My Collection'
       },
       search_error: 'Error while searching.'
     }
