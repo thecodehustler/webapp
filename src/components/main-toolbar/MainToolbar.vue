@@ -1,6 +1,6 @@
 <template>
   <v-container class="bottom-absolute" max-width="730">
-    <v-card id="main-toolbar-container">
+    <v-card id="main-toolbar-container" v-click-outside="onClickOutside">
       <v-expand-transition>
         <SearchResultList
           :data="searchResult"
@@ -9,12 +9,12 @@
           @selected="selected"
         ></SearchResultList>
       </v-expand-transition>
-      
+
       <v-toolbar dense bottom ref="main-toolbar">
         <v-menu
           top
           :offset-y="offsetY"
-          max-height="480"
+          max-height="500"
           transition="slide-y-reverse-transition"
           :close-on-content-click="closeOnContentClick"
           attach="#main-toolbar-container"
@@ -41,6 +41,7 @@
           :label="$t('toolbar.search')"
           @focus="showResult = true"
         ></v-text-field>
+        <!-- <SearchInput></SearchInput> -->
 
         <!-- 暂时不要显示它 -->
         <!-- <v-btn @click="btnClicked" icon v-if="false">
@@ -50,14 +51,14 @@
           <v-icon>mdi-home</v-icon>
         </v-btn>
         <!-- 三点菜单 -->
-        <v-menu offset-y>
+        <v-menu>
           <template v-slot:activator="{ on }">
             <v-btn icon v-on="on">
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
           <v-list min-width="150" width="250">
-            <v-list-item>
+            <v-list-item @click.stop.prevent="">
               <v-list-item-icon>
                 <v-icon>mdi-translate</v-icon>
               </v-list-item-icon>
@@ -65,8 +66,8 @@
                 <LangSelect></LangSelect>
               </v-list-item-content>
             </v-list-item>
+            <v-divider></v-divider>
             <v-list-item three-line @click.stop="show3D = !show3D">
-              <!-- <template v-slot:default="{toggle}"> -->
               <v-list-item-action>
                 <v-checkbox v-model="show3D" color="primary"></v-checkbox>
               </v-list-item-action>
@@ -79,13 +80,50 @@
               </v-list-item-content>
               <!-- </template> -->
             </v-list-item>
-            <v-list-item @click="openAboutDialog">
+<!--            <v-list-item @click="openAboutDialog">
               <v-list-item-icon>
                 <v-icon>mdi-information</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title>{{$t('toolbar.menu.about')}}</v-list-item-title>
               </v-list-item-content>
+            </v-list-item>-->
+            <v-divider></v-divider>
+            <v-list-item @click.native.stop :ripple="1===0">
+              <v-container class="pa-0 ma-0">
+                <v-row class="pa-0 ma-0">
+                  <v-col class="justify-center d-flex pa-0 ma-0" v-ripple @click="openAboutDialog">
+                    <v-btn icon>
+                      <v-icon>mdi-information</v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-divider vertical></v-divider>
+                  <v-col class="justify-center d-flex pa-0 ma-0">
+                    <ThemeAdjustButton></ThemeAdjustButton>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-list-item>
+            <v-divider></v-divider>
+            <v-list-item
+              href="https://uni-inno-webapp.top/code-server/"
+              color="success"
+              title="Try this out! My code server!"
+              target="_blank"
+            >
+              <v-list-item-icon>
+                <v-icon>mdi-microsoft-visual-studio-code</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>Try this out!</v-list-item-title>
+                <v-list-item-subtitle>My Code Server!</v-list-item-subtitle>
+                <span>
+                  <v-chip label title="Promotion (迫真)" disabled x-small>Promotion</v-chip>
+                </span>
+              </v-list-item-content>
+              <v-list-item-icon>
+                <v-icon>mdi-open-in-new</v-icon>
+              </v-list-item-icon>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -95,13 +133,7 @@
 </template>
 
 <script lang="ts">
-enum SearchState {
-  PENDING,
-  ONGOING,
-  ERROR
-}
-import lodash from "lodash";
-import Axios from "axios";
+import { debouncedSearch, SearchState } from "../../commons/landmark-search";
 
 import LangSelect from "../../components/lang-select/LangSelect.vue";
 import SearchResultList from "./SearchResultList.vue";
@@ -111,12 +143,15 @@ import { Vue, Component, Emit, Watch, Ref } from "vue-property-decorator";
 import { State, Mutation } from "vuex-class";
 
 import { wxSettings } from "../../config/config";
+import { AxiosResponse } from "axios";
+import ThemeAdjustButton from "../../components/theme-adjust-button/ThemeAdjustButton.vue";
 
 @Component({
   components: {
     LangSelect,
     SearchResultList,
-    UserInfoCard
+    UserInfoCard,
+    ThemeAdjustButton
   }
 })
 export default class MainToolbar extends Vue {
@@ -125,7 +160,7 @@ export default class MainToolbar extends Vue {
   closeOnContentClick = false;
 
   // 搜索相关
-  debouncesGetEntries = lodash.debounce(this.doSearchQuery, 500);
+  debouncesGetEntries = debouncedSearch();
 
   searchState = SearchState.PENDING;
   textInput = "";
@@ -133,32 +168,42 @@ export default class MainToolbar extends Vue {
   showResult = false;
 
   @Watch("textInput") onTextInput(newVal: string) {
-    newVal = newVal.trim();
-    if (newVal && newVal !== "") {
-      this.showResult = true;
-      this.debouncesGetEntries();
+    if (newVal) {
+      newVal = newVal.trim();
+      if (newVal !== "") {
+        this.showResult = true;
+        this.searchResult = [];
+        this.debouncesGetEntries(newVal)
+          .then((ret: AxiosResponse) => {
+            const data = ret.data;
+            this.searchResult = data;
+            this.searchState = SearchState.PENDING;
+          })
+          .catch((reason: Error) => {
+            console.warn(reason);
+            this.searchState = SearchState.ERROR;
+          });
+      } else {
+        this.showResult = false;
+      }
     } else {
       this.showResult = false;
     }
   }
-  doSearchQuery() {
-    if (this.textInput !== "") {
-      this.searchState = SearchState.ONGOING;
-      Axios.get("/api/search", {
-        params: {
-          name: this.textInput
-        }
-      })
-        .then(ret => {
-          let data = ret.data;
-          this.searchResult = data;
-          this.searchState = SearchState.PENDING;
-        })
-        .catch(reason => {
-          console.warn(reason);
-          this.searchState = SearchState.ERROR;
-        });
-    }
+  // doSearchQuery() {
+  //   if (this.textInput !== "") {
+  //     this.searchState = SearchState.ONGOING;
+  //     Axios.get("/api/search", {
+  //       params: {
+  //         name: this.textInput
+  //       }
+  //     })
+
+  //   }
+  // }
+  // Called when click outside of this card.
+  onClickOutside() {
+    this.showResult = false;
   }
 
   selected() {
@@ -166,10 +211,10 @@ export default class MainToolbar extends Vue {
   }
 
   // 从 Vuex 传来的微信相关数据。
-  @State(state => state.wx.wxState == 0) wxReady: boolean;
+  @State(state => state.wx.wxState == 0) wxReady!: boolean;
   @State(state => (state.wx.useFake ? state.wx.localFake : state.wx.userInfo))
   userInfo;
-  @State(state => state.wx.useFake) fake: boolean;
+  @State(state => state.wx.useFake) fake!: boolean;
   @Mutation("updateFake") updateFakeInformation;
 
   created() {
@@ -199,10 +244,6 @@ export default class MainToolbar extends Vue {
 
   openAboutDialog() {
     this.$router.push("/about");
-  }
-
-  cardBlur() {
-    this.showResult = false;
   }
 }
 // import lodash from "lodash";

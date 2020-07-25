@@ -14,10 +14,13 @@ module.exports = {
   },
   rules: {
     'no-console': 'off',
-    'no-debugger': 'off'
+    'no-debugger': 'off',
+    'camelcase': 'off',
+    '@typescript-eslint/camelcase': 'warn'
   },
   globals: {
     'globalThis': false,
     'Cesium': false,
+    'VARS': false
   }
 }

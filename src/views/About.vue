@@ -1,10 +1,10 @@
 <template>
 <v-dialog v-model="model" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile">
   <v-card max-width="540">
-    <v-sheet tile color="primary" height="160">
+    <v-sheet tile color="blue" height="160">
       <v-container class="align-content-end fill-height relative">
         <v-row no-gutters>
-          <h1 class="display-2 font-weight-light condensed">{{$t('app.title')}}</h1>
+          <h1 class="display-2 font-weight-light condensed white--text">{{$t('app.title')}}</h1>
         </v-row>
           <!-- <img class="absolute-image" src="img/icons/drone-pngrepo-com.png"/> -->
       </v-container>
@@ -14,7 +14,7 @@
         <v-row no-gutters>
           <v-col>
             <h3
-              class="subtitle-2 font-weight-medium py-3 light-blue--text"
+              class="subtitle-2 font-weight-medium py-3 blue--text"
             >{{$t('about.open_source_libraries')}}</h3>
 
             <v-expansion-panels flat>
@@ -92,8 +92,8 @@
             </p>
             <p>{{$t('about.guide')}}虹吾、佰林</p>
             <div class="text--disabled text-right">
-              <span>build {{VERSION}}</span> ·
-              <span>©2020 SHERRY / APTX.</span>
+              <span>{{$t('about.build_version')}} {{VERSION}}</span> ·
+              <span v-text="COPYRIGHT"></span>
             </div>
           </v-col>
         </v-row>
@@ -112,7 +112,8 @@ export default {
   data() {
     return {
       // eslint-disable-next-line no-undef
-      VERSION: MY_APP_VERSION,
+      VERSION: VARS.VERSION,
+      COPYRIGHT: VARS.COPYRIGHT,
       model: true,
       LIBRARIES: [
         {
@@ -176,7 +177,7 @@ export default {
   position: relative;
   background: no-repeat url("/img/icons/drone-pngrepo-com.png");
   background-position: right 12px bottom -36px;
-  background-size: 200px;
+  background-size: 180px;
   background-origin: border-box;
 }
 

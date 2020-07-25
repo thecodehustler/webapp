@@ -1,5 +1,5 @@
 <template>
-  <div class="root">
+  <div class="cesium-viewer-root">
     
     <!-- <div class="debug-float" v-if="debug.show">
       <v-card max-height="320">
@@ -214,7 +214,7 @@ export default {
 </script>
 
 <style>
-div.root {
+div.cesium-viewer-root {
   /* height: 100%;
   width: 100%; */
   padding: 0;

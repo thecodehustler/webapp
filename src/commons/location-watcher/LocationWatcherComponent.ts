@@ -8,7 +8,7 @@ import Vue from 'vue';
 
 const component = {
   name: 'LocationWatcher',
-  render: function(createElement) {
+  render: function(createElement: Function) {
     return createElement('i', {'display': 'none'});
   },
   data() {
@@ -25,10 +25,10 @@ const component = {
     }
   },
   methods: {
-    onUpdate(coord) {
+    onUpdate(coord: Position) {
       this.$emit('update', coord);
     },
-    onError(error) {
+    onError(error:PositionError) {
       this.$emit('error', error)
     }
   },

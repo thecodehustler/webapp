@@ -1,3 +1,14 @@
+import {Browser} from './commons/browser';
+console.log(Browser);
+if (!Browser.features.intersectionObserver) {
+  import(/* webpackChunkName: "intersect-observer-polyfill" */ "intersection-observer").then(
+    (object) => {
+      console.log('polyfill loaded.', object);
+      // object.prototype.POLL_INTERVAL = 200; // 配置这个 Polyfill 的检测间隔为 200 毫秒。
+    }
+  );
+}
+
 import Vue from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
@@ -6,37 +17,22 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import VI18NOptions from './vue-i18n/index';
 
-import {MainConfig} from './config/config'
-
 // 导入 Vue-Cesium 库；
 import VueCesium from 'vue-cesium';
 // 在 Vue 中声明要使用这个库。
 Vue.use(VueCesium, {
   cesiumPath: 'https://cdn.jsdelivr.net/npm/cesium@1.71.0/Build/Cesium/Cesium.js',
-  accessToken: MainConfig.cesiumAccessToken,
+  accessToken: VARS.CESIUM_ACCESS_TOKEN,
 });
 
 Vue.config.productionTip = false
 
-let root = new Vue({
+console.log(VI18NOptions);
+const root = new Vue({
   router,
   store,
   vuetify,
   i18n: VI18NOptions,
   render: h => h(App), // 等效于 createElement: createElement(App),
 });
-
-// if ('serviceWorker' in navigator) {
-//   navigator.serviceWorker.addEventListener('message', (msg) => {
-//     console.log(msg);
-//     if (msg.data.type == 'updateAvaliable') {
-//       store.commit('updateAvaliable');
-//       console.log('Should update!');
-//     }
-//   })
-// }
-
-root.$vuetify.theme.dark = true;
-
-store.commit('darkMode', true);
 root.$mount('#app');

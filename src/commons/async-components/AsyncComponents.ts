@@ -2,7 +2,7 @@ import Loading from "../../components/indeterminate/Loading.vue";
 import ErrorComponent from '../../components/indeterminate/Error.vue';
 
 export default {
-    build(path) {
+    build(path: string) {
         return () => ({
             component: import(`SRC/${path}`), // 前缀是为了确保能以 src 目录起始
             // 异步组件加载时使用的组件

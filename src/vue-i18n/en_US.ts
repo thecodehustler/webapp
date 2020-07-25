@@ -1,5 +1,8 @@
-export default {
-    app: {
+import LangInterface from "@/vue-i18n/lang-interface";
+import {LocaleMessageObject, LocaleMessages} from "vue-i18n";
+
+class en_US implements LangInterface, LocaleMessages{
+    app = {
       title: 'SKY SOARING CREW',
       offlineMessage: 'Your device is offline. Some contents may be outdated or unavaliable.',
       update_avaliable: 'New content avaliable. Please refresh this page.',
@@ -14,8 +17,8 @@ export default {
       upgrade_help: 'Need help?',
       close: 'Close',
       ie_warning: 'You\'re using Internet Explorer, which is not fully supported by this site. We recommend switching to a modern browser.',
-    },
-    about: {
+    }
+    about = {
       open_source_libraries: 'Open-source Projects',
       map: '2D map: ',
       website: 'Website: ',
@@ -24,16 +27,17 @@ export default {
       homepage: 'Homepage',
       guide: 'Guidance: ',
       staff: 'Staff',
-    },
-    home: {
+      build_version: 'build'
+    }
+    home = {
       locBtn_TrackGeo: 'Follow my step',
       locBtn_Geolocating: 'Locating……',
       locBtn_StopTrack: 'Stop tracking',
       locBtn_GeoLocationFailed: '无法定位。',
       locBtn_Continue: 'Continue',
       debug_Title: 'Debug info'
-    },
-    article: {
+    }
+    article = {
       errors: {
         network: 'Error connecting to the server.',
         not_exist: 'The requested item doesn\'t exist.',
@@ -43,8 +47,8 @@ export default {
       },
       got_it: 'Got it',
       goto: 'View in Official Account'
-    },
-    toolbar: {
+    }
+    toolbar = {
       search: 'Search...',
       searchResult: 'No result. | {count} result. | {count} results',
       log_out: 'Log out',
@@ -58,4 +62,5 @@ export default {
       },
       search_error: 'Error while searching.'
     }
-  }
+}
+  export default new en_US();

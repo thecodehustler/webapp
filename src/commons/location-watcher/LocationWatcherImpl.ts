@@ -1,44 +1,55 @@
-import LoDash from 'lodash';
+import {debounce} from 'lodash';
 
-let geo = navigator.geolocation;
-let instance;
+const geo = navigator.geolocation;
 
-export function LocationWatcherCallbacks(onSuccess, onError) {
-  this.success = onSuccess;
-  this.error = onError;
+export class LocationWatcherCallbacks {
+  success: PositionCallback;
+  error: Function;
+
+  constructor(onSuccess: PositionCallback, onError: PositionCallback) {
+    this.success = onSuccess;
+    this.error = onError;
+  }
 }
 
 class GeoWatch {
-  constructor() {
-    this.registeredCallbacks = new Map(); // map of LocationWatcherCallbacks
-    this._watchID = null;
-    this._cachedCoords = null;
-    this.enabledIDs = [];
-    console.log("GeoWatch: ct called.");
+  registeredCallbacks: Map<string, LocationWatcherCallbacks> = new Map();
+  _watchID: number | null = null;
+  enabledIDs: Array<string> = [];
+  _cachedCoords: Position | null = null;
 
-    this.invokeCallbacksDebounced = LoDash.debounce(pos => {
-      for (const id of this.enabledIDs) {
-        if (this.registeredCallbacks.has(id)) {
-          let a = this.registeredCallbacks.get(id);
-          console.log(a);
-          a.success(pos);
-        }
-      }
-    }, 3000, {
-      leading: true
-    });
-    this.onError = err => {
-      for (const id of this.enabledIDs) {
-        if (this.registeredCallbacks.has(id))
-          this.registeredCallbacks.get(id).error(err);
+  onSuccess(pos: Position) {
+    for (const id of this.enabledIDs) {
+      if (this.registeredCallbacks.has(id)) {
+        const a = this.registeredCallbacks.get(id);
+        console.log(a);
+        if (a) a.success(pos);
       }
     }
   }
 
-  registerCallbacks(callbacks, callbackID) {
-    if (typeof callbackID != 'string') {
-      throw Error("Key must be a string.");
+  onError(err: PositionError) {
+    for (const id of this.enabledIDs) {
+      if (this.registeredCallbacks.has(id)) {
+        const a = this.registeredCallbacks.get(id);
+        if (a) {
+          a.error(err);
+          // const b: Function = (a.error || function(e){});
+          // (err);
+        }
+      }
     }
+  }
+
+  invokeCallbacksDebounced = debounce(this.onSuccess, 3000, {
+    leading: true
+  });
+
+  constructor() {
+    console.log("GeoWatch: ct called.");
+  }
+
+  registerCallbacks(callbacks: LocationWatcherCallbacks, callbackID: string) {
     console.log("GeoWatch: callback registered: " + callbackID);
     this.registeredCallbacks.set(callbackID, callbacks);
     if (this._cachedCoords) {
@@ -46,23 +57,27 @@ class GeoWatch {
     }
   }
 
-  enableCallback(id) {
-    if (this.enabledIDs.lastIndexOf(id) == -1) {
-      this.enabledIDs.push(id);
+  enableCallback(callbackID: string) {
+    if (this.enabledIDs.lastIndexOf(callbackID) == -1) {
+      this.enabledIDs.push(callbackID);
     }
     this.startWatching();
   }
 
-  disableCallback(id) {
-    if (this.enabledIDs.lastIndexOf(id) != -1) {
-      this.enabledIDs.splice(this.enabledIDs.lastIndexOf(id), 1);
+  disableCallback(callbackID: string) {
+    if (this.enabledIDs.lastIndexOf(callbackID) != -1) {
+      this.enabledIDs.splice(this.enabledIDs.lastIndexOf(callbackID), 1);
     }
     if (this.enabledIDs.length == 0) {
       this.stopWatching();
     }
   }
 
-  unregisterCallbacks(callbackID) {
+  /**
+   * Unregister a set of callbacks.
+   * @param callbackID
+   */
+  unregisterCallbacks(callbackID: string) {
     if (this.registeredCallbacks.has(callbackID)) {
       this.registeredCallbacks.delete(callbackID);
       // delete this.registeredCallbacks[callbackID];
@@ -71,6 +86,9 @@ class GeoWatch {
     console.log("Geowatch: callback unregistered: " + callbackID);
   }
 
+  /**
+   * Start watching for positions.
+   */
   startWatching() {
     if (this._watchID == undefined) { // not watching.
       this._watchID = geo.watchPosition((coords) => {
@@ -88,15 +106,15 @@ class GeoWatch {
   stopWatching() {
     if (this._watchID) {
       geo.clearWatch(this._watchID);
-      for (let cb of this.registeredCallbacks) {
-        if (cb.stop) {
-          cb.stop();
-        }
-      }
+      // for (const cb of this.registeredCallbacks) {
+      //   if (cb.stop) {
+      //     cb.stop();
+      //   }
+      // }
     }
     console.log("GeoWatch: stopped, " + this._watchID);
-    this._watchID = undefined;
-    this._cachedCoords = undefined;
+    this._watchID = null;
+    this._cachedCoords = null;
   }
 
   get isWatching() {
@@ -104,16 +122,13 @@ class GeoWatch {
   }
 }
 
-if (!instance) {
-  instance = new GeoWatch;
-  // globalThis.GeoWatcher = instance;
+const instance: GeoWatch = new GeoWatch;
+
+export enum GEOWATCHER_STATES {
+  STOPPED,
+  PENDING,
+  FAILED,
+  ONGOING
 }
 
-const GEOWATCHER_STATES = {
-  STOPPED: 0,
-  PENDING: 1,
-  FAILED: 2,
-  ONGOING: 3
-};
-
-export { instance as default, GEOWATCHER_STATES };
+export default instance;

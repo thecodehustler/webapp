@@ -1,31 +1,41 @@
 <template>
 <div @click.stop="">
-  <v-select v-model="state" :items="options" dense>
+  <v-select :value="lang" :items="options" dense @input="onInput">
   </v-select>
 </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      options: ["English", "中文"],
-      state: '中文'
-    };
-  },
-  watch: {
-    state(n) {
-      switch(n) {
-        case '中文':
-          this.$i18n.locale = 'cn';
-          break;
-        case 'English':
-          this.$i18n.locale = 'en';
-          break;
-      }
-    }
+<script lang="ts">
+  import {Component, Vue} from 'vue-property-decorator';
+  import {namespace, State} from "vuex-class";
+
+  const settings = namespace('settings');
+enum Locales {
+  EN = 'en',
+  CN = 'cn'
+}
+@Component
+export default class LangSelect extends Vue {
+  @settings.State('lang') lang !: Locales;
+  @settings.Mutation('setLanguage') commitNew!: Function;
+  options = [{
+    text: 'English',
+    value: 'en'
+  }, {
+    text: '中文',
+    value: 'cn'
+  }];
+
+  created() {
+    console.log(this.lang);
   }
-};
+
+  onInput(event: string) {
+    this.commitNew(event);
+    // this.$i18n.locale = event;
+    // console.log('input',event);
+  }
+}
 </script>
 
 <style>

@@ -1,5 +1,8 @@
-export default {
-  app: {
+import LangInterface from './lang-interface';
+import {LocaleMessageObject, LocaleMessages} from "vue-i18n";
+
+class zh_CN implements LangInterface, LocaleMessages{
+  app = {
     title: '天空旅行团',
     offlineMessage: '您的设备已离线，部分内容可能过期或者不可用。',
     update_avaliable: '新内容已可用，请刷新页面。',
@@ -14,8 +17,8 @@ export default {
     upgrade_help: '需要帮助？',
     close: '关闭',
     ie_warning: '您正在使用 IE 浏览器，而该网站对其的支持比较有限。我们建议您切换到现代浏览器。'
-  },
-  about: {
+  };
+  about = {
     open_source_libraries: '本项目使用的开源项目',
     build_version: '构建版本：',
     map: '2D 地图：',
@@ -25,16 +28,16 @@ export default {
     homepage: '主页',
     guide: '指导：',
     staff: '人员',
-  },
-  home: {
+  }
+  home = {
     locBtn_TrackGeo: '跟踪当前位置',
     locBtn_Geolocating: '正在定位……',
     locBtn_StopTrack: '停止跟踪',
     locBtn_GeoLocationFailed: '无法定位。',
     locBtn_Continue: '继续',
     debug_Title: '调试信息'
-  },
-  article: {
+  }
+  article = {
     errors: {
       network: '与服务器的连接发生错误。',
       not_exist: '请求的项目不存在。',
@@ -44,8 +47,8 @@ export default {
     },
     got_it: '知道了',
     goto: '前往公众号查看'
-  },
-  toolbar: {
+  }
+  toolbar = {
     search: '搜索…',
     searchResult: '无结果。 | {count} 条结果。 | {count} 条结果。',
     log_out: '登出',
@@ -60,3 +63,5 @@ export default {
     search_error: '尝试搜索时出错。'
   }
 }
+
+export default new zh_CN();

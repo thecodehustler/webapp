@@ -3,6 +3,6 @@ import Vuetify from 'vuetify/lib';
 
 Vue.use(Vuetify);
 
-export default new Vuetify({
-    dark: true
-});
+const globalVuetify = new Vuetify();
+
+export default globalVuetify;

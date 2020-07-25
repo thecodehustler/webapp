@@ -1,6 +1,6 @@
 import wx from 'weixin-js-sdk';
 import axios from "axios";
-import {wxSettings} from '../config/config';
+// import {wxSettings} from '../config/config';
 
 // const SECRET = ''; // 微信开发者密钥；
 // 不要存在前端
@@ -57,7 +57,7 @@ const mod = {
         console.log(ret);
         wx.config({
           debug: false,
-          appId: wxSettings.APPID,
+          appId: VARS.WX_APPID,
           timestamp: ret.data.timestamp,// ok
           nonceStr: ret.data.nonceStr, // ok
           signature: ret.data.signature, //ok

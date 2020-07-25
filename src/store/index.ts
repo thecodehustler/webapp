@@ -7,6 +7,7 @@ Vue.use(Vuex);
 import modOverlay from './module-overlay';
 import modWx from './module-wx';
 import modSWS from './service-worker-state';
+import modSettings from './module-settings';
 
 export default new Vuex.Store({
   state: {
@@ -26,9 +27,9 @@ export default new Vuex.Store({
     initLandingState(state, payload) {
       state.landed = payload;
     },
-    darkMode(state, payload) {
-      state.darkMode = payload;
-    },
+    // darkMode(state, payload) {
+    //   state.darkMode = payload;
+    // },
     toggle3DBuildings(state, option) {
       state.show3DBuildings = option;
     }
@@ -39,5 +40,6 @@ export default new Vuex.Store({
     overlay: modOverlay,
     wx: modWx,
     sw: modSWS,
+    settings: modSettings,
   }
 })

@@ -22,8 +22,7 @@
         <div id="scrub">
           <router-view name="fs"></router-view>
         </div>
-        <!-- <ArticleOverlay ref="article"></ArticleOverlay>
-        <About></About>-->
+
       </v-col>
     </v-row>
   </v-container>
@@ -32,10 +31,9 @@
 <script lang="ts">
 "use strict";
 
-import "../commons/location-watcher/LocationWatcherComponent";
+// import "../commons/location-watcher/LocationWatcherComponent";
 
 import CesiumViewer from "../components/cesium-viewer/CesiumViewer.vue";
-// import ArticleOverlay from "../components/article-overlay/ArticleOverlay.vue";
 import MainToolbar from "../components/main-toolbar/MainToolbar.vue";
 
 let home = new CameraParameters({
@@ -52,7 +50,6 @@ import {
   CameraParameters,
   KMLData
 } from "../components/cesium-viewer/CesiumViewerTypes";
-import { States } from "../components/location-button/LocationFAB";
 import { mapState } from "vuex";
 import { cesiumSettings } from "../config/config";
 
@@ -77,7 +74,7 @@ export default {
           height: 30000
         }
       }),
-      locationWatcherStates: States.STOPPED
+      // locationWatcherStates: States.STOPPED
     };
   },
   methods: {

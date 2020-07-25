@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "suppressImplicitAnyIndexErrors": true, // Suppress noImplicitAny errors for indexing objects lacking index signatures.
     "sourceMap": true,
     "baseUrl": ".",
     "types": [

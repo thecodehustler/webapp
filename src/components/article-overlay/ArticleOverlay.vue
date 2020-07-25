@@ -1,6 +1,31 @@
 <template>
-  <v-bottom-sheet v-model="open" inset max-width="425" scrollable persistent no-click-animation>
-    <v-card>
+  <v-bottom-sheet
+    :value="open"
+    inset
+    max-width="450"
+    scrollable
+    persistent
+    no-click-animation
+    id="bottom-sheet"
+    ref="bottom-sheet"
+  >
+    <v-card max-height="85vh" ref="card">
+      <!-- 上面的几个按钮 -->
+      <v-toolbar
+        min-width="100%"
+        absolute
+        v-show="overlay.errorReason === 0"
+        :color="computedToolbarColor"
+        dense
+        flat
+      >
+        <v-toolbar-title v-show="!intersect">{{ overlay.data.name }}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="close">
+          <v-icon>mdi-close-circle</v-icon>
+        </v-btn>
+        <v-progress-linear absolute top :active="overlay.loading" indeterminate></v-progress-linear>
+      </v-toolbar>
       <!-- 显示错误信息用的 -->
       <v-overlay :value="overlay.errorReason != 0" absolute color="error">
         <v-row justify="center">
@@ -19,19 +44,17 @@
         <v-img
           gradient="to bottom, rgba(100,115,201,.33), rgba(25,32,72,.7)"
           :src="overlay.data.head_image_url"
-          lazy-src="../../assets/placeholder.jpg"
           height="180"
         >
-          <v-btn icon right absolute @click="close" v-show="overlay.errorReason === 0">
-            <v-icon>mdi-close-circle</v-icon>
-          </v-btn>
-          <v-progress-linear absolute top :active="overlay.loading" indeterminate></v-progress-linear>
-
-          <v-container class="fill-height align-content-end pb-0">
+          <v-container
+            class="fill-height align-content-end pb-0"
+            
+          >
             <v-row v-if="overlay.contentReady" class="pb-0 mb-0">
               <v-col class="mb-0">
                 <h2 class="headline font-weight-medium">{{ overlay.data.name }}</h2>
                 <p class="subtitle-1 mb-0 pb-0" id="subheading">{{ overlay.data.subtitle }}</p>
+                <div id="intersect-checker" v-intersect="{handler: onIntersect}"></div>
               </v-col>
             </v-row>
           </v-container>
@@ -93,26 +116,95 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { mapMutations } from "vuex";
-export default {
+import {Vue, Component, Watch} from 'vue-property-decorator';
+import {namespace} from 'vuex-class';
+
+const overlay = namespace('overlay');
+
+@Component
+export default class ArticleOverlay extends Vue {
+  intersect = true;
+  @overlay.State('overlay') overlay;
+  @overlay.Mutation('openPanel') openPanel;
+  @overlay.Action('closePanel') closePanel;
+  @overlay.Action('loadFromURL') loadFromURL;
+  @overlay.State('open') open;
+
+  get computedToolbarColor() {
+    if (!this.intersect) {
+      return "rgba(0,0,0,0.67)";
+    }
+    return "rgba(0,0,0,0)";
+  }
+
+  get errorMessage() {
+    switch (this.overlay.errorReason) {
+      case 0:
+        return "正常。";
+      case 1:
+        return this.$t("article.errors.network");
+      case 2:
+        return this.$t("article.errors.not_exist");
+      case 3:
+        return this.$t("article.errors.internal_server_error");
+      default:
+        return this.$t("article.errors.unknown");
+    }
+  }
+
+
+
+  close() {
+    this.closePanel().then(() => {
+      console.log('After Close');
+      this.$router.back();
+    })
+    // this.closePanel().then(() => {
+    //   this.$router.back();
+    // })
+  }
+
+  /**
+   * Callback: Called when intersect.
+   * @param entries
+   * @param observer
+   */
+  onIntersect(entries, observer) {
+    console.log(entries, observer);
+    this.intersect = entries[entries.length - 1].isIntersecting;
+  }
+
+  mounted() {
+    if (this.$route.query.id) {
+      // this.$store.dispatch(
+      //         "loadFromURL",
+      //         `/api/info?landmarkID=${this.$route.query.id}`
+      // );
+      this.loadFromURL(`/api/info?landmarkID=${this.$route.query.id}`);
+    } else {
+      this.$router.back();
+    }
+  }
+
+  beforeDestroy() {
+    console.log("Overlay beforeDestroy!");
+  }
+}
+///////////////////////////////////////////////
+/*export default {
   data() {
     return {
-      // textInfo: {
-      //   // 需要与后端返回的数据一致
-      //   name: "",
-      //   subtitle: "",
-      //   top_image_url: "",
-      //   description: "",
-      //   mp_link: ""
-      // },
-      // contentReady: false,
-      // contentLoading: false,
-      // contentShow: false,
-      // errorReason: 0,
+      intersect: true,
+      thisIsIE: false
     };
   },
   computed: {
+    computedToolbarColor() {
+      if (!this.intersect) {
+        return "rgba(0,0,0,0.67)";
+      }
+      return "rgba(0,0,0,0)";
+    },
     errorMessage() {
       switch (this.overlay.errorReason) {
         case 0:
@@ -141,8 +233,13 @@ export default {
   },
   methods: {
     close() {
-      this.$store.commit('close');
+      this.$store.commit("close");
       this.$router.back();
+    },
+
+    onIntersect(entries, observer) {
+      console.log(entries, observer);
+      this.intersect = entries[entries.length - 1].isIntersecting;
     }
   },
   mounted() {
@@ -156,9 +253,9 @@ export default {
     }
   },
   beforeDestroy() {
-    console.log('Overlay beforeDestroy!');
+    console.log("Overlay beforeDestroy!");
   }
-};
+};*/
 </script>
 
 <style lang="scss">
@@ -181,5 +278,12 @@ export default {
     max-width: 95%;
   }
 }
-
+#intersect-checker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  height: 0px;
+  visibility: hidden;
+}
 </style>
