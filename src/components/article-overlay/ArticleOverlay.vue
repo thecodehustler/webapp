@@ -130,6 +130,7 @@ export default class ArticleOverlay extends Vue {
   @overlay.Action('loadFromURL') loadFromURL;
   @overlay.State('open') open;
 
+  // TODO: The color code is NOT supposed to be fixed. The color should be theme-aware.
   get computedToolbarColor() {
     if (!this.intersect) {
       return "rgba(0,0,0,0.67)";
@@ -140,7 +141,7 @@ export default class ArticleOverlay extends Vue {
   get errorMessage() {
     switch (this.overlay.errorReason) {
       case 0:
-        return "正常。";
+        return "";
       case 1:
         return this.$t("article.errors.network");
       case 2:
@@ -152,16 +153,11 @@ export default class ArticleOverlay extends Vue {
     }
   }
 
-
-
   close() {
     this.closePanel().then(() => {
-      console.log('After Close');
+      // console.log('After Close');
       this.$router.back();
-    })
-    // this.closePanel().then(() => {
-    //   this.$router.back();
-    // })
+    });
   }
 
   /**

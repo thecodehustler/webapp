@@ -6,9 +6,9 @@ import msgEN from './en_US';
 Vue.use(V18N);
 
 const V18nOptions = new V18N({
-  locale: 'cn',
+  locale: navigator.language.slice(0, 2),
   messages: {
-    cn: msgCN,
+    zh: msgCN,
     en: msgEN
   }
   // en: msgEN

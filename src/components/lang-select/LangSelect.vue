@@ -23,7 +23,7 @@ export default class LangSelect extends Vue {
     value: 'en'
   }, {
     text: '中文',
-    value: 'cn'
+    value: 'zh'
   }];
 
   created() {

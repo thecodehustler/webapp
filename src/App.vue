@@ -3,7 +3,13 @@
   <v-app>
     <v-main>
       <router-view v-if="notSupportedReason === 0"></router-view>
-      <NotSupported v-else-if="notSupportedReason === 1"></NotSupported>
+      <NotSupported v-else-if="notSupportedReason === 1" :error-title="$t('app.webgl_unsupported')" :error-description="$t('app.webgl_unsupported_description')">
+        <template v-slot:addition>
+          <v-col>
+            <v-btn href="https://browsehappy.com/" target="_blank">{{$t('app.upgrade_help')}}<v-icon small>mdi-open-in-new</v-icon></v-btn>
+          </v-col>
+        </template>
+      </NotSupported>
       <div v-else></div>
       <v-snackbar vertical top right color="warning" v-model="ieWarningSnackbar" timeout="14000">
         {{$t('app.ie_warning')}}

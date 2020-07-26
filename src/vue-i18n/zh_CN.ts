@@ -6,7 +6,7 @@ class zh_CN implements LangInterface, LocaleMessages{
     title: '天空旅行团',
     offlineMessage: '您的设备已离线，部分内容可能过期或者不可用。',
     update_avaliable: '新内容已可用，请刷新页面。',
-    action_refresh: '刷新',
+    action_refresh: '刷新页面',
     action_dismiss: '知道了',
     loading_text: '正在载入……',
     loading_longer: '载入的时间似乎比预期要慢一些。请稍等片刻。',
@@ -35,7 +35,9 @@ class zh_CN implements LangInterface, LocaleMessages{
     locBtn_StopTrack: '停止跟踪',
     locBtn_GeoLocationFailed: '无法定位。',
     locBtn_Continue: '继续',
-    debug_Title: '调试信息'
+    debug_Title: '调试信息',
+    cesium_RenderErrorTitle: 'Cesium 发生渲染错误。',
+    cesium_RenderErrorDescription: '地图的渲染已停止。请刷新页面。'
   }
   article = {
     errors: {
@@ -55,7 +57,7 @@ class zh_CN implements LangInterface, LocaleMessages{
     menu: {
       show3d: '显示 3D 建筑',
       show3dHint: '这可能会消耗大量的数据流量和处理性能。',
-      about: '关于'
+      about: '关于…'
     },
     userCard: {
       myCollection: '我的收藏'

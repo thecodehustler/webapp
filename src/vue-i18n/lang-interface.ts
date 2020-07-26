@@ -32,7 +32,9 @@ export default interface LangInterface {
     locBtn_StopTrack: string,
     locBtn_GeoLocationFailed: string,
     locBtn_Continue: string,
-    debug_Title: string
+    debug_Title: string,
+    cesium_RenderErrorTitle: string,
+    cesium_RenderErrorDescription: string,
   },
   article: {
     errors: {

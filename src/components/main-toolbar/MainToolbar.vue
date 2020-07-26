@@ -58,7 +58,7 @@
             </v-btn>
           </template>
           <v-list min-width="150" width="250">
-            <v-list-item @click.stop.prevent="">
+            <v-list-item @click.native.stop="">
               <v-list-item-icon>
                 <v-icon>mdi-translate</v-icon>
               </v-list-item-icon>
@@ -92,11 +92,16 @@
             <v-list-item @click.native.stop :ripple="1===0">
               <v-container class="pa-0 ma-0">
                 <v-row class="pa-0 ma-0">
-                  <v-col class="justify-center d-flex pa-0 ma-0" v-ripple @click="openAboutDialog">
+                  <v-tooltip top transition="fade-transition">
+                    <template v-slot:activator="{ on, attrs }">
+                  <v-col class="justify-center d-flex pa-0 ma-0" v-ripple @click="openAboutDialog" v-on="on">
                     <v-btn icon>
                       <v-icon>mdi-information</v-icon>
                     </v-btn>
                   </v-col>
+                    </template>
+                    <span>{{$t('toolbar.menu.about')}}</span>
+                  </v-tooltip>
                   <v-divider vertical></v-divider>
                   <v-col class="justify-center d-flex pa-0 ma-0">
                     <ThemeAdjustButton></ThemeAdjustButton>

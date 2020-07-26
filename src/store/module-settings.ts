@@ -9,7 +9,7 @@ export enum ThemeOption {
 
 @Module({namespaced: true})
 export default class Settings extends VuexModule {
-  lang = 'cn';
+  lang = navigator.language.slice(0, 2);
   theme: ThemeOption = ThemeOption.FOLLOW;
   @Mutation setLanguage(payload: string) {
     this.lang = payload;

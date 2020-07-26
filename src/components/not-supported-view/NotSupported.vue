@@ -1,27 +1,29 @@
 <template>
-  <v-container class="fill-height text-center align-content-center">
+  <v-container class="fill-height text-center align-content-center overflow-y-auto">
     <v-row align-content="center" align="center" class="text-center">
       <v-col>
-        <h1 class="display-2 font-weight-light condensed">{{$t('app.webgl_unsupported')}}</h1>
+        <h1 class="display-2 font-weight-light condensed">{{errorTitle}}</h1>
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
       <v-col>
-        <p class="text--secondary subtitle-1">{{$t('app.webgl_unsupported_description')}}</p>
+        <p class="text--secondary subtitle-1">{{errorDescription}}</p>
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
-        <v-btn href="https://browsehappy.com/" target="_blank">{{$t('app.upgrade_help')}}<v-icon small>mdi-open-in-new</v-icon></v-btn>
-      </v-col>
+      <slot name="addition">
+
+      </slot>
+
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import {Vue, Component} from 'vue-property-decorator';
+  import {Vue, Component, Prop} from 'vue-property-decorator';
 @Component 
 export default class NotSupported extends Vue {
-  
+  @Prop(String) errorTitle!: string;
+  @Prop(String) errorDescription!: string;
 }
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div class="cesium-viewer-root">
-    
     <!-- <div class="debug-float" v-if="debug.show">
       <v-card max-height="320">
         <v-card-title @click="debug.hide = !debug.hide">{{$t("home.debug_Title")}}</v-card-title>
@@ -29,6 +28,8 @@
       @MOUSE_MOVE="onMouseMove"
       @selectedEntityChanged="onSelectedEntityChanged"
       @renderError="onRenderError"
+      :showRenderLoopErrors="false"
+      :useDefaultRenderLoop="useDefaultRenderLoop"
     >
       <!-- Terrains -->
       <vc-provider-terrain-cesium ref="terrain"></vc-provider-terrain-cesium>
@@ -81,6 +82,7 @@ export default {
   name: "CesiumViewer",
   data() {
     return {
+        useDefaultRenderLoop: true
       // debug: {
       //   show: true,
       //   locationOnGlobe: new CVDataTypes.LocationOnGlobe(),
@@ -102,7 +104,7 @@ export default {
 
   created() {
     this.flyTo = options => {
-      let o = {
+      const o = {
         destination: Cesium.Cartesian3.fromDegrees(
           options.position.lng,
           options.position.lat,
@@ -129,7 +131,7 @@ export default {
       Cesium.zip.Deflater = window.zip.Deflater;
 
       this.viewer = cesiumInstance.viewer; // 保留一份本地副本。
-      let viewer = this.viewer;
+      const viewer = this.viewer;
       console.log("Cesium is ready to operate.");
       setupViewer(this, viewer);
       this.$emit("ready", cesiumInstance);
@@ -138,8 +140,8 @@ export default {
       this.$emit("cameraMoveStart");
     },
     onCameraMoveEnd() {
-      let camP = new CVDataTypes.CameraParameters();
-      let cat = this.viewer.camera.positionCartographic;
+      const camP = new CVDataTypes.CameraParameters();
+      const cat = this.viewer.camera.positionCartographic;
       camP.position = {
         lat: Cesium.Math.toDegrees(cat.latitude),
         lng: Cesium.Math.toDegrees(cat.longitude),
@@ -151,19 +153,19 @@ export default {
       this.$emit("cameraMoveEnd", camP);
     },
     onMouseMove(event) {
-      let ret = new CVDataTypes.LocationOnGlobe();
-      let viewer = this.viewer;
+      const ret = new CVDataTypes.LocationOnGlobe();
+      const viewer = this.viewer;
       // 屏幕坐标转为世界坐标
-      let ray = viewer.camera.getPickRay(event.endPosition);
-      let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+      const ray = viewer.camera.getPickRay(event.endPosition);
+      const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
       if (Cesium.defined(cartesian)) {
         // 笛卡尔坐标转为地理坐标
-        let cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
         ret.longitude = Cesium.Math.toDegrees(cartographic.longitude);
         ret.latitude = Cesium.Math.toDegrees(cartographic.latitude);
         ret.above = viewer.scene.globe.getHeight(cartographic);
         ret.height = cartographic.height;
-        let toEmit = {
+        const toEmit = {
           viewer: this.viewer,
           event: event
         };
@@ -172,7 +174,7 @@ export default {
       }
     },
     onSelectedEntityChanged(entity) {
-      let toEmit = {
+      const toEmit = {
         entity,
         viewer: this.viewer
       };
@@ -181,10 +183,10 @@ export default {
         // 尝试规避一些鼠标单击事件的问题。
       })
     },
-    onRenderError(param) {
-      let {scene, error} = param;
-      console.log('Render error: ', error);
+    onRenderError(scene, error) {
+      // console.log('Render error: ', error);
       this.$emit('error', error);
+      // this.useDefaultRenderLoop = true;
     },
     // resolveWhenReady() {
     //   return new Promise(resolve => {

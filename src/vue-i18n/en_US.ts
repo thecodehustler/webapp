@@ -35,7 +35,9 @@ class en_US implements LangInterface, LocaleMessages{
       locBtn_StopTrack: 'Stop tracking',
       locBtn_GeoLocationFailed: '无法定位。',
       locBtn_Continue: 'Continue',
-      debug_Title: 'Debug info'
+      debug_Title: 'Debug info',
+      cesium_RenderErrorTitle: 'Render error occurred in Cesium.',
+      cesium_RenderErrorDescription: 'The rendering process has stopped. Please refresh this page.'
     }
     article = {
       errors: {
