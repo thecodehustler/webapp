@@ -38,30 +38,19 @@
 
 <script lang="ts">
   "use strict";
-
-  // import "../commons/location-watcher/LocationWatcherComponent";
-
   import CesiumViewer from "../components/cesium-viewer/CesiumViewer.vue";
   import MainToolbar from "../components/main-toolbar/MainToolbar.vue";
+  import { ViewerData, Tileset, CameraParameters, KMLData } from "@/components/cesium-viewer/CesiumViewerTypes";
+  import {mapState} from "vuex";
+  import {cesiumSettings} from "@/config/config";
+  import NotSupported from "@/components/not-supported-view/NotSupported.vue";
 
-  let home = new CameraParameters({
+  const home = new CameraParameters({
     position: cesiumSettings.homePosition,
     heading: 0,
     pitch: -45,
     roll: 0
   });
-
-  import {
-    ViewerData,
-    // eslint-disable-next-line no-unused-vars
-    Tileset,
-    CameraParameters,
-    KMLData
-  } from "../components/cesium-viewer/CesiumViewerTypes";
-  import {mapState} from "vuex";
-  import {cesiumSettings} from "../config/config";
-  import NotSupported from "@/components/not-supported-view/NotSupported.vue";
-
   export default {
     data: () => {
       return {
@@ -91,7 +80,7 @@
     methods: {
       onCesiumReady(cesiumInstance) {
         this.viewer = cesiumInstance.viewer;
-        let viewer = cesiumInstance.viewer;
+        const viewer = cesiumInstance.viewer;
         // Called when Cesium is ready.
         console.log("CesiumViewer is ready to operate.");
         // console.log(Cesium); // Cesium 现在已经可以以一个全局变量的方式被访问。
@@ -150,8 +139,8 @@
 
       mouseOnGlobe(obj) {
         // 鼠标悬浮在某个尸体上的时候触发。
-        let pickedPrimitive = obj.viewer.scene.pick(obj.event.endPosition);
-        let pickedEntity = Cesium.defined(pickedPrimitive)
+        const pickedPrimitive = obj.viewer.scene.pick(obj.event.endPosition);
+        const pickedEntity = Cesium.defined(pickedPrimitive)
           ? pickedPrimitive.id
           : undefined;
         if (Cesium.defined(this.cached) && Cesium.defined(this.cached.label)) {
@@ -175,7 +164,6 @@
     components: {
       NotSupported,
       CesiumViewer,
-      // ArticleOverlay,
       MainToolbar,
     },
     created() {
@@ -190,7 +178,7 @@
       open: function (newVal) {
         if (!newVal) {
           // 文章预览关闭之后……
-          let v = this.$refs.viewer;
+          const v = this.$refs.viewer;
           v.clearSelection(); // 清除 Cesium 的选择状态。
         }
       },

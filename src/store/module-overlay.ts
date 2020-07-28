@@ -47,7 +47,6 @@ export default class ModuleOverlay extends VuexModule {
   @Mutation updateData(data: any) {
     if (data.head_image_url == null) {
         data.head_image_url = ' '; // 传一个无用的数据，强迫 IMG 刷新。
-        // SB Vuetify 是你逼我的。
       }
       this.overlay.data = data
   }

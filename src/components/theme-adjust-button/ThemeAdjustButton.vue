@@ -1,6 +1,7 @@
 <template>
-  <v-btn icon>
-    <v-icon v-text="iconText" @click="cycle"></v-icon>
+  <v-btn text @click="cycle">
+    <v-icon v-text="iconText"></v-icon>
+    <slot></slot>
   </v-btn>
 </template>
 

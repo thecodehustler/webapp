@@ -12,7 +12,6 @@
       </v-list-item-content>
     </v-list-item>
     </transition-group>
-    <!-- </v-expand-transition> -->
   </v-list>
 </template>
 
@@ -21,8 +20,8 @@ import {Vue, Component, Prop, Emit} from 'vue-property-decorator';
 
 @Component
 export default class SearchResultList extends Vue {
-  @Prop(Number) state: Number;
-  @Prop() data : Array<any>; // Array<?>
+  @Prop(Number) state!: number;
+  @Prop(Array) data!: Array<any>; // Array<?>
 
   itemClicked(result: any) { //
     this.$router.push({name: 'Landmark', query: {id: result.landmark_id}}).then(()=>{

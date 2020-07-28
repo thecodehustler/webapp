@@ -1,5 +1,4 @@
 <template>
-<body>
   <v-app>
     <v-main>
       <router-view v-if="notSupportedReason === 0"></router-view>
@@ -28,7 +27,6 @@
       <div v-if="notSupportedReason !== 0" class="text--disabled">© 2020 SHERRY / APTX</div>
     </v-footer>
   </v-app>
-</body>
 </template>
 
 <script lang="ts">

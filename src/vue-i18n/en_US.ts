@@ -64,5 +64,12 @@ class en_US implements LangInterface, LocaleMessages{
       },
       search_error: 'Error while searching.'
     }
+    settings = {
+      themeOptions: {
+        follow: 'Auto',
+        light: 'Light',
+        dark: 'Dark',
+      }
+    }
 }
   export default new en_US();

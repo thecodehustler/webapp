@@ -6,15 +6,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-
+  
+  <!-- START 国产浏览器们求你们别用 IE -->
   <meta name="renderer" content="webkit" />
   <meta name="force-rendering" content="webkit" />
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-  <!-- 国产浏览器们求你们别用 IE -->
+  <!-- END 国产浏览器们求你们别用 IE -->
+
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
 
   <title><%= htmlWebpackPlugin.options.title %></title>
-  <style>#app{position: fixed; top: 0; bottom: 0; left: 0; right: 0}</style>
+  <style>div#app{position: fixed; top: 0; bottom: 0; left: 0; right: 0; margin: 0; padding: 0;}</style>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/roboto-fontface@0.10.0/css/roboto/roboto-fontface.min.css"
     as="style">

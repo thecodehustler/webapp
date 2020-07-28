@@ -1,11 +1,11 @@
 <template>
-  <v-container class="bottom-absolute" max-width="730">
-    <v-card id="main-toolbar-container" v-click-outside="onClickOutside">
+  <v-container class="bottom-absolute">
+    <v-card id="main-toolbar-container" v-click-outside="onClickOutside" max-width="730">
       <v-expand-transition>
         <SearchResultList
           :data="searchResult"
           :state="searchState"
-          v-show="showResult && textInput != ''"
+          v-show="showResultPanel && textInput != ''"
           @selected="selected"
         ></SearchResultList>
       </v-expand-transition>
@@ -39,14 +39,10 @@
           dark
           v-model="textInput"
           :label="$t('toolbar.search')"
-          @focus="showResult = true"
+          @focus="showResultPanel = true"
         ></v-text-field>
-        <!-- <SearchInput></SearchInput> -->
 
         <!-- 暂时不要显示它 -->
-        <!-- <v-btn @click="btnClicked" icon v-if="false">
-          <v-icon>{{iconText}}</v-icon>
-        </v-btn>-->
         <v-btn @click="goHome" icon>
           <v-icon>mdi-home</v-icon>
         </v-btn>
@@ -58,7 +54,7 @@
             </v-btn>
           </template>
           <v-list min-width="150" width="250">
-            <v-list-item @click.native.stop="">
+            <v-list-item @click.native.prevent class="py-0">
               <v-list-item-icon>
                 <v-icon>mdi-translate</v-icon>
               </v-list-item-icon>
@@ -69,7 +65,7 @@
             <v-divider></v-divider>
             <v-list-item three-line @click.stop="show3D = !show3D">
               <v-list-item-action>
-                <v-checkbox v-model="show3D" color="primary"></v-checkbox>
+                <v-checkbox v-model="show3D" color="primary" @click="show3D = !show3D"></v-checkbox>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>{{$t('toolbar.menu.show3d')}}</v-list-item-title>
@@ -78,33 +74,24 @@
                   {{$t('toolbar.menu.show3dHint')}}
                 </v-list-item-subtitle>
               </v-list-item-content>
-              <!-- </template> -->
             </v-list-item>
-<!--            <v-list-item @click="openAboutDialog">
-              <v-list-item-icon>
-                <v-icon>mdi-information</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>{{$t('toolbar.menu.about')}}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>-->
             <v-divider></v-divider>
             <v-list-item @click.native.stop :ripple="1===0">
               <v-container class="pa-0 ma-0">
-                <v-row class="pa-0 ma-0">
-                  <v-tooltip top transition="fade-transition">
-                    <template v-slot:activator="{ on, attrs }">
-                  <v-col class="justify-center d-flex pa-0 ma-0" v-ripple @click="openAboutDialog" v-on="on">
-                    <v-btn icon>
+                <v-row>
+                  <v-col class="justify-center d-flex pa-0 ma-0" @click="openAboutDialog">
+                    <v-btn text>
                       <v-icon>mdi-information</v-icon>
+                      <span class="pl-1">{{$t('toolbar.menu.about')}}</span>
                     </v-btn>
                   </v-col>
-                    </template>
-                    <span>{{$t('toolbar.menu.about')}}</span>
-                  </v-tooltip>
-                  <v-divider vertical></v-divider>
+                  <!-- <v-col class="justify-center d-flex pa-0 ma-0"> -->
+                    <v-divider vertical class="d-flex"></v-divider>
+                  <!-- </v-col> -->
                   <v-col class="justify-center d-flex pa-0 ma-0">
-                    <ThemeAdjustButton></ThemeAdjustButton>
+                    <ThemeAdjustButton>
+                      <span class="pl-1">{{themeText}}</span>
+                    </ThemeAdjustButton>
                   </v-col>
                 </v-row>
               </v-container>
@@ -138,26 +125,29 @@
 </template>
 
 <script lang="ts">
-import { debouncedSearch, SearchState } from "../../commons/landmark-search";
+  import {debouncedSearch, SearchState} from "@/commons/landmark-search";
 
-import LangSelect from "../../components/lang-select/LangSelect.vue";
-import SearchResultList from "./SearchResultList.vue";
-import UserInfoCard from "./UserInfoCard.vue";
+  import LangSelect from "../../components/lang-select/LangSelect.vue";
+  import SearchResultList from "./SearchResultList.vue";
+  import UserInfoCard from "./UserInfoCard.vue";
+  import ThemeAdjustButton from "../../components/theme-adjust-button/ThemeAdjustButton.vue";
 
-import { Vue, Component, Emit, Watch, Ref } from "vue-property-decorator";
-import { State, Mutation } from "vuex-class";
+  import {Component, Emit, Vue, Watch} from "vue-property-decorator";
+  import {Mutation, namespace, State} from "vuex-class";
 
-import { wxSettings } from "../../config/config";
-import { AxiosResponse } from "axios";
-import ThemeAdjustButton from "../../components/theme-adjust-button/ThemeAdjustButton.vue";
+  import {wxSettings} from "@/config/config";
+  import {AxiosResponse} from "axios";
+  import {ThemeOption} from "@/store/module-settings";
+
+  const settings = namespace("settings");
 
 @Component({
   components: {
     LangSelect,
     SearchResultList,
     UserInfoCard,
-    ThemeAdjustButton
-  }
+    ThemeAdjustButton,
+  },
 })
 export default class MainToolbar extends Vue {
   keep = true;
@@ -165,20 +155,21 @@ export default class MainToolbar extends Vue {
   closeOnContentClick = false;
 
   // 搜索相关
-  debouncesGetEntries = debouncedSearch();
+  debouncedGetSearchResultEntries = debouncedSearch();
 
   searchState = SearchState.PENDING;
   textInput = "";
   searchResult = [];
-  showResult = false;
+  showResultPanel = false;
 
   @Watch("textInput") onTextInput(newVal: string) {
     if (newVal) {
       newVal = newVal.trim();
       if (newVal !== "") {
-        this.showResult = true;
+        this.showResultPanel = true;
         this.searchResult = [];
-        this.debouncesGetEntries(newVal)
+        this.searchState = SearchState.ONGOING;
+        this.debouncedGetSearchResultEntries(newVal)
           .then((ret: AxiosResponse) => {
             const data = ret.data;
             this.searchResult = data;
@@ -189,26 +180,15 @@ export default class MainToolbar extends Vue {
             this.searchState = SearchState.ERROR;
           });
       } else {
-        this.showResult = false;
+        this.showResultPanel = false;
       }
     } else {
-      this.showResult = false;
+      this.showResultPanel = false;
     }
   }
-  // doSearchQuery() {
-  //   if (this.textInput !== "") {
-  //     this.searchState = SearchState.ONGOING;
-  //     Axios.get("/api/search", {
-  //       params: {
-  //         name: this.textInput
-  //       }
-  //     })
 
-  //   }
-  // }
-  // Called when click outside of this card.
   onClickOutside() {
-    this.showResult = false;
+    this.showResultPanel = false;
   }
 
   selected() {
@@ -216,20 +196,20 @@ export default class MainToolbar extends Vue {
   }
 
   // 从 Vuex 传来的微信相关数据。
-  @State(state => state.wx.wxState == 0) wxReady!: boolean;
-  @State(state => (state.wx.useFake ? state.wx.localFake : state.wx.userInfo))
-  userInfo;
-  @State(state => state.wx.useFake) fake!: boolean;
-  @Mutation("updateFake") updateFakeInformation;
+  @State((state) => state.wx.wxState == 0) wxReady!: boolean;
+  @State((state) => (state.wx.useFake ? state.wx.localFake : state.wx.userInfo))
+  userInfo !:any;
+  @State((state) => state.wx.useFake) fake!: boolean;
+  @Mutation("updateFake") updateFakeInformation!: Function;
 
   created() {
     this.updateFakeInformation(wxSettings.fakeUserInfo);
     console.log(this.wxReady);
   }
   get avatarAlt() {
-    let text = "";
+    const text = "";
     if (this.userInfo.name) {
-      let arr = this.userInfo.name.split(" ");
+      const arr = this.userInfo.name.split(" ");
       text.concat(arr[0].charAt(0));
       if (arr.length > 1) {
         text.concat(arr[arr.length - 1].charAt(0));
@@ -238,22 +218,34 @@ export default class MainToolbar extends Vue {
     return text;
   }
 
-  // 按钮们的回调和相关的数据。
+  // 栏上的按钮们的回调和相关的数据。
   show3D = false;
-  @Mutation("toggle3DBuildings") toggleBuildings;
+  @Mutation("toggle3DBuildings") toggleBuildings!: Function;
   @Watch("show3D") toggle(newVal: boolean) {
     this.toggleBuildings(newVal);
   }
 
-  @Emit("goHome") goHome() {}
+  @Emit("goHome") goHome() {console.log('goHome emitted.');}
 
   openAboutDialog() {
     this.$router.push("/about");
   }
-}
-// import lodash from "lodash";
 
-// import { mapState } from "vuex";
+  // 界面主题相关。
+  @settings.State theme!: ThemeOption;
+  get themeText() {
+    switch (this.theme) {
+      case ThemeOption.FOLLOW:
+        return this.$t("settings.themeOptions.follow");
+      case ThemeOption.LIGHT:
+        return this.$t("settings.themeOptions.light");
+      case ThemeOption.DARK:
+        return this.$t("settings.themeOptions.dark");
+      default:
+        return "¯\\_(ツ)_/¯";
+    }
+  }
+}
 
 // // export const States = {
 // //   STOPPED: 0, // 未开始
@@ -423,7 +415,7 @@ export default class MainToolbar extends Vue {
 // };
 </script>
 
-<style>
+<style lang="scss">
 div.bottom-absolute {
   position: absolute;
   display: flex;

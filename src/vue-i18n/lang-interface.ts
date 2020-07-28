@@ -59,6 +59,13 @@ export default interface LangInterface {
     userCard: {
       myCollection: string
     },
-    search_error: string
+    search_error: string,
   },
+  settings: {
+    themeOptions: {
+      follow: string,
+      light: string,
+      dark: string,
+    }
+  }
 }

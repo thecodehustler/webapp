@@ -58,7 +58,7 @@ export default {
       "views/landing/pages/Intro1.vue",
       "views/landing/pages/Intro2.vue"
     ];
-    let promises = componentsPath.map(path => {
+    const promises = componentsPath.map(path => {
       return AsyncComponents.build(path);
     });
     promises.forEach(x => {

@@ -71,8 +71,6 @@ module.exports = {
       // let a = new Date();
       const Vars = require('./webpack.global.vars.js');
       Object.assign(args[0], Vars.VARS);
-      // args[0]["MY_APP_VERSION"] = JSON.stringify(`${a.getFullYear() % 1000 * 10000 + (a.getMonth() + 1) * 100 + a.getDate()}@${new GitRevision().version()}`);
-      // args[0]['MY_APP_VERSION'] = `${a.getUTCFullYear() * 10000 + (a.getUTCMonth() + 1) * 100 + a.getUTCDate() + 1}@${new GitRevision().commithash()}`;
       return args;
     })
   },
@@ -86,7 +84,7 @@ module.exports = {
         '/'
       ],
       useRenderEvent: true,
-      headless: false,
+      headless: true,
       onlyProduction: true
     },
     externals: {

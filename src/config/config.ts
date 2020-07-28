@@ -11,10 +11,6 @@ export const cesiumSettings = {
   }
 }
 
-export const MainConfig = {
-  cesiumAccessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5YjcxZDU2OS0zZThlLTQxMTYtYjE0Ny1jZjIyN2ZlYzRlYTEiLCJpZCI6MTc2ODksInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzI1OTU5NDl9.3kZPuGydn6_Ffm6pewG2NbBeyYfTaA72Z3cT_gqGD_w',
-}
-
 export const wxSettings = {
   fakeUserInfo: {
     // Some fake user info, used for presentation.
@@ -24,5 +20,4 @@ export const wxSettings = {
       "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1cfa619f-ac21-4dd8-b4fb-e5aa12ac465d/d8ual6l-7dadd771-ea61-46db-abac-818eab12eaa8.png/v1/fill/w_1024,h_1024,strp/hakase_shinonome_by_numenoreano_d8ual6l-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNCIsInBhdGgiOiJcL2ZcLzFjZmE2MTlmLWFjMjEtNGRkOC1iNGZiLWU1YWExMmFjNDY1ZFwvZDh1YWw2bC03ZGFkZDc3MS1lYTYxLTQ2ZGItYWJhYy04MThlYWIxMmVhYTgucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.DOrXOCBO1lKffcxiCF2JWOkkeKmjff-DUc8siBN5r8k",
     gender: 2
   },
-  APPID: 'wxf72802a4a9dc0581'
 }

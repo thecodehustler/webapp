@@ -1,8 +1,8 @@
 import LangInterface from './lang-interface';
-import {LocaleMessageObject, LocaleMessages} from "vue-i18n";
+import {LocaleMessages} from "vue-i18n";
 
 class zh_CN implements LangInterface, LocaleMessages{
-  app = {
+  app: LocaleMessages = {
     title: '天空旅行团',
     offlineMessage: '您的设备已离线，部分内容可能过期或者不可用。',
     update_avaliable: '新内容已可用，请刷新页面。',
@@ -63,6 +63,13 @@ class zh_CN implements LangInterface, LocaleMessages{
       myCollection: '我的收藏'
     },
     search_error: '尝试搜索时出错。'
+  }
+  settings = {
+    themeOptions: {
+      follow: '自动',
+      light: '亮色',
+      dark: '暗色',
+    }
   }
 }
 

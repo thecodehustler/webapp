@@ -1,41 +1,47 @@
 <template>
-<v-dialog v-model="model" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile">
-  <v-card max-width="540">
-    <v-sheet tile color="blue" height="160">
-      <v-container class="align-content-end fill-height relative">
-        <v-row no-gutters>
-          <h1 class="display-2 font-weight-light condensed white--text">{{$t('app.title')}}</h1>
-        </v-row>
+  <v-dialog v-model="model" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile">
+    <v-card max-width="540">
+      <v-sheet tile color="blue" height="160">
+        <v-container class="align-content-end fill-height relative">
+          <v-row no-gutters>
+            <h1 class="display-2 font-weight-light condensed white--text">{{$t('app.title')}}</h1>
+          </v-row>
           <!-- <img class="absolute-image" src="img/icons/drone-pngrepo-com.png"/> -->
-      </v-container>
-    </v-sheet>
-    <v-card-text>
-      <v-container class="pa-0">
-        <v-row no-gutters>
-          <v-col>
-            <h3
-              class="subtitle-2 font-weight-medium py-3 blue--text"
-            >{{$t('about.open_source_libraries')}}</h3>
+        </v-container>
+      </v-sheet>
+      <v-card-text>
+        <v-container class="pa-0">
+          <v-row no-gutters>
+            <v-col>
+              <h3
+                class="subtitle-2 font-weight-medium py-3 blue--text"
+              >{{$t('about.open_source_libraries')}}</h3>
 
-            <v-expansion-panels flat>
-              <v-expansion-panel v-for="lib of LIBRARIES" :key="lib.name">
-                <v-expansion-panel-header>
-                  {{lib.name}}
-                  <span style="padding-left: 8px">
-                    <v-chip x-small label :href="lib.licenseURL" target="_blank" @click.stop>{{lib.license}}</v-chip>
-                  </span>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-btn small color="primary" :href="lib.homepage" target="_blank">
-                    <v-icon small>mdi-home</v-icon>
-                    {{$t('about.homepage')}}
-                  </v-btn>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-          </v-col>
+              <v-expansion-panels flat>
+                <v-expansion-panel v-for="lib of LIBRARIES" :key="lib.name">
+                  <v-expansion-panel-header>
+                    {{lib.name}}
+                    <span style="padding-left: 8px">
+                      <v-chip
+                        x-small
+                        label
+                        :href="lib.licenseURL"
+                        target="_blank"
+                        @click.stop
+                      >{{lib.license}}</v-chip>
+                    </span>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-btn small color="primary" :href="lib.homepage" target="_blank">
+                      <v-icon small>mdi-home</v-icon>
+                      {{$t('about.homepage')}}
+                    </v-btn>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-col>
 
-          <!-- <v-list class="fill-width">
+            <!-- <v-list class="fill-width">
           <v-list-item>
             <v-card outlined href="https://github.com/vuejs/vue" class="god-damn-vuetify-grid">
               <v-container>
@@ -75,101 +81,148 @@
               </v-container>
             </v-card>
           </v-list-item>
-          </v-list>-->
-        </v-row>
+            </v-list>-->
+          </v-row>
 
-        <v-row no-gutters>
-          <v-col>
-            <h3
-              class="subtitle-2 font-weight-medium py-3 light-blue--text"
-            >{{$t('app.title')}} - {{$t('about.staff')}}</h3>
-            <p>{{$t('about.website')}}SHERRY / APTX</p>
-            <p>{{$t('about.map')}}某位不愿透露姓名的路边小伙</p>
-            <p>{{$t('about.modeling')}}艺鸣</p>
-            <p>
-              {{$t('about.articles')}}晋华、恺、
-              <span title="？？？在一起？？？">斯斯、秋秋</span>
-            </p>
-            <p>{{$t('about.guide')}}虹吾、佰林</p>
-            <div class="text--disabled text-right">
-              <span>{{$t('about.build_version')}} {{VERSION}}</span> ·
-              <span v-text="COPYRIGHT"></span>
-            </div>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn @click="close" text>{{$t('app.close')}}</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
+          <v-row no-gutters>
+            <v-col>
+              <h3
+                class="subtitle-2 font-weight-medium py-3 light-blue--text"
+              >{{$t('app.title')}} - {{$t('about.staff')}}</h3>
+              <p>{{$t('about.website')}}SHERRY / APTX</p>
+              <p>{{$t('about.map')}}某位不愿透露姓名的路边小伙</p>
+              <p>{{$t('about.modeling')}}艺鸣</p>
+              <p>
+                {{$t('about.articles')}}晋华、恺、
+                <span title="？？？在一起？？？">斯斯、秋秋</span>
+              </p>
+              <p>{{$t('about.guide')}}虹吾、佰林</p>
+              <div class="text--disabled text-right">
+                <span>{{$t('about.build_version')}} {{VERSION}}</span> ·
+                <span v-text="COPYRIGHT"></span>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row style="height: 400px;">
+            <BiliVideoView avid="2295825" p="23"></BiliVideoView>
+          </v-row>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="close" text>{{$t('app.close')}}</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
-<script lang="tsx">
-export default {
-  data() {
-    return {
-      // eslint-disable-next-line no-undef
-      VERSION: VARS.VERSION,
-      COPYRIGHT: VARS.COPYRIGHT,
-      model: true,
-      LIBRARIES: [
-        {
-          name: "Vue.js",
-          license: "MIT",
-          licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://vuejs.org/",
-        },
-        {
-          name: "Vuetify",
-          license: "MIT",
-          licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://vuetifyjs.com/",
+<script lang="ts">
+// export default {
+//   data() {
+//     return {
+//       // eslint-disable-next-line no-undef
+//       VERSION: VARS.VERSION,
+//       COPYRIGHT: VARS.COPYRIGHT,
+//       model: true,
+//       LIBRARIES: [
+//         {
+//           name: "Vue.js",
+//           license: "MIT",
+//           licenseURL: "https://opensource.org/licenses/MIT",
+//           homepage: "https://vuejs.org/",
+//         },
+//         {
+//           name: "Vuetify",
+//           license: "MIT",
+//           licenseURL: "https://opensource.org/licenses/MIT",
+//           homepage: "https://vuetifyjs.com/",
+//         },
+//         {
+//           name: "Vuex",
+//           license: "MIT",
+//           licenseURL: "https://opensource.org/licenses/MIT",
+//           homepage: "https://vuex.vuejs.org/",
+//         },
+//         {
+//           name: "Cesium",
+//           license: "Apache-2.0",
+//           licenseURL:
+//             "https://github.com/CesiumGS/cesium/blob/master/LICENSE.md",
+//           homepage: "https://cesiumjs.org",
+//         },
+//         {
+//           name: "Vue I18n",
+//           license: "MIT",
+//           licenseURL: "https://opensource.org/licenses/MIT",
+//           homepage: "https://kazupon.github.io/vue-i18n/",
+//         },
+//       ],
+//     };
+//   },
+//   methods: {},
+//   watch: {
+//     model(newVal) {},
+//   },
+// };
 
-        },
-        {
-          name: "Vuex",
-          license: "MIT",
-          licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://vuex.vuejs.org/",
-
-        },
-        {
-          name: "Cesium",
-          license: "Apache-2.0",
-          licenseURL:
-            "https://github.com/CesiumGS/cesium/blob/master/LICENSE.md",
-          homepage: "https://cesiumjs.org",
-
-        },
-        {
-          name: "Vue I18n",
-          license: "MIT",
-          licenseURL: "https://opensource.org/licenses/MIT",
-          homepage: "https://kazupon.github.io/vue-i18n/",
-
-        }
-      ]
-    };
+import { Vue, Component, Watch } from "vue-property-decorator";
+import BiliVideoView from "../components/article-overlay/bili-video-view/BiliVideoView.vue";
+@Component({
+  components: {
+    BiliVideoView,
   },
-  methods: {
-    close() {
-      this.$emit("close");
-      this.model = false;
-    }
-  },
-  watch: {
-    model(newVal) {
-      if (newVal == false) {
-        setTimeout(()=>{
-          this.$router.go(-1);
-        }, 200);
-      }
+})
+export default class About extends Vue {
+  model = true;
+  VERSION = VARS.VERSION;
+  COPYRIGHT = VARS.COPYRIGHT;
+
+  close() {
+    this.$emit("close");
+    this.model = false;
+  }
+
+  @Watch("model") onDialogStateChanged(newVal: boolean) {
+    if (newVal == false) {
+      setTimeout(() => {
+        this.$router.go(-1);
+      }, 200);
     }
   }
-};
+
+  LIBRARIES = [
+    {
+      name: "Vue.js",
+      license: "MIT",
+      licenseURL: "https://opensource.org/licenses/MIT",
+      homepage: "https://vuejs.org/",
+    },
+    {
+      name: "Vuetify",
+      license: "MIT",
+      licenseURL: "https://opensource.org/licenses/MIT",
+      homepage: "https://vuetifyjs.com/",
+    },
+    {
+      name: "Vuex",
+      license: "MIT",
+      licenseURL: "https://opensource.org/licenses/MIT",
+      homepage: "https://vuex.vuejs.org/",
+    },
+    {
+      name: "Cesium",
+      license: "Apache-2.0",
+      licenseURL: "https://github.com/CesiumGS/cesium/blob/master/LICENSE.md",
+      homepage: "https://cesiumjs.org",
+    },
+    {
+      name: "Vue I18n",
+      license: "MIT",
+      licenseURL: "https://opensource.org/licenses/MIT",
+      homepage: "https://kazupon.github.io/vue-i18n/",
+    },
+  ];
+}
 </script>
 
 <style lang="scss" scoped>

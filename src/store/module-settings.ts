@@ -1,6 +1,7 @@
 import { Module, VuexModule, Mutation } from 'vuex-module-decorators';
 
 import VueI18nOptions from '../vue-i18n/index';
+import { Browser } from '@/commons/browser';
 export enum ThemeOption {
   LIGHT,
   DARK,
@@ -9,7 +10,7 @@ export enum ThemeOption {
 
 @Module({namespaced: true})
 export default class Settings extends VuexModule {
-  lang = navigator.language.slice(0, 2);
+  lang = Browser.host.osMajorLanguage;
   theme: ThemeOption = ThemeOption.FOLLOW;
   @Mutation setLanguage(payload: string) {
     this.lang = payload;
@@ -18,8 +19,6 @@ export default class Settings extends VuexModule {
 
   @Mutation setDarkMode(isDark: ThemeOption) {
     this.theme = isDark;
-    // console.log(vuetify);
-    // vuetify.theme.dark = isDark;
   }
 
   @Mutation setTheme(theme: ThemeOption) {

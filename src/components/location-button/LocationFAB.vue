@@ -28,10 +28,10 @@ export default {
   },
   methods: {
     start() {
-      if (this.intervalID == undefined) {
+      if (this.intervalID === undefined) {
         this.intervalID = setInterval(() => {
           this.count++;
-          if (this.count % 2 == 0) {
+          if (this.count % 2 === 0) {
             this.iconText = "mdi-crosshairs";
           } else {
             this.iconText = "mdi-crosshairs-gps";

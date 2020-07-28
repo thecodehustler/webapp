@@ -19,7 +19,7 @@
         dense
         flat
       >
-        <v-toolbar-title v-show="!intersect">{{ overlay.data.name }}</v-toolbar-title>
+        <v-toolbar-title v-show="!intersect" class="font-weight-medium">{{ overlay.data.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="close">
           <v-icon>mdi-close-circle</v-icon>

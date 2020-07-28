@@ -63,15 +63,15 @@ export default class MyCollectionManage extends Vue {
   @Emit("back") goBack() {}
 
   editingMode = false;
-  selectedIndex = new Set<Number>();
+  selectedIndex = new Set<number>();
   state = CollectionState.PENDING;
 
   mounted() {
     this.state = CollectionState.ONGOING;
 
-    let p = new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
       setTimeout(() => {
-        let res = [
+        const res = [
           {
             name: "她声音像清爽薄荷",
             description: "她的呼吸能不能感应 遥远时差外的海域"

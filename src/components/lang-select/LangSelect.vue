@@ -12,7 +12,7 @@
   const settings = namespace('settings');
 enum Locales {
   EN = 'en',
-  CN = 'cn'
+  CN = 'zh'
 }
 @Component
 export default class LangSelect extends Vue {
@@ -32,8 +32,6 @@ export default class LangSelect extends Vue {
 
   onInput(event: string) {
     this.commitNew(event);
-    // this.$i18n.locale = event;
-    // console.log('input',event);
   }
 }
 </script>

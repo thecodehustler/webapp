@@ -40,12 +40,12 @@ export default {
   },
   methods: {
     preRenderListener() {
-      let scratch = new Cesium.Cartesian2();
-      let position = Cesium.Cartesian3.fromDegrees(
+      const scratch = new Cesium.Cartesian2();
+      const position = Cesium.Cartesian3.fromDegrees(
         this.position.latitude,
         this.position.longitude
       );
-      let canvasPosition = this.viewer.scene.cartesianToCanvasCoordinates(
+      const canvasPosition = this.viewer.scene.cartesianToCanvasCoordinates(
         position,
         scratch
       );
@@ -64,7 +64,7 @@ export default {
     }
   },
   created() {
-    let promise = this.$parent.getCesiumInstance(); // 这要求 CesiumViewer 必须作为他的直接父组件。
+    const promise = this.$parent.getCesiumInstance(); // 这要求 CesiumViewer 必须作为他的直接父组件。
     promise.then(instance => {
       this.init(instance);
     });

@@ -1,10 +1,9 @@
 /**
  * 数据类型定义。
  */
-import LD from 'lodash';
 
 export function CameraParameters(options) {
-  let o = {
+  const o = {
     position: {
       lng: 0,
       lat: 0,
@@ -14,8 +13,8 @@ export function CameraParameters(options) {
     pitch: 0,
     roll: 0
   };
-  // Object.assign(this, o);
-  LD.assign(this, o, options);
+  Object.assign(this, o, options);
+  // LD.assign(this, o, options);
 }
 
 export class Tileset {
@@ -32,23 +31,27 @@ export class Tileset {
 }
 
 export class KMLData {
-  constructor(url) {
+  url: string;
+  show = true;
+  clampToGround = true;
+  _ready: Function|undefined = undefined;
+  ready(callback: Function) {
+    this._ready = callback;
+    return this;
+  }
+  options = {};
+
+  proxyReady(obj: any, thiz: KMLData) {
+    if (typeof thiz._ready == 'function')
+      thiz._ready(obj);
+  }
+  constructor(url: string) {
     this.url = url;
-    this.show = true;
-    this.clampToGround = true;
-    this._ready = undefined; // callback
     this.options = {
       clampToGround: true,
     };
-    this.ready = function (f) {
-      this._ready = f;
-      return this;
-    };
-    this.proxyReady = function(obj, thiz) {
-      if (typeof thiz._ready == 'function')
-        thiz._ready(obj);
-    }
   }
+
 }
 
 

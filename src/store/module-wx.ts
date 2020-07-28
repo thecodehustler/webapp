@@ -5,7 +5,7 @@ import axios from "axios";
 // const SECRET = ''; // 微信开发者密钥；
 // 不要存在前端
 // 暂时是这样的了。
-let thisURL = window.location.href.split('#')[0];
+const thisURL = window.location.href.split('#')[0];
 
 const mod = {
   state: {
@@ -85,7 +85,7 @@ const mod = {
             code: state.redirectCode
           }
         }).then( result => {
-          let d = result.data;
+          const d = result.data;
           commit('updateInfo', d);
           console.log(d);
         })

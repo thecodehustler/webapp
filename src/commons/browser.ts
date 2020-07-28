@@ -38,7 +38,7 @@ class HostInfo {
   // deviceType // Vuetify 会帮我们做出判断的。
 
   constructor() {
-    this.osMajorLanguage = navigator.language;
+    this.osMajorLanguage = navigator.language.slice(0, 2);
     if (navigator.platform.toLowerCase().indexOf('win')) {
       this.osType = OSType.Windows;
     } // else {}

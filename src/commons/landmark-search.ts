@@ -1,5 +1,4 @@
 import Axios from 'axios';
-// import LoDash from 'lodash';
 import debounce from 'debounce-promise';
 
 export enum SearchState {
@@ -27,8 +26,8 @@ function doQuery(nameQuery: string): Promise<any> {
 }
 
 /**
- * Generate a debounced searching executor (Powered by lodash).
- * @param {Number} timeout - Waiting timeout for lodash.debounce.
+ * Generate a debounced searching executor (Powered by debounce-promise).
+ * @param {Number} timeout - Waiting timeout for debounce-promise.
  */
 export function debouncedSearch(timeout = 500) :Function {
   return debounce(doQuery, timeout);
