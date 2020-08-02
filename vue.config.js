@@ -31,7 +31,7 @@ module.exports = {
         changeOrigin: true,
       },
       '/wx': {
-        target: 'https://uni-inno-webapp.top:443',
+        target: 'https://uni-inno-webapp.top',
         ws: true,
         changeOrigin: true,
       }
@@ -44,20 +44,21 @@ module.exports = {
         SRC: path.resolve(__dirname, 'src/')
       }
     },
-    devtool: 'source-map', // 调试用的选项
+    devtool: 'source-map', // 在热重载环境下向浏览器提供 SourceMap，以便调试。
     optimization: {
       minimizer: [
         new UglifyJsPlugin({
           uglifyOptions: {
+            parallel: true,
             compress: {
               // warnings: false,
-              drop_console: true,//console
+              drop_console: true, // 干掉所有的 console.*
               drop_debugger: true,
               unused: true,
-              pure_funcs: ['console.log', 'console.warn', 'console.error']//移除console
+              // pure_funcs: ['console.log', 'console.warn', 'console.error'] //移除console系列函数。
             },
             output: {
-              comments: false
+              comments: false // 干掉最终生成代码中的一切注释。
             }
           }
         })
@@ -68,7 +69,6 @@ module.exports = {
   chainWebpack: config => {
     // 添加全局变量。这些变量仅在构建环境中可用。
     config.plugin('define').tap(args => {
-      // let a = new Date();
       const Vars = require('./webpack.global.vars.js');
       Object.assign(args[0], Vars.VARS);
       return args;

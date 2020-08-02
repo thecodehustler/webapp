@@ -1,5 +1,7 @@
 // Global Vars for Webpack to inject.
 // This should only be visible in Node environment.
+
+/* eslint-disable @typescript-eslint/no-var-requires */
 const GitRevision = require('git-revision-webpack-plugin');
 
 class Vars { 
@@ -17,6 +19,7 @@ class Vars {
 // 注意：如果这里的值类型是 string 的话，Webpack 的 DefinePlugin 会把 string 里面的内容完整的拷贝到最终代码里面。
 // 也就是说，如果应用有 let ver = VARS.VERSION;
 // 最后会出现：let ver = 200707@7f44ac3 // 报错。
+// 对于对象也是一样的。
 
 const GlobalVars = {VARS: new Vars()};
 

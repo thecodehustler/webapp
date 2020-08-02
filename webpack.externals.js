@@ -1,50 +1,49 @@
 const commons = [];
 
-function generateAssetURL() {
-    return '';
+function generateAssetURL(name, version) {
+    return 'https://';
 }
 
 if (process.env.NODE_ENV === 'production') {
     commons.push(...[
         {
             id: 'weixin-js-sdk',
-            assets: 'https://cdn.jsdelivr.net/npm/weixin-js-sdk@1.6.0/index.original.js',
+            assets: 'https://unpkg.com/weixin-js-sdk@1.6.0/index.original.js',
             global: 'jWeixin'
         },
         {
             id: 'vue',
-            assets: 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.runtime.min.js',
+            assets: 'https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.runtime.min.js',
             global: 'Vue'
         },
         {
             id: 'vue-router',
-            assets: 'https://cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js',
+            assets: 'https://cdn.bootcdn.net/ajax/libs/vue-router/3.2.0/vue-router.min.js',
             global: 'VueRouter'
         },
         {
             id: 'vuex',
-            assets: 'https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
+            assets: 'https://cdn.bootcdn.net/ajax/libs/vuex/3.5.1/vuex.min.js',
             global: 'Vuex'
         },
         {
             id: 'vue-i18n',
-            assets: 'https://cdn.jsdelivr.net/npm/vue-i18n@8.18.2/dist/vue-i18n.min.js',
+            assets: 'https://cdn.bootcdn.net/ajax/libs/vue-i18n/8.20.0/vue-i18n.min.js',
             global: 'VueI18n'
         },
         {
             id: 'vue-cesium',
-            assets: 'https://cdn.jsdelivr.net/npm/vue-cesium@2.1.4/lib/index.umd.min.js',
+            assets: 'https://cdn.bootcdn.net/ajax/libs/vue-cesium/2.1.4/lib/index.umd.min.js',
             global: 'VueCesium'
         },
         {
             id: 'lodash',
-            assets: 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js',
+            assets: 'https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.19/lodash.min.js',
             global: '_'
         },
         {
             id: 'axios',
-            assets: 'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
-            global: 'axios'
+            assets: 'https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.min.js'
         },
     ]);
 }

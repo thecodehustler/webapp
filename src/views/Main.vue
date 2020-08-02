@@ -2,9 +2,9 @@
   <v-container class="fill-height flex-grow-1 flex-shrink-0 ma-0 pa-0" fluid>
     <v-row no-gutters class="fill-height">
       <v-col>
-        <v-overlay absolute opacity="0.9" :value="!imageryReady">
-          <v-progress-circular size="96" indeterminate></v-progress-circular>
-        </v-overlay>
+<!--        <v-overlay absolute opacity="0.9" :value="!imageryReady">-->
+<!--          <v-progress-circular size="96" indeterminate></v-progress-circular>-->
+<!--        </v-overlay>-->
         <NotSupported :error-title="$t('home.cesium_RenderErrorTitle')" :error-description="$t('home.cesium_RenderErrorDescription')" v-if="renderErrorOccurred">
           <template v-slot:addition>
             <v-col>
@@ -25,7 +25,7 @@
               v-show="!renderErrorOccurred"
           ></CesiumViewer>
         </div>
-        <MainToolbar ref="toolbar"></MainToolbar>
+        <MainToolbar ref="toolbar" :is-loading="!imageryReady"></MainToolbar>
         <!-- 计划是通过路由来控制组件的可见性 -->
         <div id="scrub">
           <router-view name="fs"></router-view>
