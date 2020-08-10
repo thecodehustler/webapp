@@ -16,7 +16,7 @@ enum Locales {
 }
 @Component
 export default class LangSelect extends Vue {
-  @settings.State('lang') lang !: Locales;
+  @settings.State(state=>state.data.lang) lang !: Locales;
   @settings.Mutation('setLanguage') commitNew!: Function;
   options = [{
     text: 'English',

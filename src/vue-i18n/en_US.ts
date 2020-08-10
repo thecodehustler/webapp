@@ -51,6 +51,9 @@ class en_US implements LangInterface, LocaleMessages{
       goto: 'View in Official Account'
     }
     toolbar = {
+      userButtonAriaLabel: 'User Info',
+      goHomeAriaLabel: 'Back to start position',
+      moreAriaLabel: 'More',
       search: 'Search...',
       searchResult: 'No result. | {count} result. | {count} results',
       log_out: 'Log out',

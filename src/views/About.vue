@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="model" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile">
+  <v-dialog v-model="model" max-width="540" scrollable :fullscreen="$vuetify.breakpoint.mobile" transition="slide-y-reverse-transition">
     <v-card max-width="540">
       <v-sheet tile color="blue" height="160">
         <v-container class="align-content-end fill-height relative">
@@ -27,7 +27,7 @@
                         label
                         :href="lib.licenseURL"
                         target="_blank"
-                        @click.stop
+                        @click.stop=""
                       >{{lib.license}}</v-chip>
                     </span>
                   </v-expansion-panel-header>
@@ -87,7 +87,7 @@
           <v-row no-gutters>
             <v-col>
               <h3
-                class="subtitle-2 font-weight-medium py-3 light-blue--text"
+                class="subtitle-2 font-weight-medium py-3 blue--text"
               >{{$t('app.title')}} - {{$t('about.staff')}}</h3>
               <p>{{$t('about.website')}}SHERRY / APTX</p>
               <p>{{$t('about.map')}}某位不愿透露姓名的路边小伙</p>

@@ -26,9 +26,14 @@ export default class ModuleOverlay extends VuexModule {
     this.open = false;
   }
 
-  @Action({commit: 'close'})
+  @Action
   closePanel() {
-    return false;
+    return new Promise((resolve) => {
+      this.context.commit('close');
+      setTimeout(() => {
+        resolve(false);
+      }, 250);
+    });
     // this.open = false;
   }
   @Mutation updateErrorReason(reason: ErrorReason) {
@@ -37,8 +42,8 @@ export default class ModuleOverlay extends VuexModule {
 
   @Mutation startLoading() {
     this.overlay.errorReason = ErrorReason.SUCCESS;
-          this.overlay.loading = true;
-      this.overlay.contentReady = false;
+    this.overlay.loading = true;
+    this.overlay.contentReady = false;
   }
 
   @Mutation stopLoading() {
@@ -60,7 +65,6 @@ export default class ModuleOverlay extends VuexModule {
    */
   @Action loadFromURL(url: string) {
       let errorReason: ErrorReason = ErrorReason.SUCCESS;
-      // this.updateData({});
       this.context.commit('updateData', {}); // 清空之前的数据
       let data = {};
       this.context.commit('openPanel');

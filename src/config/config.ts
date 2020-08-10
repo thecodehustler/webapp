@@ -1,5 +1,5 @@
 export const cesiumSettings = {
-  imageryURLTemplate: 'https://www.google.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}',
+  imageryURLTemplate: 'https://www.google.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}',
   kmlDataURL: '/kmls/sample.kmz',
   tileset: {
     cesiumIonAssetID: 97713

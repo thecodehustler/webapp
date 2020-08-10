@@ -48,6 +48,9 @@ export default interface LangInterface {
     goto: string
   },
   toolbar: {
+    userButtonAriaLabel: string,
+    goHomeAriaLabel: string,
+    moreAriaLabel: string,
     search: string,
     searchResult: string,
     log_out: string,

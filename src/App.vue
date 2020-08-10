@@ -52,7 +52,7 @@ export default class App extends Vue {
   notSupportedReason = -1;
   ieWarningSnackbar = false;
 
-  @settings.State('theme') theme!: ThemeOption;
+  @settings.State(state=>state.data.theme) theme!: ThemeOption;
   @settings.Mutation('setDarkMode') setDarkMode!: Function;
   @Action("initWX") initWX!: Function;
   @Action("redirected") onRedirected!: Function;
@@ -69,12 +69,12 @@ export default class App extends Vue {
   }
 
   setTheme(newTheme: ThemeOption) {
-    const localmedia: MediaQueryList = media;
-    if (localmedia) {
-      if (typeof localmedia.removeEventListener === 'function')
-        localmedia.removeEventListener('change', this.onUserAgentColorSchemeChange);
-      else if (typeof localmedia.removeListener === 'function')
-        localmedia.removeListener(this.onUserAgentColorSchemeChange);
+    const localMedia: MediaQueryList = media;
+    if (localMedia) {
+      if (typeof localMedia.removeEventListener === 'function')
+        localMedia.removeEventListener('change', this.onUserAgentColorSchemeChange);
+      else if (typeof localMedia.removeListener === 'function')
+        localMedia.removeListener(this.onUserAgentColorSchemeChange);
     }
     media = undefined;
     switch(newTheme) {

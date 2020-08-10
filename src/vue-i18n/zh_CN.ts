@@ -51,6 +51,9 @@ class zh_CN implements LangInterface, LocaleMessages{
     goto: '前往公众号查看'
   }
   toolbar = {
+    userButtonAriaLabel: '用户信息',
+    goHomeAriaLabel: '回到初始位置',
+    moreAriaLabel: '更多',
     search: '搜索…',
     searchResult: '无结果。 | {count} 条结果。 | {count} 条结果。',
     log_out: '登出',

@@ -13,7 +13,7 @@
   const settings = namespace('settings');
   @Component
   export default class ThemeAdjustButton extends Vue {
-    @settings.State('theme') theme!: ThemeOption;
+    @settings.State(state => state.data.theme) theme!: ThemeOption;
     @settings.Mutation('setTheme') setTheme!: Function;
 
     get iconText() {

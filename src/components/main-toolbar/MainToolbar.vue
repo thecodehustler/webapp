@@ -1,8 +1,8 @@
 <template>
-  <v-container class="bottom-absolute">
+  <v-container class="bottom-absolute" fluid>
     <v-row dense class="flex-wrap-reverse">
       <v-col class="flex-shrink-0 flex-grow-1">
-        <v-card id="main-toolbar-container" v-click-outside="onClickOutside" max-width="500">
+        <v-card id="main-toolbar-container" v-click-outside="onClickOutside" max-width="450">
           <v-expand-transition>
             <SearchResultList
                 :data="searchResult"
@@ -22,7 +22,7 @@
                 attach="#main-toolbar-container"
             >
               <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on" v-show="wxReady || fake">
+                <v-btn icon v-on="on" v-show="wxReady || fake" :aria-label="$t('toolbar.userButtonAriaLabel')">
                   <v-avatar color="grey" size="36">
                     <span v-if="!userInfo.avatar_url" class="white--text headline">{{ avatarAlt }}</span>
                     <v-img :src="userInfo.avatar_url"></v-img>
@@ -45,13 +45,13 @@
             ></v-text-field>
 
             <!-- 暂时不要显示它 -->
-            <v-btn @click="goHome" icon>
+            <v-btn @click="goHome" icon :aria-label="$t('toolbar.goHomeAriaLabel')">
               <v-icon>mdi-home</v-icon>
             </v-btn>
             <!-- 三点菜单 -->
             <v-menu>
               <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on">
+                <v-btn icon v-on="on" :aria-label="$t('toolbar.moreAriaLabel')">
                   <v-icon>mdi-dots-vertical</v-icon>
                 </v-btn>
               </template>
@@ -125,9 +125,7 @@
         </v-card>
       </v-col>
       <v-col class="flex-shrink-1 flex-grow-0 justify-end align-self-start ml-auto">
-        <transition name="v-loading-button">
-          <v-btn fab :loading="true" small :class="{'v-loading-button-enter': !isLoading, 'v-loading-button-enter-active': isLoading, 'v-loading-button-leave-active': !isLoading}"></v-btn>
-        </transition>
+          <v-btn aria-hidden="true" disabled fab :loading="true" small :class="{'v-loading-button-enter': !isLoading, 'v-loading-button-enter-active': isLoading, 'v-loading-button-leave-active': !isLoading}"></v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -244,7 +242,7 @@ export default class MainToolbar extends Vue {
   }
 
   // 界面主题相关。
-  @settings.State theme!: ThemeOption;
+  @settings.State(state => state.data.theme) theme!: ThemeOption;
 
   get themeText() {
     switch (this.theme) {
@@ -437,7 +435,8 @@ div.bottom-absolute {
   display: flex;
   bottom: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  //width: 100%;
 }
 /* Animations */
 .v-loading-button-enter, .v-loading-button-leave-to {

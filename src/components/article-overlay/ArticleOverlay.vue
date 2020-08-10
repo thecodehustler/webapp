@@ -19,15 +19,15 @@
         dense
         flat
       >
-        <v-toolbar-title v-show="!intersect" class="font-weight-medium">{{ overlay.data.name }}</v-toolbar-title>
+        <v-toolbar-title v-show="!intersect" class="font-weight-medium grey--text text--lighten-3">{{ overlay.data.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="close">
-          <v-icon>mdi-close-circle</v-icon>
+          <v-icon class="grey--text text--lighten-3">mdi-close-circle</v-icon>
         </v-btn>
         <v-progress-linear absolute top :active="overlay.loading" indeterminate></v-progress-linear>
       </v-toolbar>
       <!-- 显示错误信息用的 -->
-      <v-overlay :value="overlay.errorReason != 0" absolute color="error">
+      <v-overlay :value="overlay.errorReason !== 0" absolute color="error">
         <v-row justify="center">
           <v-icon>mdi-alert-circle</v-icon>
         </v-row>
@@ -51,45 +51,14 @@
             
           >
             <v-row v-if="overlay.contentReady" class="pb-0 mb-0">
-              <v-col class="mb-0">
-                <h2 class="headline font-weight-medium">{{ overlay.data.name }}</h2>
-                <p class="subtitle-1 mb-0 pb-0" id="subheading">{{ overlay.data.subtitle }}</p>
+              <v-col class="mb-0 d-flex flex-column">
                 <div id="intersect-checker" v-intersect="{handler: onIntersect}"></div>
+                <h2 class="headline font-weight-medium white--text">{{ overlay.data.name }}</h2>
+                <p class="subtitle-1 mb-0 pb-0 grey--text text--lighten-2" id="subheading">{{ overlay.data.subtitle }}</p>
               </v-col>
             </v-row>
           </v-container>
         </v-img>
-        <!-- <v-toolbar prominent height="120" color="primary">
-          <template slot="extension">
-            <v-container class="px-0 mx-0 mb-2">
-              <v-row>
-                <v-col v-if="overlay.contentReady">
-                  <h2 class="heading">{{ overlay.data.name }}</h2>
-                  <p class="subheading">{{overlay.data.subtitle}}</p>
-                </v-col>
-              </v-row>
-            </v-container>
-          </template>
-
-          <template slot="img">
-            <v-img
-              gradient="to bottom, rgba(100,115,201,.33), rgba(25,32,72,.7)"
-              :src="overlay.data.head_image_url"
-            ></v-img>
-          </template>
-
-          <template>
-            <v-spacer />
-            <v-btn icon @click="close">
-              <v-icon>mdi-close-circle</v-icon>
-            </v-btn>
-          </template>
-        </v-toolbar>-->
-
-        <!-- <v-card-text v-if="overlay.contentReady"> -->
-        <!-- <v-container class="me-3 ps-3"> -->
-        <!-- <v-row>{{overlay.data.description}}</v-row> -->
-        <!-- </v-container> -->
         <v-slide-y-transition>
           <v-card-text v-show="overlay.contentReady">
             <div id="card-text" v-html="overlay.data.rawHTML"></div>
@@ -116,7 +85,7 @@
 </template>
 
 <script>
-import {Vue, Component, Watch} from 'vue-property-decorator';
+import {Vue, Component} from 'vue-property-decorator';
 import {namespace} from 'vuex-class';
 
 const overlay = namespace('overlay');
@@ -130,7 +99,7 @@ export default class ArticleOverlay extends Vue {
   @overlay.Action('loadFromURL') loadFromURL;
   @overlay.State('open') open;
 
-  // TODO: The color code is NOT supposed to be fixed. The color should be theme-aware.
+  // TODO: The color code is NOT supposed to be a fixed value. The color should be theme-aware.
   get computedToolbarColor() {
     if (!this.intersect) {
       return "rgba(0,0,0,0.67)";
@@ -155,7 +124,6 @@ export default class ArticleOverlay extends Vue {
 
   close() {
     this.closePanel().then(() => {
-      // console.log('After Close');
       this.$router.back();
     });
   }
@@ -275,11 +243,11 @@ export default class ArticleOverlay extends Vue {
   }
 }
 #intersect-checker {
-  position: absolute;
-  bottom: 0;
+  position: relative;
+  top: 0;
   left: 0;
   width: 2px;
-  height: 0px;
+  height: 0;
   visibility: hidden;
 }
 </style>
