@@ -27,9 +27,6 @@ export default new Vuex.Store({
     initLandingState(state, payload) {
       state.landed = payload;
     },
-    // darkMode(state, payload) {
-    //   state.darkMode = payload;
-    // },
     toggle3DBuildings(state, option) {
       state.show3DBuildings = option;
     }

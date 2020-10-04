@@ -3,8 +3,7 @@ import VueRouter from 'vue-router'
 
 // import AsyncComponents from '../commons/async-components/AsyncComponents';
 // import Main from '../views/Main.vue';
-import ArticleOverlay from '../components/article-overlay/ArticleOverlay.vue';
-import About from '../views/About.vue';
+// import About from '../views/About.vue';
 Vue.use(VueRouter);
 
 const routes = [
@@ -18,16 +17,15 @@ const routes = [
       {
         path: 'about',
         name: 'About',
-        
         components: {
-          fs: About,
+          fs: () => import(/* webpackChunkName: "about" */'../views/About.vue'),
         }
       },
       {
         path: 'landmark',
         name: 'Landmark',
         components: {
-          fs: ArticleOverlay
+          fs: () => import (/* webpackChunkName: "landmark" */ '../components/article-overlay/ArticleOverlay.vue')
         }
       }
     ]
@@ -35,8 +33,8 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  routes
-})
+  routes: routes,
+  mode: "history"
+});
 
-export default router
+export default router;

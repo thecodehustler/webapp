@@ -21,6 +21,6 @@ module.exports = {
   globals: {
     'globalThis': false,
     'Cesium': false,
-    'VARS': false
+    'VARS': 'readonly'
   }
 }

@@ -21,7 +21,7 @@ import VI18NOptions from './vue-i18n/index';
 import VueCesium from 'vue-cesium';
 // 在 Vue 中声明要使用这个库。
 Vue.use(VueCesium, {
-  cesiumPath: 'https://unpkg.com/cesium@1.72.0/Build/Cesium/Cesium.js',
+  cesiumPath: 'https://unpkg.com/cesium@1.73.0/Build/Cesium/Cesium.js',
   accessToken: VARS.CESIUM_ACCESS_TOKEN,
 });
 

@@ -8,9 +8,9 @@ export enum ThemeOption {
   FOLLOW
 }
 
-const SETTINGS_KEY = 'settings';
 
-class SettingsData {
+class SettingsStorage {
+  static SETTINGS_KEY = 'settings';
 
   lang: string = Browser.host.osMajorLanguage;
   theme: ThemeOption = ThemeOption.FOLLOW;
@@ -21,7 +21,7 @@ class SettingsData {
   }
 
   read() {
-    const rawData = localStorage.getItem(SETTINGS_KEY);
+    const rawData = localStorage.getItem(SettingsStorage.SETTINGS_KEY);
     if (rawData !== null) {
       const data = JSON.parse(rawData);
       console.log('Read: ', data);
@@ -33,7 +33,7 @@ class SettingsData {
   write() {
     const data = JSON.stringify(this);
     console.log('Writing:', data); // REMOVE THIS.
-    localStorage.setItem(SETTINGS_KEY, data);
+    localStorage.setItem(SettingsStorage.SETTINGS_KEY, data);
   }
 
   init() {
@@ -47,13 +47,7 @@ class SettingsData {
 */
 @Module({namespaced: true})
 export default class Settings extends VuexModule {
-  data = new SettingsData();
-  //
-  // constructor(params: any) {
-  //   super(params);
-  //   // console.log(this);
-  //   // this.read();
-  // }
+  data = new SettingsStorage();
 
   @Mutation setLanguage(payload: string) {
     this.data.lang = payload;

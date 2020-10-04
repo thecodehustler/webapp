@@ -17,3 +17,6 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### About Cesium API Key
+Configure your own Cesium API Key in `custom-settings.js`.

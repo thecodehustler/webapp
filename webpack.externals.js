@@ -1,6 +1,6 @@
 const commons = [{
   id: 'cesium',
-  assets: ['https://unpkg.com/cesium@1.72.0/Build/Cesium/Cesium.js', 'https://unpkg.com/cesium@1.72.0/Build/Cesium/Widgets/widgets.css'],
+  assets: ['https://unpkg.com/cesium@1.73.0/Build/Cesium/Cesium.js', 'https://unpkg.com/cesium@1.73.0/Build/Cesium/Widgets/widgets.css'],
   global: 'Cesium'
 }];
 
@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
     },
     {
       id: 'vue',
-      assets: 'https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.runtime.min.js',
+      assets: 'https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.runtime.min.js',
       global: 'Vue'
     },
     {
@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
     },
     {
       id: 'vue-cesium',
-      assets: 'https://cdn.bootcdn.net/ajax/libs/vue-cesium/2.1.4/lib/index.umd.min.js',
+      assets: 'https://cdn.bootcdn.net/ajax/libs/vue-cesium/2.1.6/lib/index.umd.min.js',
       global: 'VueCesium'
     },
     {

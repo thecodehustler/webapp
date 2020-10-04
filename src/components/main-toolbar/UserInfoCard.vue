@@ -67,7 +67,7 @@ enum Gender {
   }
 })
 export default class UserInfoCard extends Vue {
-  @State(state => state.wx.wxState == 0) wxReady;
+  @State(state => state.wx.wxState == 0) wxReady: any;
   @State(state => (state.wx.useFake ? state.wx.localFake : state.wx.userInfo))
   userInfo;
   @State(state => state.wx.useFake) fake;

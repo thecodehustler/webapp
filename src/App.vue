@@ -18,7 +18,7 @@
     </v-main>
     <v-footer>
       <div>
-        <a href="http://www.beian.miit.gov.cn" target="_blank">赣ICP备20005831号-1</a>
+        <a href="http://www.beian.miit.gov.cn" target="_blank" class="text-decoration-none">赣ICP备20005831号-1</a>
       </div>
       <v-spacer></v-spacer>
       <div v-if="notSupportedReason > 0">
@@ -59,13 +59,7 @@ export default class App extends Vue {
 
   onUserAgentColorSchemeChange(ev: MediaQueryListEvent|MediaQueryList) {
     console.log(ev);
-    if (ev.matches) {
-      // this.setDarkMode(DarkModeOptions.ON);
-      this.$vuetify.theme.dark = true;
-    } else {
-      // this.setDarkMode(false);
-      this.$vuetify.theme.dark = false;
-    }
+    this.$vuetify.theme.dark = ev.matches;
   }
 
   setTheme(newTheme: ThemeOption) {
@@ -104,25 +98,6 @@ export default class App extends Vue {
   @Watch('theme') onThemeChange(newTheme: ThemeOption) {
     console.log(newTheme);
     this.setTheme(newTheme);
-  /*  if (window.matchMedia && this.theme == ThemeOption.FOLLOW) {
-      const media = window.matchMedia('(prefers-color-scheme: dark)');
-      this.onUserAgentColorSchemeChange(media);
-      if (typeof media.addEventListener === 'function') {
-        media.addEventListener('change', this.onUserAgentColorSchemeChange);
-      } else if (typeof media.addListener === 'function') {
-        media.addListener(this.onUserAgentColorSchemeChange);
-      }
-    } else {
-      switch(this.theme) {
-        case ThemeOption.LIGHT:
-          this.$vuetify.theme.dark = false;
-          break;
-        case ThemeOption.DARK:
-        default:
-          this.$vuetify.theme.dark = true;
-          break;
-      }
-    }*/
   }
 
   created() {
@@ -231,10 +206,6 @@ export default class App extends Vue {
 // };
 </script>
 <style lang="scss">
-a {
-  text-decoration: none;
-}
-
 ::-webkit-scrollbar {
   display: none;
 }
